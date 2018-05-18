@@ -14,6 +14,7 @@ object Chapter10 {
     def zero = Nil
   }
 
+
   /*
    * Exercise 10.1
    */
@@ -38,6 +39,7 @@ object Chapter10 {
     def zero = true
   }
 
+
   /*
    * Exercise 10.2
    */
@@ -48,5 +50,15 @@ object Chapter10 {
     // this would work too
     // def op(x: Option[A], y: Option[A]) = y orElse x
     def zero = None
+  }
+
+
+  /*
+   * Exercise 10.3
+   */
+
+  def endoMonoid[A] = new Monoid[A => A] {
+    def op(f: A => A, g: A => A) = x => f(g(x))
+    def zero = x => x
   }
 }
