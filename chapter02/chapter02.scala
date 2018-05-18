@@ -37,4 +37,37 @@ object Chapter2 {
 
     go(n, 0, 1)
   }
+
+  def findFirst[A](as: Array[A], p: A => Boolean): Int = {
+    @annotation.tailrec
+    def loop(n: Int): Int =
+      if (n >= as.length)
+        -1
+      else
+        if (p(as(n)))
+          n
+        else
+          loop(n + 1)
+
+    loop(0)
+  }
+
+
+  /*
+   * Exercise 2.2
+   */
+
+  def isSorted[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = {
+    @annotation.tailrec
+    def loop(n: Int): Boolean =
+      if (n >= as.length - 1) // zero- and one-length arrays are sorted
+        true
+      else // we have at least two elements
+        if (ordered(as(n), as(n+1)))
+          loop(n + 1)
+        else
+          false
+
+    loop(0)
+  }
 }
