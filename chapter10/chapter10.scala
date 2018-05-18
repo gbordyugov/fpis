@@ -8,4 +8,13 @@ object Chapter10 {
     def op(x: String, y: String) = x + y
     def zero = ""
   }
+
+  /*
+   * Exercise 10.1
+   */
+
+  val intAddition = new Monoid[Int] {
+    def op(x: Int, y: Int) = x + y
+    def zero = 0
+  }
 }
