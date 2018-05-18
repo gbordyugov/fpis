@@ -9,6 +9,11 @@ object Chapter10 {
     def zero = ""
   }
 
+  def listMonoid[A] = new Monoid[List[A]] {
+    def op(x: List[A], y: List[A]) = x ++ y
+    def zero = Nil
+  }
+
   /*
    * Exercise 10.1
    */
