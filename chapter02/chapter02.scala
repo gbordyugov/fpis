@@ -74,4 +74,12 @@ object Chapter2 {
   val lessThan = new Function2[Int, Int, Boolean] {
     def apply(a: Int, b: Int): Boolean = a < b
   }
+
+
+  /*
+   * Exercise 2.3
+   */
+
+  def curry[A,B,C](f: (A, B) => C): A => (B => C) = 
+    (a: A) => ((b: B) => f(a, b))
 }
