@@ -22,4 +22,9 @@ object Chapter10 {
     def op(x: Int, y: Int) = x * y
     def zero = 1
   }
+
+  val booleanOr = new Monoid[Boolean] {
+    def op(x: Boolean, y: Boolean) = x | y
+    def zero = false
+  }
 }
