@@ -61,4 +61,10 @@ object Chapter10 {
     def op(f: A => A, g: A => A) = x => f(g(x))
     def zero = x => x
   }
+
+
+  /*
+   * Exercise 10.4 skipped (haven't read Part 2 yet)
+   */
+
 }
