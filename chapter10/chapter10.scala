@@ -17,4 +17,9 @@ object Chapter10 {
     def op(x: Int, y: Int) = x + y
     def zero = 0
   }
+
+  val intMultiplication = new Monoid[Int] {
+    def op(x: Int, y: Int) = x * y
+    def zero = 1
+  }
 }
