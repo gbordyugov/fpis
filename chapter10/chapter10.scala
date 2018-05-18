@@ -67,4 +67,11 @@ object Chapter10 {
    * Exercise 10.4 skipped (haven't read Part 2 yet)
    */
 
+
+  /*
+   * Exercise 10.5
+   */
+
+  def foldMap[X, Y] (xs: List[X], m: Monoid[Y])(f: X => Y): Y =
+    xs.map(f).foldLeft(m.zero)(m.op)
 }
