@@ -27,4 +27,9 @@ object Chapter10 {
     def op(x: Boolean, y: Boolean) = x | y
     def zero = false
   }
+
+  val booleanAnd = new Monoid[Boolean] {
+    def op(x: Boolean, y: Boolean) = x & y
+    def zero = true
+  }
 }
