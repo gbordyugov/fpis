@@ -37,4 +37,16 @@ object Chapter10 {
     def op(x: Boolean, y: Boolean) = x & y
     def zero = true
   }
+
+  /*
+   * Exercise 10.2
+   */
+
+  def optionMonoid[A] = new Monoid[Option[A]] {
+    def op(x: Option[A], y: Option[A]) = x orElse y
+
+    // this would work too
+    // def op(x: Option[A], y: Option[A]) = y orElse x
+    def zero = None
+  }
 }
