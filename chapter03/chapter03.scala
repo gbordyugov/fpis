@@ -37,5 +37,15 @@ object Chapter3 {
       case Cons(h, t) => t
       case _          => ???
     }
+
+
+    /*
+     * Exercise 3.3
+     */
+
+    def setHead[A](l: List[A], h: A) = l match {
+      case Cons(h_, t) => h
+      case _           => ???
+    }
   }
 }
