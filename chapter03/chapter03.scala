@@ -47,5 +47,15 @@ object Chapter3 {
       case Cons(h_, t) => h
       case _           => ???
     }
+
+
+    /*
+     * Exercise 3.4
+     */
+
+    def drop[A](l: List[A], n: Int): List[A] = n match {
+      case 0 => l
+      case n => drop(tail(l), n - 1)
+    }
   }
 }
