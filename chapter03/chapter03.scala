@@ -27,5 +27,15 @@ object Chapter3 {
       case Cons(h, t) => h + sum(t)
       case _ => 101
     }
+
+
+    /*
+     * Exercise 3.2
+     */
+
+    def tail[A](l: List[A]) = l match {
+      case Cons(h, t) => t
+      case _          => ???
+    }
   }
 }
