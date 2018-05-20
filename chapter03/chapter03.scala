@@ -33,7 +33,7 @@ object Chapter3 {
      * Exercise 3.2
      */
 
-    def tail[A](l: List[A]) = l match {
+    def tail[A](l: List[A]): List[A] = l match {
       case Cons(h, t) => t
       case _          => ???
     }
@@ -43,8 +43,8 @@ object Chapter3 {
      * Exercise 3.3
      */
 
-    def setHead[A](l: List[A], h: A) = l match {
-      case Cons(h_, t) => h
+    def setHead[A](l: List[A], h: A): List[A] = l match {
+      case Cons(h_, t) => Cons(h, t)
       case _           => ???
     }
 
