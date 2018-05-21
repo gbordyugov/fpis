@@ -146,4 +146,14 @@ object Chapter3 {
 
     def length[A](as: List[A]) = foldRight(as, 0)((a, c) => c + 1)
   }
+
+
+    /*
+     * Exercise 3.10
+     */
+
+    def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match {
+      case Nil => z
+      case Cons(head, tail) => foldLeft(tail, f(z, head))(f)
+    }
 }
