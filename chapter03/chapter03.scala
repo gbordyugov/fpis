@@ -164,5 +164,13 @@ object Chapter3 {
     def sum3(as: List[Int]): Int = foldLeft(as, 0)(_ + _)
     def product3(as: List[Double]): Double = foldLeft(as, 1.0)(_ * _)
     def length3[A](as: List[A]): Int = foldLeft(as, 0)((z, a) => z + 1)
+
+
+    /*
+     * Exercise 3.12
+     */
+
+    def rev[A](as: List[A]): List[A] =
+      foldLeft(as, Nil: List[A])((as, a) => Cons(a, as))
   }
 }
