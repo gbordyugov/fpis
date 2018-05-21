@@ -72,5 +72,18 @@ object Chapter3 {
       case Nil         => b
       case Cons (h, t) => Cons(h, append(t, b))
     }
+
+
+    /*
+     * Exercise 3.6 (first solution)
+     */
+
+    def init[A](l: List[A]): List[A] = {
+      def rev(a: List[A], acc: List[A] = Nil): List[A] = a match {
+        case Nil => acc
+        case Cons(h, t) => rev(t, Cons(h, acc))
+      }
+      rev(tail(rev(l)))
+    }
   }
 }
