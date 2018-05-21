@@ -117,5 +117,19 @@ object Chapter3 {
 
     def sum2    (as: List[Int])    = foldRight(as,   0)(_ + _)
     def product2(as: List[Double]) = foldRight(as, 1.0)(_ * _)
+
+
+    /*
+     * Exercise 3.7
+     */
+
+    def productShortcut(as: List[Double]): Double = as match {
+      case Nil              => 1.0
+      case Cons(0.0, tail)  => 0.0
+      case Cons(head, tail) => head * productShortcut(tail)
+    }
+    /*
+     * I don't see how to implement this shortcutting using foldRight
+     */
   }
 }
