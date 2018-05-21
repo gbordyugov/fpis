@@ -107,5 +107,15 @@ object Chapter3 {
       case Cons(h, t) if f(h) => dropWhile_(t)(f)
       case _                  => l
     }
+
+
+    def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B =
+      as match {
+        case Nil => z
+        case Cons(head, tail) => f(head, foldRight(tail, z)(f))
+      }
+
+    def sum2    (as: List[Int])    = foldRight(as,   0)(_ + _)
+    def product2(as: List[Double]) = foldRight(as, 1.0)(_ * _)
   }
 }
