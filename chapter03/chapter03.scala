@@ -145,7 +145,6 @@ object Chapter3 {
      */
 
     def length[A](as: List[A]) = foldRight(as, 0)((a, c) => c + 1)
-  }
 
 
     /*
@@ -156,4 +155,5 @@ object Chapter3 {
       case Nil => z
       case Cons(head, tail) => foldLeft(tail, f(z, head))(f)
     }
+  }
 }
