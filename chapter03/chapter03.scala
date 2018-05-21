@@ -57,5 +57,10 @@ object Chapter3 {
       case 0 => l
       case n => drop(tail(l), n - 1)
     }
+
+    def append[A](a: List[A], b: List[A]): List[A] = a match {
+      case Nil         => b
+      case Cons (h, t) => Cons(h, append(t, b))
+    }
   }
 }
