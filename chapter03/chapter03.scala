@@ -138,5 +138,12 @@ object Chapter3 {
      *
      * foldRight will re-build the original list
      */
+
+
+    /*
+     * Exercise 3.9
+     */
+
+    def length[A](as: List[A]) = foldRight(as, 0)((a, c) => c + 1)
   }
 }
