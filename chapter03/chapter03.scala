@@ -131,5 +131,12 @@ object Chapter3 {
     /*
      * I don't see how to implement this shortcutting using foldRight
      */
+
+
+    /*
+     * Exercise 3.8
+     *
+     * foldRight will re-build the original list
+     */
   }
 }
