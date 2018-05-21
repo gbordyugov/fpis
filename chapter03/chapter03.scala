@@ -101,5 +101,11 @@ object Chapter3 {
       case Cons(x, Cons(y, Nil)) => Cons(x, Nil)
       case Cons(h, tail)         => Cons(h, init(tail))
     }
+
+
+    def dropWhile_[A](l: List[A])(f: A => Boolean): List[A] = l match {
+      case Cons(h, t) if f(h) => dropWhile_(t)(f)
+      case _                  => l
+    }
   }
 }
