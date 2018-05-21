@@ -172,5 +172,18 @@ object Chapter3 {
 
     def rev[A](as: List[A]): List[A] =
       foldLeft(as, Nil: List[A])((as, a) => Cons(a, as))
+
+
+    /*
+     * Exercise 3.13
+     */
+
+    def foldRight_[A, B](as: List[A], z: B)(f: (A, B) => B): B = {
+      val id: B => B = b => b
+      // val g: (B => B, A) => (B => B) = ((g, a) => (b => f(a, g(b))))
+      val g: (B => B, A) => (B => B) = ((g, a) => (b => g(f(a, b))))
+      val h: B => B = foldLeft(as, id)(g)
+      h(z)
+    }
   }
 }
