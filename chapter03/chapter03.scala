@@ -185,5 +185,6 @@ object Chapter3 {
       val h: B => B = foldLeft(as, id)(g)
       h(z)
     }
+
   }
 }
