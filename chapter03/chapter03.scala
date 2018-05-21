@@ -155,5 +155,14 @@ object Chapter3 {
       case Nil => z
       case Cons(head, tail) => foldLeft(tail, f(z, head))(f)
     }
+
+
+    /*
+     * Exercise 3.11
+     */
+
+    def sum3(as: List[Int]) = foldLeft(as, 0)(_ + _)
+    def product3(as: List[Double]) = foldLeft(as, 1.0)(_ * _)
+    def length3(as: List[Double]) = foldLeft(as, 0)((z, a) => z + 1)
   }
 }
