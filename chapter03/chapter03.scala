@@ -76,14 +76,30 @@ object Chapter3 {
 
     /*
      * Exercise 3.6 (first solution)
+     *
+     * this one is three-pass solution, but is tail-recursive
      */
 
     def init[A](l: List[A]): List[A] = {
+      @annotation.tailrec
       def rev(a: List[A], acc: List[A] = Nil): List[A] = a match {
         case Nil => acc
         case Cons(h, t) => rev(t, Cons(h, acc))
       }
       rev(tail(rev(l)))
+    }
+
+
+    /*
+     * Exercise 3.6 (second solution)
+     *
+     * this one is not tail-recursive, but is a one-pass solution
+     */
+
+    def init_[A](l: List[A]): List[A] = l match {
+      case Nil                   => ???
+      case Cons(x, Cons(y, Nil)) => Cons(x, Nil)
+      case Cons(h, tail)         => Cons(h, init(tail))
     }
   }
 }
