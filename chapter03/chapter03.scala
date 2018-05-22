@@ -265,5 +265,16 @@ object Chapter3 {
 
     def filter_[A](as: List[A])(f: A => Boolean): List[A] =
       flatMap(as)(a => if (f(a)) Cons(a, Nil) else Nil)
+
+
+    /*
+     * Exercise 3.22
+     */
+
+    def addLists(as: List[Int], bs: List[Int]): List[Int] =
+      (as, bs) match {
+        case (Cons(a, as), Cons(b, bs)) => Cons(a+b, addLists(as, bs))
+        case _ => Nil
+      }
   }
 }
