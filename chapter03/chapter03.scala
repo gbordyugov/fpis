@@ -186,5 +186,12 @@ object Chapter3 {
       h(z)
     }
 
+
+    /*
+     * Exercise 3.14
+     */
+
+    def append[A](a: List[A], b: List[A]): List[A] = {
+    }
   }
 }
