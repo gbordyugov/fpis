@@ -276,5 +276,16 @@ object Chapter3 {
         case (Cons(a, as), Cons(b, bs)) => Cons(a+b, addLists(as, bs))
         case _ => Nil
       }
+
+
+    /*
+     * Exercise 3.23
+     */
+
+    def zipWith[A, B, C](as: List[A], bs: List[B])(f: (A, B) => C): List[C] =
+      (as, bs) match {
+        case (Cons(a, as), Cons(b, bs)) => Cons(f(a, b), zipWith(as, bs)(f))
+        case _                          => Nil
+      }
   }
 }
