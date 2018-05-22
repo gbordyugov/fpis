@@ -207,5 +207,15 @@ object Chapter3 {
     def concatenate[A](l: List[List[A]]): List[A] = {
       foldRight(l, Nil: List[A])((a, b) => append(a, b))
     }
+
+
+    /*
+     * Exercise 3.16
+     */
+
+    def add1(as: List[Int]): List[Int] = as match {
+      case Nil => Nil
+      case Cons(head, tail) => Cons(head+1, add1(tail))
+    }
   }
 }
