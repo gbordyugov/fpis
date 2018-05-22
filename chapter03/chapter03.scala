@@ -191,7 +191,8 @@ object Chapter3 {
      * Exercise 3.14
      */
 
-    def append[A](a: List[A], b: List[A]): List[A] = {
+    def append_[A](a: List[A], b: List[A]): List[A] = {
+      foldLeft(rev(a), b)((bs, a) => Cons(a, bs))
     }
   }
 }
