@@ -287,5 +287,16 @@ object Chapter3 {
         case (Cons(a, as), Cons(b, bs)) => Cons(f(a, b), zipWith(as, bs)(f))
         case _                          => Nil
       }
+
+
+    /*
+     * Exercise 3.24
+     */
+
+    def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+      ???
+    }
+    def prefices[A](as: List[A]): List[List[A]] = ???
+      // foldLeft(as, Nil: List[A])(
   }
 }
