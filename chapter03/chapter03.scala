@@ -248,5 +248,13 @@ object Chapter3 {
       case Cons(h, t) if f(h) => Cons(h, filter(t)(f))
       case Cons(h, t)         => filter(t)(f)
     }
+
+
+    /*
+     * Exercise 3.20
+     */
+
+    def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
+      concatenate(map(as)(f))
   }
 }
