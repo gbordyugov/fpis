@@ -217,5 +217,15 @@ object Chapter3 {
       case Nil => Nil
       case Cons(head, tail) => Cons(head+1, add1(tail))
     }
+
+
+    /*
+     * Exercise 3.17
+     */
+
+    def d2s(ds: List[Double]): List[String] = ds match {
+      case Nil => Nil
+      case Cons(head, tail) => Cons(head.toString, d2s(tail))
+    }
   }
 }
