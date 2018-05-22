@@ -205,6 +205,7 @@ object Chapter3 {
      */
 
     def concatenate[A](l: List[List[A]]): List[A] = {
+      // could be implemented through foldRight by foldLeft
       foldRight(l, Nil: List[A])((a, b) => append(a, b))
     }
 
