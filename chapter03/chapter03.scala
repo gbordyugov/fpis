@@ -198,5 +198,14 @@ object Chapter3 {
     def append__[A](a: List[A], b: List[A]): List[A] = {
       foldRight(a, b)(Cons(_, _))
     }
+
+
+    /*
+     * Exercise 3.15
+     */
+
+    def concatenate[A](l: List[List[A]]): List[A] = {
+      foldRight(l, Nil: List[A])((a, b) => append(a, b))
+    }
   }
 }
