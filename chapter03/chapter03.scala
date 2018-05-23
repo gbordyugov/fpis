@@ -293,14 +293,22 @@ object Chapter3 {
      * Exercise 3.24
      */
 
-    def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
-      ???
-    }
-
-	def member[A](as: List[A], a: A): Boolean = as match {
-		case Nil => false
-		case Cons(h, t) => if (h == a) true else member(t, a)
+	def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+		val suffs = suffices(sup)
+		val prefs = prefices(sup)
+		member(append(suffs, prefs), sub)
+		member(append(suffices(sup), prefices(sup)), sub)
 	}
+
+	def member[A](as: List[A], a: A): Boolean =
+		if (a == Nil)
+			true
+		else
+			as match {
+				case Nil                    => false
+				case Cons(h, t) if (h == a) => true
+				case Cons(h, t)             => member(t, a)
+			}
 
 	type LList[A] = List[List[A]]
 	def suffices[A](as: List[A]): LList[A] = {
@@ -311,5 +319,7 @@ object Chapter3 {
 			}
 		go(as)
 	}
+
+	def prefices[A](as: List[A]): LList[A] = map(suffices(rev(as)))(rev(_))
   }
 }
