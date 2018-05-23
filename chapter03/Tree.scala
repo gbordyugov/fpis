@@ -52,4 +52,7 @@ object TreeChapter{
 		case Leaf(a) => f(a)
 		case Branch(l, r) => g(fold(l)(f)(g), fold(r)(f)(g))
 	}
+
+	def mapViaFold[A, B](t: Tree[A])(f: A => B): Tree[B] =
+		fold(t)(a => Leaf(f(a)): Tree[B])(Branch(_, _): Tree[B])
 }
