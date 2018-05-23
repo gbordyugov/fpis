@@ -12,6 +12,11 @@ object ChapterOption {
       case None => None
       case Some(x) => f(x)
     }
+
+    def getOrElse[B >: A](default: => B): B = this match {
+      case None    => default
+      case Some(x) => x
+    }
   }
 
   case class Some[+A](get: A) extends Option[A]
