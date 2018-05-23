@@ -59,5 +59,9 @@ object TreeChapter{
 	def sizeViaFold[A](t: Tree[A]): Int =
 		fold(t)(_ => 1)(_ + _)
 
-	def maximumViaFold(t: Tree[Int]): Int = fold(t)(x => x)(_ max _)
+	def maximumViaFold(t: Tree[Int]): Int =
+    fold(t)(x => x)(_ max _)
+
+  def depthViaFold[A](t: Tree[A]): Int =
+    fold(t)(_ => 0)((l, r) => 1 + (l max r))
 }
