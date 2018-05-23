@@ -301,5 +301,15 @@ object Chapter3 {
 		case Nil => false
 		case Cons(h, t) => if (h == a) true else member(t, a)
 	}
+
+	type LList[A] = List[List[A]]
+	def suffices[A](as: List[A]): LList[A] = {
+		def go(as: List[A], prefices: LList[A] = Nil): LList[A] =
+			as match {
+				case Nil => prefices
+				case (l @ Cons(a, as)) => go(as, Cons(l, prefices))
+			}
+		go(as)
+	}
   }
 }
