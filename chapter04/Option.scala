@@ -22,6 +22,12 @@ object ChapterOption {
       case None    => ob
       case Some(x) => Some(x)
     }
+
+    def filter(f: A => Boolean): Option[A] = this match {
+      case None            => None
+      case Some(x) if f(x) => Some(x)
+      case _               => None
+    }
   }
 
   case class Some[+A](get: A) extends Option[A]
