@@ -49,17 +49,17 @@ object TreeChapter{
    */
 
   def fold[A, B](t: Tree[A])(f: A => B)(g: (B, B) => B): B = t match {
-		case Leaf(a) => f(a)
-		case Branch(l, r) => g(fold(l)(f)(g), fold(r)(f)(g))
-	}
+    case Leaf(a) => f(a)
+    case Branch(l, r) => g(fold(l)(f)(g), fold(r)(f)(g))
+  }
 
-	def mapViaFold[A, B](t: Tree[A])(f: A => B): Tree[B] =
-		fold(t)(a => Leaf(f(a)): Tree[B])(Branch(_, _): Tree[B])
+  def mapViaFold[A, B](t: Tree[A])(f: A => B): Tree[B] =
+    fold(t)(a => Leaf(f(a)): Tree[B])(Branch(_, _): Tree[B])
 
-	def sizeViaFold[A](t: Tree[A]): Int =
-		fold(t)(_ => 1)(_ + _)
+  def sizeViaFold[A](t: Tree[A]): Int =
+    fold(t)(_ => 1)(_ + _)
 
-	def maximumViaFold(t: Tree[Int]): Int =
+  def maximumViaFold(t: Tree[Int]): Int =
     fold(t)(x => x)(_ max _)
 
   def depthViaFold[A](t: Tree[A]): Int =
