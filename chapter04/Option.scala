@@ -1,3 +1,5 @@
+import math.pow
+
 object ChapterOption {
   sealed trait Option[+A] {
     /*
@@ -32,4 +34,19 @@ object ChapterOption {
 
   case class Some[+A](get: A) extends Option[A]
   case object None extends Option[Nothing]
+
+
+  /*
+   * Exercise 4.2
+   */
+
+  def mean(xs: Seq[Double]): Option[Double] =
+    if (xs.isEmpty)
+      None
+    else
+      Some(xs.sum / xs.length)
+
+  def variance(xs: Seq[Double]): Option[Double] =
+    mean(xs).flatMap(m =>
+      mean(xs.map(x => pow(x - m, 2))))
 }
