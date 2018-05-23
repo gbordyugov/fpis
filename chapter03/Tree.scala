@@ -55,4 +55,7 @@ object TreeChapter{
 
 	def mapViaFold[A, B](t: Tree[A])(f: A => B): Tree[B] =
 		fold(t)(a => Leaf(f(a)): Tree[B])(Branch(_, _): Tree[B])
+
+	def sizeViaFold[A](t: Tree[A]): Int =
+		fold(t)(_ => 1)(_ + _)
 }
