@@ -296,7 +296,10 @@ object Chapter3 {
     def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
       ???
     }
-    def prefices[A](as: List[A]): List[List[A]] = ???
-      // foldLeft(as, Nil: List[A])(
+
+	def member[A](as: List[A], a: A): Boolean = as match {
+		case Nil => false
+		case Cons(h, t) => if (h == a) true else member(t, a)
+	}
   }
 }
