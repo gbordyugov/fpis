@@ -71,4 +71,19 @@ object ChapterOption {
       case (Some(a), Some(b)) => Some(f(a, b))
       case _                  => None
     }
+
+
+  /*
+   * Exercise 4.4
+   */
+
+  // my own solution
+  def sequence[A](a: List[Option[A]]): Option[List[A]] = a match {
+    case Nil             => Some(Nil)
+    case Some(a) :: tail => sequence(tail) match {
+      case Some(s) => Some(a :: s)
+      case None    => None
+    }
+    case None :: _       => None
+  }
 }
