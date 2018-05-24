@@ -51,4 +51,10 @@ object ChapterOption {
       mean(xs.map(x => pow(x - m, 2))))
 
   def lift[A, B](f: A => B): Option[A] => Option[B] = _ map f
+
+
+  /*
+   * Exercise 4.3
+   */
+
 }
