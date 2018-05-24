@@ -57,4 +57,11 @@ object ChapterOption {
    * Exercise 4.3
    */
 
+  def map2[A, B, C](oa: Option[A],
+                    ob: Option[B])(f: (A, B) => C): Option[C] = {
+    for {
+      a <- oa
+      b <- ob
+      } yield f(a, b)
+  }
 }
