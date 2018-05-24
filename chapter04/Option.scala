@@ -96,4 +96,13 @@ object ChapterOption {
     case Nil => Some(Nil)
     case h :: t => h.flatMap(x => sequence__(t).map(s => x::s))
   }
+
+
+  /*
+   * Exercise 4.5
+   */
+
+  type OList[B] = Option[List[B]]
+  def traverse[A, B](a: List[A])(f: A => Option[B]): OList[B] =
+    a.foldRight[OList[B]](Some(Nil))((a, b) => map2(f(a), b)(_ :: _))
 }
