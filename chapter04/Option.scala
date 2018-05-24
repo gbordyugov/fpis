@@ -86,4 +86,8 @@ object ChapterOption {
     }
     case None :: _       => None
   }
+
+  def sequence_[A](a: List[Option[A]]): Option[List[A]] =
+    a.foldRight[Option[List[A]]](Some(Nil))((x, y) => map2(x, y)(_ :: _))
+
 }
