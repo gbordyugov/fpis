@@ -88,6 +88,12 @@ object ChapterOption {
   }
 
   def sequence_[A](a: List[Option[A]]): Option[List[A]] =
-    a.foldRight[Option[List[A]]](Some(Nil))((x, y) => map2(x, y)(_ :: _))
+    a.foldRight[Option[List[A]]](Some(Nil))((x,y) =>
+      map2(x, y)(_ :: _)
+    )
 
+  def sequence__[A](a: List[Option[A]]): Option[List[A]] = a match {
+    case Nil => Some(Nil)
+    case h :: t => h.flatMap(x => sequence__(t).map(s => x::s))
+  }
 }
