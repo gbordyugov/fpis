@@ -64,4 +64,11 @@ object ChapterOption {
       b <- ob
       } yield f(a, b)
   }
+
+  def map2_[A, B, C](oa: Option[A],
+                     ob: Option[B])(f: (A, B) => C): Option[C] =
+    (oa, ob) match {
+      case (Some(a), Some(b)) => Some(f(a, b))
+      case _                  => None
+    }
 }
