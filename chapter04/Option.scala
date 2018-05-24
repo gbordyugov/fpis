@@ -111,4 +111,7 @@ object ChapterOption {
       case Nil => Some(Nil)
       case h :: t => f(h) flatMap (x => traverse_(t)(f) map (x :: _))
     }
+
+  def sequence___[A](a: List[Option[A]]): Option[List[A]] =
+    traverse(a)(x => x)
 }
