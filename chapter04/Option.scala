@@ -105,4 +105,10 @@ object ChapterOption {
   type OList[B] = Option[List[B]]
   def traverse[A, B](a: List[A])(f: A => Option[B]): OList[B] =
     a.foldRight[OList[B]](Some(Nil))((a, b) => map2(f(a), b)(_ :: _))
+
+  def traverse_[A, B](a: List[A])(f: A => Option[B]): OList[B] =
+    a match {
+      case Nil => Some(Nil)
+      case h :: t => f(h) flatMap (x => traverse_(t)(f) map (x :: _))
+    }
 }
