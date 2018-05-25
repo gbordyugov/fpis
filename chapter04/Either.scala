@@ -17,6 +17,12 @@ object ChapterEither {
         case Left(b)  => Left(b)
       }
 
+    def orElse[EE >: E, B >: A](b: => Either[EE, B]): Either[EE, B] =
+      this match {
+        case Right(a) => Right(a)
+        case Left(_)  => b
+      }
+
 
   }
 
