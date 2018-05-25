@@ -51,7 +51,7 @@ object StrictnessAndLazyness {
         case Empty => acc
         case Cons(h, t) => go(t(), h() :: acc)
       }
-      go(this, List.empty)
+      go(this, List.empty).reverse
     }
   }
 
