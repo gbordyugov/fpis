@@ -1,7 +1,7 @@
+import scala.{Either => _, Right => _, Left => _, _}
+
 object ChapterEither {
   sealed trait Either[+E, +A] {
-
-
     /*
      * Exercise 4.6
      */
@@ -23,13 +23,20 @@ object ChapterEither {
         case Left(_)  => b
       }
 
-    def map2[EE >:E, B, C](b: Either[EE, B]) (f: (A, B) => C): Either[EE, C] = (this, b) match {
+    def map2[EE >:E, B, C](b: Either[EE, B])
+      (f: (A, B) => C): Either[EE, C] = (this, b) match {
       case (Right(a), Right(b)) => Right(f(a, b))
       case (Right(a), Left(e))  => Left(e)
       case (Left(e), _)         => Left(e)
     }
 
+  }
 
+  case class Left[+E] (value: E) extends Either[E, Nothing]
+  case class Right[+A](value: A) extends Either[Nothing, A]
+
+
+  object Either{
     /*
      * Exercise 4.7
      */
@@ -51,8 +58,7 @@ object ChapterEither {
       }
     }
 
+    def seq__[E, A](es: List[Either[E, A]]): Either[E, List[A]] =
+      ???
   }
-
-  case class Left[+E] (value: E) extends Either[E, Nothing]
-  case class Right[+A](value: A) extends Either[Nothing, A]
 }
