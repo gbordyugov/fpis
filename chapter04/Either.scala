@@ -1,5 +1,3 @@
-import scala.{Either => _, Right => _, Left => _, _}
-
 object ChapterEither {
   sealed trait Either[+E, +A] {
     /*
