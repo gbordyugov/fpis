@@ -40,8 +40,16 @@ object ChapterEither {
       }
 
     def seq_[E, A](es: List[Either[E, A]]): Either[E, List[A]] =
-      es.foldRight[Either[E, List[A]]](Right(Nil)){ (e, l) => e.map2(l)(_ :: _) }
+      es.foldRight[Either[E, List[A]]](Right(Nil)){ (e, l) =>
+        e.map2(l)(_ :: _)
+      }
 
+    def traverse[E, A, B](as: List[A])
+      (f: A => Either[E, B]): Either[E, List[B]] = {
+      as.foldRight[Either[E, List[B]]](Right(Nil)){ (a, l) =>
+        f(a).flatMap(a_ => l.map(a_ :: _))
+      }
+    }
 
   }
 
