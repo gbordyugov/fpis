@@ -39,6 +39,8 @@ object ChapterEither {
         e.flatMap(e_ => l.map (l_ => e_ :: l_))
       }
 
+    def seq_[E, A](es: List[Either[E, A]]): Either[E, List[A]] =
+      es.foldRight[Either[E, List[A]]](Right(Nil)){ (e, l) => e.map2(l)(_ :: _) }
 
 
   }
