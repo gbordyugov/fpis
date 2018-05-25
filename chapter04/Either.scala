@@ -59,5 +59,12 @@ object ChapterEither {
 
     def seq__[E, A](es: List[Either[E, A]]): Either[E, List[A]] =
       traverse(es)(x => x)
+    
+
+    /*
+     * Exercise 4.8
+     *
+     * this one is rather a design question
+     */
   }
 }
