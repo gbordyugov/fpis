@@ -34,7 +34,27 @@ object StrictnessAndLazyness {
       case Empty => None
       case Cons(h, t) => Some(h()) // explicit forcing
     }
+
+
+    /*
+     * Exercise 5.1
+     */
+
+    def toListBad: List[A] = this match {
+      case Empty => Nil
+      case Cons(h, t) => h() :: (t().toListBad)
+    }
+
+    def toList: List[A] = {
+      @annotation.tailrec
+      def go[A](as: Stream[A], acc: List[A]): List[A] = as match {
+        case Empty => acc
+        case Cons(h, t) => go(t(), h() :: acc)
+      }
+      go(this, List.empty)
+    }
   }
+
   case object Empty extends Stream[Nothing]
   // the explicit thunks are a technical necessity here
   case class Cons[+A](h: () => A, t: () => Stream[A])
