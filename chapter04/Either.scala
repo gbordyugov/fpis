@@ -23,6 +23,15 @@ object ChapterEither {
         case Left(_)  => b
       }
 
+    def map2[EE >:E, B, C](b: Either[EE, B])
+      (f: (A, B) => C): Either[EE, C] = (this, b) match {
+        case (Right(a), Right(b)) => Right(f(a, b))
+        case (Right(a), Left(e))  => Left(e)
+        case (Left(e), _)         => Left(e)
+      }
+
+
+
 
   }
 
