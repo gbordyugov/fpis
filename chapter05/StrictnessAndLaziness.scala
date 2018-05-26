@@ -72,6 +72,17 @@ object StrictnessAndLazyness {
        case Cons(h, t) if n == 0 => this
        case Cons(h, t)           => t().drop(n-1)
      }
+
+
+     /*
+      * Exercise 5.3
+      */
+
+     def takeWhile(p: A => Boolean): Stream[A] = this match {
+       case Empty => Empty
+       case Cons(h, t) if p(h()) => Cons(h, () => t().takeWhile(p))
+       case _ => Empty
+     }
   }
 
   case object Empty extends Stream[Nothing]
