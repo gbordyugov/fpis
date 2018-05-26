@@ -94,6 +94,9 @@ object StrictnessAndLazyness {
       case Empty => z
       case Cons(h, t) => f(h(), t().foldRight(z)(f))
     }
+
+    def exists_(p: A => Boolean): Boolean =
+      foldRight(false)((a, b) => p(a) || b)
   }
 
   case object Empty extends Stream[Nothing]
