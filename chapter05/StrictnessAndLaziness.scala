@@ -59,30 +59,30 @@ object StrictnessAndLazyness {
      * Exercise 5.2
      */
 
-     def take(n: Long): Stream[A] = n match {
-       case 0          => Empty
-       case m if m > 0 => this match {
-         case Empty      => ???
-         case Cons(h, t) => Cons(h, () => t().take(m - 1))
-       }
-     }
+    def take(n: Long): Stream[A] = n match {
+      case 0          => Empty
+      case m if m > 0 => this match {
+        case Empty      => ???
+        case Cons(h, t) => Cons(h, () => t().take(m - 1))
+      }
+    }
 
-     def drop(n: Long): Stream[A] = this match {
-       case Empty => Empty
-       case Cons(h, t) if n == 0 => this
-       case Cons(h, t)           => t().drop(n-1)
-     }
+    def drop(n: Long): Stream[A] = this match {
+      case Empty => Empty
+      case Cons(h, t) if n == 0 => this
+      case Cons(h, t)           => t().drop(n-1)
+    }
 
 
-     /*
-      * Exercise 5.3
-      */
+    /*
+     * Exercise 5.3
+     */
 
-     def takeWhile(p: A => Boolean): Stream[A] = this match {
-       case Empty => Empty
-       case Cons(h, t) if p(h()) => Cons(h, () => t().takeWhile(p))
-       case _ => Empty
-     }
+    def takeWhile(p: A => Boolean): Stream[A] = this match {
+      case Empty => Empty
+      case Cons(h, t) if p(h()) => Cons(h, () => t().takeWhile(p))
+      case _ => Empty
+    }
   }
 
   case object Empty extends Stream[Nothing]
