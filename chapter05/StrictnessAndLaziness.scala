@@ -53,6 +53,15 @@ object StrictnessAndLazyness {
       }
       go(this, List.empty).reverse
     }
+
+
+    /*
+     * Exercise 5.2
+     */
+
+     def take(n: Long): Stream[A] = ???
+
+     def drop(n: Long): Stream[A] = ???
   }
 
   case object Empty extends Stream[Nothing]
