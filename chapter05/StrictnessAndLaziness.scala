@@ -59,7 +59,13 @@ object StrictnessAndLazyness {
      * Exercise 5.2
      */
 
-     def take(n: Long): Stream[A] = ???
+     def take(n: Long): Stream[A] = n match {
+       case 0          => Empty
+       case m if m > 0 => this match {
+         case Empty      => ???
+         case Cons(h, t) => Cons(h, () => t().take(m - 1))
+       }
+     }
 
      def drop(n: Long): Stream[A] = ???
   }
