@@ -67,7 +67,11 @@ object StrictnessAndLazyness {
        }
      }
 
-     def drop(n: Long): Stream[A] = ???
+     def drop(n: Long): Stream[A] = this match {
+       case Empty => Empty
+       case Cons(h, t) if n == 0 => this
+       case Cons(h, t)           => t().drop(n-1)
+     }
   }
 
   case object Empty extends Stream[Nothing]
