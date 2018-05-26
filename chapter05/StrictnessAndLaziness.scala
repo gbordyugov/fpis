@@ -88,6 +88,12 @@ object StrictnessAndLazyness {
       case Empty => false
       case Cons(h, t) => p(h()) || t().exists(p)
     }
+
+    def foldRight[B](z: => B)(f: (A, => B) => B): B =
+      this match {
+      case Empty => z
+      case Cons(h, t) => f(h(), t().foldRight(z)(f))
+    }
   }
 
   case object Empty extends Stream[Nothing]
