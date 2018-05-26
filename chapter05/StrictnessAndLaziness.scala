@@ -83,6 +83,11 @@ object StrictnessAndLazyness {
       case Cons(h, t) if p(h()) => Cons(h, () => t().takeWhile(p))
       case _ => Empty
     }
+    
+    def exists(p: A => Boolean): Boolean = this match {
+      case Empty => false
+      case Cons(h, t) => p(h()) || t().exists(p)
+    }
   }
 
   case object Empty extends Stream[Nothing]
