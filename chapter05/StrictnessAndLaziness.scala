@@ -97,6 +97,14 @@ object StrictnessAndLazyness {
 
     def exists_(p: A => Boolean): Boolean =
       foldRight(false)((a, b) => p(a) || b)
+
+
+    /*
+     * Exercise 5.4
+     */
+
+    def forAll(p: A => Boolean): Boolean =
+      foldRight(false)((a, b) => p(a) && b)
   }
 
   case object Empty extends Stream[Nothing]
