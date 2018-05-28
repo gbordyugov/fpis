@@ -216,7 +216,7 @@ object StrictnessAndLazyness {
      * Exercise 5.11
      */
 
-    def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
+    def badUnfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
       lazy val as: Stream[Option[(A, S)]] =
         cons(f(z), as.map(x => x.map(_._2).flatMap(f)))
       lazy val bs = as.takeWhile { a =>
@@ -227,5 +227,11 @@ object StrictnessAndLazyness {
       }
       bs.map(oas => oas.get._1)
     }
+
+    def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] =
+      f(z) match {
+        case None         => empty
+        case Some((a, s)) => cons(a, unfold(s)(f))
+      }
   }
 }
