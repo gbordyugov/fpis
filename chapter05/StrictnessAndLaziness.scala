@@ -182,7 +182,6 @@ object StrictnessAndLazyness {
         empty
       else
         cons(as.head, apply(as.tail: _*))
-    }
 
 
     /*
@@ -190,7 +189,8 @@ object StrictnessAndLazyness {
      */
 
     def constant[A](a: A): Stream[A] = {
-      lazy val s = Cons(() => a, () = > s)
+      lazy val s: Stream[A] = Cons(() => a, () => s)
       s
     }
+  }
 }
