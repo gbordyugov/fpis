@@ -210,5 +210,16 @@ object StrictnessAndLazyness {
         cons((0, 1), s.map(a => (a._1 + a._2, a._1)))
       s.map(_._1)
     }
+
+
+    /*
+     * Exercise 5.11
+     */
+
+    def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
+      lazy val as: Stream[Option[(A, S)]] =
+        cons(f(z), as.map(x => x.map(_._2).flatMap(f)))
+      as.map(oas => oas.map(as => as._1).getOrElse(empty: Stream[A]))
+    }
   }
 }
