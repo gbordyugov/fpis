@@ -105,6 +105,14 @@ object StrictnessAndLazyness {
 
     def forAll(p: A => Boolean): Boolean =
       foldRight(false)((a, b) => p(a) && b)
+
+
+    /*
+     * Exercise 5.5
+     */
+
+    def takeWhile_(p: A => Boolean): Stream[A] =
+      foldRight(???)(???)
   }
 
   case object Empty extends Stream[Nothing]
