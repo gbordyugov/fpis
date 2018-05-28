@@ -192,5 +192,12 @@ object StrictnessAndLazyness {
       lazy val s: Stream[A] = Cons(() => a, () => s)
       s
     }
+
+
+    /*
+     * Exercise 5.9
+     */
+    
+    def from(n: Int): Stream[Int] = cons(n, from(n + 1))
   }
 }
