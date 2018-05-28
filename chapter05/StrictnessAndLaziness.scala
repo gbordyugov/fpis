@@ -112,7 +112,12 @@ object StrictnessAndLazyness {
      */
 
     def takeWhile_(p: A => Boolean): Stream[A] =
-      foldRight(???)(???)
+      foldRight(Empty: Stream[A]) {(a, l) =>
+        if (p(a))
+          Cons(() => a, () => l)
+        else
+          Empty
+      }
   }
 
   case object Empty extends Stream[Nothing]
