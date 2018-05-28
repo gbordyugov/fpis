@@ -118,6 +118,18 @@ object StrictnessAndLazyness {
         else
           Empty
       }
+
+
+    /*
+     * Exercise 5.6
+     */
+
+    def headOption1ViaFold: Option[A] =
+      foldRight(None: Option[A])((a, oa) => oa match {
+          case None => Some(a)
+          case _    => None
+        }
+      )
   }
 
   case object Empty extends Stream[Nothing]
