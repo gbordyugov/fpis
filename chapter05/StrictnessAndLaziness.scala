@@ -206,8 +206,9 @@ object StrictnessAndLazyness {
      */
 
     def fibs: Stream[Int] = {
-      lazy val s: Stream[(Int, Int)] = ???
-      s
+      lazy val s: Stream[(Int, Int)] =
+        cons((0, 1), s.map(a => (a._1 + a._2, a._1)))
+      s.map(_._1)
     }
   }
 }
