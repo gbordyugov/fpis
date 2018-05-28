@@ -158,6 +158,9 @@ object StrictnessAndLazyness {
     // append appends to the tail
     def append[B >: A](s: => Stream[B]): Stream[B] =
       foldRight(s)((h, t) => cons(h, t))
+
+    def flatMap[B](f: A => Stream[B]): Stream[B] =
+      foldRight(empty: Stream[B])((a, as) => f(a).append(as))
   }
 
   case object Empty extends Stream[Nothing]
