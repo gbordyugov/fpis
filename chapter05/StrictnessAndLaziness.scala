@@ -151,6 +151,13 @@ object StrictnessAndLazyness {
         else
           sa
       }
+
+    // I accept that I cheated here, especially on the
+    // co-/contravariance theme
+    // we accept streams of supertypes here
+    // append appends to the tail
+    def append[B >: A](s: => Stream[B]): Stream[B] =
+      foldRight(s)((h, t) => cons(h, t))
   }
 
   case object Empty extends Stream[Nothing]
