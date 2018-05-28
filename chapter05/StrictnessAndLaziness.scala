@@ -29,6 +29,7 @@ object StrictnessAndLazyness {
       0
   }
 
+  import Stream._
   sealed trait Stream[+A] {
     def headOption: Option[A] = this match {
       case Empty => None
@@ -114,7 +115,7 @@ object StrictnessAndLazyness {
     def takeWhile_(p: A => Boolean): Stream[A] =
       foldRight(Empty: Stream[A]) {(a, l) =>
         if (p(a))
-          Cons(() => a, () => l)
+          cons(a, l)
         else
           Empty
       }
@@ -141,7 +142,7 @@ object StrictnessAndLazyness {
      */
 
     def map[B](f: A => B): Stream[B] =
-      foldRight(Empty: Stream[B])((a, sb) => Cons(()=>f(a), ()=>sb))
+      foldRight(Empty: Stream[B])((a, sb) => cons(f(a), sb))
   }
 
   case object Empty extends Stream[Nothing]
