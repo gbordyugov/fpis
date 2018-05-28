@@ -143,6 +143,14 @@ object StrictnessAndLazyness {
 
     def map[B](f: A => B): Stream[B] =
       foldRight(Empty: Stream[B])((a, sb) => cons(f(a), sb))
+
+    def filter(p: A => Boolean): Stream[A] =
+      foldRight(Empty: Stream[A]){ (a, sa) =>
+        if (p(a))
+          cons(a, sa)
+        else
+          sa
+      }
   }
 
   case object Empty extends Stream[Nothing]
