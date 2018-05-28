@@ -134,6 +134,14 @@ object StrictnessAndLazyness {
     // shorter version
     def headOption1ViaFoldBetter: Option[A] =
       foldRight(None: Option[A])((a, _) => Some(a))
+
+
+    /*
+     * Exercise 5.7
+     */
+
+    def map[B](f: A => B): Stream[B] =
+      foldRight(Empty: Stream[B])((a, sb) => Cons(()=>f(a), ()=>sb))
   }
 
   case object Empty extends Stream[Nothing]
