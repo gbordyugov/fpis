@@ -248,5 +248,7 @@ object StrictnessAndLazyness {
     def constantByUnfold[A](a: A): Stream[A] =
       unfold(a)(s => Some(a, a))
 
+    def onesByUnfold: Stream[Int] = constantByUnfold(1: Int)
+
   }
 }
