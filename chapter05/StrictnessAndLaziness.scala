@@ -174,6 +174,12 @@ object StrictnessAndLazyness {
         }
       }
 
+    def takeByUnfold(i: Int): Stream[A] =
+      unfold((i, this)) {
+        case (j, Cons(h, t)) if j > 0 => Some((h(), (j-1, t())))
+        case _                        => None
+      }
+
     def takeWhileByUnfold(p: A => Boolean): Stream[A] =
       unfold(this) { _ match {
           case Cons(h, t) if p(h()) => Some((h(), t()))
