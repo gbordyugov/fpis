@@ -241,5 +241,9 @@ object StrictnessAndLazyness {
 
     def fibsByUnfold: Stream[Int] =
       unfold((0, 1)){ s => Some(s._1, (s._1 + s._2, s._1)) }
+    
+    def fromByUnfold(i: Int): Stream[Int] =
+      unfold(i)(s => Some(s, s+1))
+
   }
 }
