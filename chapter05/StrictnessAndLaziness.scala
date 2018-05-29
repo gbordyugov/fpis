@@ -233,5 +233,13 @@ object StrictnessAndLazyness {
         case None         => empty
         case Some((a, s)) => cons(a, unfold(s)(f))
       }
+
+
+    /*
+     * Exercise 5.12
+     */
+
+    def fibsByUnfold: Stream[Int] =
+      unfold((0, 1)){ s => Some(s._1, (s._1 + s._2, s._1)) }
   }
 }
