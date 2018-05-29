@@ -161,6 +161,19 @@ object StrictnessAndLazyness {
 
     def flatMap[B](f: A => Stream[B]): Stream[B] =
       foldRight(empty: Stream[B])((a, as) => f(a).append(as))
+
+
+    /*
+     * Exercise 5.13
+     */
+
+    def mapByUnfold[B](f: A => B): Stream[B] =
+      unfold(this) { _ match {
+          case Empty      => None
+          case Cons(h, t) => Some((f(h()), t()))
+        }
+      }
+
   }
 
   case object Empty extends Stream[Nothing]
@@ -249,6 +262,5 @@ object StrictnessAndLazyness {
       unfold(a)(s => Some(a, a))
 
     def onesByUnfold: Stream[Int] = constantByUnfold(1: Int)
-
   }
 }
