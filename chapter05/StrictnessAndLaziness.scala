@@ -84,7 +84,7 @@ object StrictnessAndLazyness {
       case Cons(h, t) if p(h()) => Cons(h, () => t().takeWhile(p))
       case _ => Empty
     }
-    
+
     def exists(p: A => Boolean): Boolean = this match {
       case Empty => false
       case Cons(h, t) => p(h()) || t().exists(p)
@@ -195,6 +195,18 @@ object StrictnessAndLazyness {
           case _                        => None
         }
       }
+
+    def zipAll[B](that: Stream[B]): Stream[(Option[A], Option[B])] =
+      unfold((this, that)) { _ match  {
+          case (Cons(a, b), Cons(x, y)) =>
+            Some(((Some(a()), Some(x())), (b(), y())))
+          case (Cons(a, b), Empty)      =>
+            Some(((Some(a()), None), (b(), empty)))
+          case (Empty, Cons(x, y))      =>
+            Some(((None, Some(x())), (empty, y())))
+          case _                        => None
+        }
+      }
   }
 
   case object Empty extends Stream[Nothing]
@@ -231,7 +243,7 @@ object StrictnessAndLazyness {
     /*
      * Exercise 5.9
      */
-    
+
     def from(n: Int): Stream[Int] = cons(n, from(n + 1))
 
 
@@ -275,7 +287,7 @@ object StrictnessAndLazyness {
 
     def fibsByUnfold: Stream[Int] =
       unfold((0, 1)){ s => Some(s._1, (s._1 + s._2, s._1)) }
-    
+
     def fromByUnfold(i: Int): Stream[Int] =
       unfold(i)(s => Some(s, s+1))
 
