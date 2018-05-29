@@ -186,6 +186,15 @@ object StrictnessAndLazyness {
           case _                    => None
         }
       }
+
+    def zipWithByUnfold[B, C](that: Stream[B])
+      (f: (A, B) => C): Stream[C] =
+      unfold((this, that)) { _ match {
+          case (Cons(a, b), Cons(x, y)) =>
+            Some((f(a(), x()), (b(), y())))
+          case _                        => None
+        }
+      }
   }
 
   case object Empty extends Stream[Nothing]
