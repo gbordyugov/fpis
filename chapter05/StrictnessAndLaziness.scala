@@ -207,6 +207,16 @@ object StrictnessAndLazyness {
           case _                        => None
         }
       }
+
+
+    /*
+     * Exercise 5.14
+     */
+    def startsWith[A](that: Stream[A]): Boolean = (this, that) match {
+      case (_, Empty)                             => true
+      case (Cons(a, b), Cons(x, y)) if a() == (x) => b().startsWith(y())
+      case _                                      => false
+    }
   }
 
   case object Empty extends Stream[Nothing]
