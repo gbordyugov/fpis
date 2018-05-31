@@ -212,11 +212,18 @@ object StrictnessAndLazyness {
     /*
      * Exercise 5.14
      */
+
     def startsWith[A](that: Stream[A]): Boolean = (this, that) match {
       case (_, Empty)                             => true
       case (Cons(a, b), Cons(x, y)) if a() == (x) => b().startsWith(y())
       case _                                      => false
     }
+
+    def length: Long = this.foldRight(0)((_, c) => c + 1)
+
+    def startsWith1[A](that: Stream[A]): Boolean =
+      this.zipWithByUnfold(that)(_ == _)
+      .takeWhileByUnfold(x => x).length == that.length
   }
 
   case object Empty extends Stream[Nothing]
