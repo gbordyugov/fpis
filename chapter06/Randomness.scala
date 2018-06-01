@@ -38,4 +38,14 @@ object Randomness {
       case _                    => (0,  rng2)
     }
   }
+
+
+  /*
+   * Exercise 6.2
+   */
+
+  def double(rng1: RNG): (Double, RNG) = {
+    val (i, rng2) = nonNegativeInt(rng1)
+    (i.toDouble / Int.MaxValue.toDouble, rng2)
+  }
 }
