@@ -85,4 +85,24 @@ object Randomness {
       ((i::ls), rng3)
     }
   }
+
+
+  /*
+   * note the pattern RNG => (A, RNG)
+   */
+
+  type Rand[+A] = RNG => (A, RNG)
+
+  val int: Rand[Int] = _.nextInt
+
+
+  /*
+   * Aim: to implement a combinator library, i.e. a couple of basic
+   * abstractions plus means of combinations
+   */
+
+  def unit[A](a: A): Rand[A] =
+    rng => (a, rng)
+
+  def anotherUnit[A](a: A): Rand[A] = (a, _)
 }
