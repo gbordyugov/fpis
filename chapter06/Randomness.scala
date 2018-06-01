@@ -122,4 +122,16 @@ object Randomness {
 
   def newDouble: Rand[Double] =
     map(nonNegativeInt){ _ / Int.MaxValue.toDouble}
+
+
+  /*
+   * Exercise 6.6
+   */
+
+  def map2[A, B, C](ra: Rand[A], rb: Rand[B])
+    (f: (A, B) => C): Rand[C] = rng1 => {
+    val (a, rng2) = ra(rng1)
+    val (b, rng3) = rb(rng2)
+    (f(a, b), rng3)
+  }
 }
