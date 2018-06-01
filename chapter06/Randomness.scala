@@ -152,4 +152,22 @@ object Randomness {
     val zero: Rand[List[A]] = rng => (List.empty, rng)
     fs.foldRight(zero)((a, b) => map2(a, b)(_ :: _))
   }
+
+
+  /*
+   * A pattern is beginning to emerge: we're progressing towards
+   * implementations that don't explicitly mention or pass along
+   * the RNG value
+   */
+
+
+  /*
+   * Exercise 6.8
+   */
+
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = rng1 => {
+    val (a, rng2) = f(rng1)
+    val (b, rng3) = g(a)(rng2)
+    (b, rng3)
+  }
 }
