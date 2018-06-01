@@ -48,4 +48,27 @@ object Randomness {
     val (i, rng2) = nonNegativeInt(rng1)
     (i.toDouble / Int.MaxValue.toDouble, rng2)
   }
+
+
+  /*
+   * Exercise 6.3
+   */
+
+  def intDouble(rng1: RNG): ((Int, Double), RNG) = {
+    val (i, rng2) = rng1.nextInt
+    val (d, rng3) = double(rng2)
+    ((i, d), rng3)
+  }
+
+  def doubleInt(rng1: RNG): ((Double, Int), RNG) = {
+    val ((i, d), rng2) = intDouble(rng1)
+    ((d, i), rng2)
+  }
+
+  def double3(rng1: RNG): ((Double, Double, Double), RNG) = {
+    val (d1, rng2) = double(rng1)
+    val (d2, rng3) = double(rng2)
+    val (d3, rng4) = double(rng3)
+    ((d1, d2, d3), rng4)
+  }
 }
