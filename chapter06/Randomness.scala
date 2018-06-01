@@ -170,4 +170,16 @@ object Randomness {
     val (b, rng3) = g(a)(rng2)
     (b, rng3)
   }
+
+
+  /*
+   * Exercise 6.9
+   */
+
+  def mapByFlatMap[A, B](a: Rand[A])(f: A => B): Rand[B] =
+    flatMap(a)(a => unit[B](f(a)))
+
+  def map2ByFlatMap[A, B, C](ra: Rand[A], rb: Rand[B])
+    (f: (A, B) => C): Rand[C] =
+    flatMap(ra)(a => flatMap(rb)(b => unit[C](f(a, b))))
 }
