@@ -142,4 +142,14 @@ object Randomness {
   def randIntDouble: Rand[(Int, Double)] = both(int, double)
 
   def randDoubleInt: Rand[(Double, Int)] = both(double, int)
+
+
+  /*
+   * Exercise 6.7
+   */
+
+  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = {
+    val zero: Rand[List[A]] = rng => (List.empty, rng)
+    fs.foldRight(zero)((a, b) => map2(a, b)(_ :: _))
+  }
 }
