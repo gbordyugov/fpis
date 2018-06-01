@@ -194,10 +194,11 @@ object Randomness {
 
   def unit[S, A](a: A): State[S, A] = State(s => (a, s))
 
-  def flatMap[S, A, B](sa: State[S, A])(f: A => B): State[S, B]
+  def map[S, A, B](sa: State[S, A])(f: A => B): State[S, B]
     = State(s1 => {
       val (a, s2) = sa.run(s1)
       (f(a), s2)
       }
     )
+
 }
