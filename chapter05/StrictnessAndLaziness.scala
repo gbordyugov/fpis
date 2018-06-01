@@ -247,8 +247,10 @@ object StrictnessAndLazyness {
      */
 
     def scanRight[B](z: B)(f: (A, B) => B): Stream[B] =
-      this.foldRight(Stream(z)){ (a, bs) =>
-        ???
+      foldRight(Stream(z)){ (a, bs) => bs match {
+          case Cons(h, t) => cons(f(a, h()), bs)
+          case _          => ???
+        }
       }
   }
 
