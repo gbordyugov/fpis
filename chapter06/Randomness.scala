@@ -17,4 +17,11 @@ object Randomness {
       (n, nextRNG)
     }
   }
+
+
+  def randomPair(rng1: RNG): ((Int, Int), RNG) = {
+    val (i1, rng2) = rng1.nextInt
+    val (i2, rng3) = rng2.nextInt
+    ((i1, i2), rng3)
+  }
 }
