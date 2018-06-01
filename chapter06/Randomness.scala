@@ -114,4 +114,12 @@ object Randomness {
 
   def nonNegativeEven: Rand[Int] =
     map(nonNegativeInt)(i => i - i % 2)
+
+
+  /*
+   * Exercise 6.5
+   */
+
+  def newDouble: Rand[Double] =
+    map(nonNegativeInt){ _ / Int.MaxValue.toDouble}
 }
