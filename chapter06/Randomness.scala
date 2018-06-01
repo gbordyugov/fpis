@@ -71,4 +71,18 @@ object Randomness {
     val (d3, rng4) = double(rng3)
     ((d1, d2, d3), rng4)
   }
+
+
+  /*
+   * Exercise 6.4
+   */
+
+  def ints(count: Int)(rng1: RNG): (List[Int], RNG) = count match {
+    case 0 => (List.empty: List[Int], rng1)
+    case n => {
+      val (ls, rng2) = ints(n - 1)(rng1)
+      val (i,  rng3) = rng2.nextInt
+      ((i::ls), rng3)
+    }
+  }
 }
