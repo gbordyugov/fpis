@@ -241,8 +241,15 @@ object StrictnessAndLazyness {
      * Exercise 5.16
      */
 
-    def scanRight[B](z: B)(f: (A, B) => B): Stream[Stream[B]] =
-      ???
+    /*
+     * One could do it like tails above using unfold, but that
+     * implementation would be n^2-complex
+     */
+
+    def scanRight[B](z: B)(f: (A, B) => B): Stream[B] =
+      this.foldRight(Stream(z)){ (a, bs) =>
+        ???
+      }
   }
 
   case object Empty extends Stream[Nothing]
