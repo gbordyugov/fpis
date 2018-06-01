@@ -105,4 +105,13 @@ object Randomness {
     rng => (a, rng)
 
   def anotherUnit[A](a: A): Rand[A] = (a, _)
+
+  def map[A, B](s: Rand[A])(f: A => B): Rand[B] =
+    rng1 => {
+      val (a, rng2) = s(rng1)
+      (f(a), rng2)
+    }
+
+  def nonNegativeEven: Rand[Int] =
+    map(nonNegativeInt)(i => i - i % 2)
 }
