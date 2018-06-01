@@ -235,6 +235,14 @@ object StrictnessAndLazyness {
           case x@Cons(h, t) => Some( ( x, t()) )
         }
       } append Stream(Empty)
+
+
+    /*
+     * Exercise 5.16
+     */
+
+    def scanRight[B](z: B)(f: (A, B) => B): Stream[Stream[B]] =
+      ???
   }
 
   case object Empty extends Stream[Nothing]
