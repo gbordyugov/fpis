@@ -149,7 +149,8 @@ object Randomness {
    */
 
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = {
-    val zero: Rand[List[A]] = rng => (List.empty, rng)
+    // val zero: Rand[List[A]] = rng => (List.empty, rng)
+    val zero = unit[List[A]](List.empty)
     fs.foldRight(zero)((a, b) => map2(a, b)(_ :: _))
   }
 
