@@ -190,7 +190,7 @@ object Randomness {
    * Exercise 6.10
    */
 
-  case class State[S, +A](run: S => (A, S)) {
-    def unit(a: A) = State(s: S => (a, s))
-  }
+  case class State[S, +A](run: S => (A, S))
+
+  def unit[S, A](a: A): State[S, A] = State(s => (a, s))
 }
