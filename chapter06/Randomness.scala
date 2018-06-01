@@ -183,4 +183,14 @@ object Randomness {
   def map2ByFlatMap[A, B, C](ra: Rand[A], rb: Rand[B])
     (f: (A, B) => C): Rand[C] =
     flatMap(ra)(a => flatMap(rb)(b => unit[C](f(a, b))))
+
+
+
+  /*
+   * Exercise 6.10
+   */
+
+  case class State[S, +A](run: S => (A, S)) {
+    def unit(a: A) = State(s: S => (a, s))
+  }
 }
