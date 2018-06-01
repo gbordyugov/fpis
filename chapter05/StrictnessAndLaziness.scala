@@ -224,6 +224,17 @@ object StrictnessAndLazyness {
     def startsWith1[A](that: Stream[A]): Boolean =
       this.zipWithByUnfold(that)(_ == _)
       .takeWhileByUnfold(x => x).length == that.length
+
+    /*
+     * Exercise 5.15
+     */
+
+    def tails: Stream[Stream[A]] =
+      unfold(this) { _ match {
+          case Empty        => None
+          case x@Cons(h, t) => Some( ( x, t()) )
+        }
+      } append Stream(Empty)
   }
 
   case object Empty extends Stream[Nothing]
