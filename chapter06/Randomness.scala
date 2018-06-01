@@ -216,9 +216,10 @@ object Randomness {
         (f(a, b), s3)
       }
     }
-    /*
-    def sequence[S, A](sas: List[State[S, A]): State[S, List[A]] =
-      sas.foldRight(unit[List[A]])((a, b) => map2(a, b)(_ :: _))
-    */
+
+    def sequence[S, A](sas: List[State[S, A]]): State[S, List[A]] =
+      sas.foldRight(unit[S, List[A]](List.empty)) { (a, b) =>
+        map2(a, b)(_ :: _)
+      }
   }
 }
