@@ -222,4 +222,24 @@ object Randomness {
         map2(a, b)(_ :: _)
       }
   }
+
+
+  /*
+   * Exercise 6.13
+   */
+
+  trait Input
+  case object Coin extends Input
+  case object Turn extends Input
+
+  case class Machine(locked: Boolean, candies: Int, coins: Int)
+
+  def update(i: Input, m: Machine): Machine = (i, m) match {
+    case (_, Machine(_, 0, _)) => m
+    case (Turn, Machine(true,  _, _)) => m
+    case (Coin, Machine(false, _, _)) => m
+    case (Turn, Machine(false, ca, co)) => Machine(true, ca-1, co)
+    case (coin, Machine(true, ca, co)) if ca > 0 =>
+      Machine(false, ca, co)
+  }
 }
