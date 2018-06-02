@@ -239,7 +239,12 @@ object Randomness {
     case (Turn, Machine(true,  _, _)) => m
     case (Coin, Machine(false, _, _)) => m
     case (Turn, Machine(false, ca, co)) => Machine(true, ca-1, co)
-    case (coin, Machine(true, ca, co)) if ca > 0 =>
-      Machine(false, ca, co)
+    case (Coin, Machine(true, ca, co)) if ca > 0 =>
+      Machine(false, ca, co+1)
+  }
+
+  def simulateMachine(inputs: List[Input]): State[Machine, (Int,Int)] = {
+    ???
+    // val actions = inputs.map { i => State(m =>
   }
 }
