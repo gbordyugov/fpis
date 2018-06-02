@@ -266,5 +266,12 @@ object Randomness {
 
     val tmp = simulate(List(Coin, Turn, Coin, Turn))
       .run(Machine(true, 10, 10))
+
+    /*
+     * what I learned here:
+     * State[S, A] describe really the transitions, not the underlying
+     * state per se. It has its only member, which is a function,
+     * by applying to a state, we modify it
+     */
   }
 }
