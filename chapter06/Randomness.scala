@@ -237,29 +237,34 @@ object Randomness {
    * Exercise 6.13
    */
 
-  trait Input
-  case object Coin extends Input
-  case object Turn extends Input
+  object Machine {
+    import State._
 
-  case class Machine(locked: Boolean, candies: Int, coins: Int)
+    trait Input
+    case object Coin extends Input
+    case object Turn extends Input
 
-  def update(i: Input, m: Machine): Machine = (i, m) match {
-    case (_, Machine(_, 0, _)) => m
-    case (Turn, Machine(true,  _, _)) => m
-    case (Coin, Machine(false, _, _)) => m
-    case (Turn, Machine(false, ca, co)) => Machine(true, ca-1, co)
-    case (Coin, Machine(true, ca, co)) if ca > 0 =>
-      Machine(false, ca, co+1)
-  }
+    case class Machine(locked: Boolean, candies: Int, coins: Int)
 
-  def simulateMachine(inputs: List[Input]): State[Machine, (Int,Int)] = {
-    val actions = inputs.map { i =>
-      State[Machine, (Int, Int)] { m => {
-          val nm = update(i, m)
-          ((nm.candies, nm.coins), nm)
-        }
-      }
+    def update(i: Input)(m: Machine): Machine = (i, m) match {
+      case (_, Machine(_, 0, _)) => m
+      case (Turn, Machine(true,  _, _)) => m
+      case (Coin, Machine(false, _, _)) => m
+      case (Turn, Machine(false, ca, co)) => Machine(true, ca-1, co)
+      case (Coin, Machine(true, ca, co)) if ca > 0 =>
+        Machine(false, ca, co+1)
     }
-    ???
+
+    def modifyMachine(i: Input): State[Machine, Unit] =
+      modify[Machine](update(i)(_))
+
+    type Inputs = List[Input]
+    def simulate(inputs: Inputs): State[Machine, (Int,Int)] = for {
+      _ <- State.sequence[Machine, Unit](inputs.map(modifyMachine))
+      m <- get
+    } yield ((m.candies, m.coins))
+
+    val tmp = simulate(List(Coin, Turn, Coin, Turn))
+      .run(Machine(true, 10, 10))
   }
 }
