@@ -206,7 +206,7 @@ object Randomness {
     }
   }
 
-  object State{
+  object State {
     def unit[S, A](a: A): State[S, A] = State(s => (a, s))
 
     def map2[S, A, B, C](sa: State[S, A], sb: State[S, B])
@@ -223,6 +223,15 @@ object Randomness {
       }
   }
 
+
+  def modify[S](f: S => S): State[S, Unit] = for {
+    s <- get
+    _ <- set(f(s))
+  } yield ()
+
+  def get[S]: State[S, S] = State(s => (s, s))
+
+  def set[S](s: S): State[S, Unit] = State(_ => ((), s))
 
   /*
    * Exercise 6.13
@@ -244,7 +253,13 @@ object Randomness {
   }
 
   def simulateMachine(inputs: List[Input]): State[Machine, (Int,Int)] = {
+    val actions = inputs.map { i =>
+      State[Machine, (Int, Int)] { m => {
+          val nm = update(i, m)
+          ((nm.candies, nm.coins), nm)
+        }
+      }
+    }
     ???
-    // val actions = inputs.map { i => State(m =>
   }
 }
