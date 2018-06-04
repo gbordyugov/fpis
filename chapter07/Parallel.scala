@@ -27,6 +27,9 @@ object Parallel {
     def unit[A](a: A): Par[A] =
       (es: ExecutorService) => UnitFuture(a)
 
+    def lazyUnit[A](a: => A): Par[A] =
+      fork(unit(a))
+
 
     private case class UnitFuture[A](get: A) extends Future[A] {
       def isDone = true
@@ -93,5 +96,12 @@ object Parallel {
          */
         def call = a(es).get
       })
+
+    /*
+     * Exercise 7.4
+     */
+
+    def asyncF[A, B](f: A => B): A => Par[B] =
+      a => lazyUnit(f(a))
   }
 }
