@@ -1,4 +1,5 @@
-import java.util.concurrent.{ExecutorService, Future, TimeUnit}
+import java.util.concurrent.{ExecutorService, Future, TimeUnit,
+  Callable}
 
 object Parallel {
 
@@ -40,5 +41,14 @@ object Parallel {
       val bf = b(es)
       UnitFuture(f(af.get, bf.get))
     }
+
+
+    def fork[A](a: Par[A]): Par[A] =
+      es => es.submit(new Callable[A] {
+        /*
+         * this will block the caller's thread
+         */
+        def call = a(es).get
+      })
   }
 }
