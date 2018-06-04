@@ -107,5 +107,18 @@ object Parallel {
 
     def map[A, B](pa: Par[A])(f: A => B): Par[B] =
       map2(pa, unit(()))((a, _) => f(a))
+
+
+    /*
+     * Exercise 7.5
+     */
+
+    def sequence[A](ps: List[Par[A]]): Par[List[A]] =
+      ps.foldRight(unit(List.empty: List[A]))
+        (???)
+      /*
+      ps.foldRight(unit(List.empty: List[A]))
+        ((a, b) => map2(a, b)(_ :: _))
+       */
   }
 }
