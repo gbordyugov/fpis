@@ -37,6 +37,17 @@ object Parallel {
 
 
     /*
+     * Exercise 7.3
+     */
+
+    def map2[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C): Par[C] =
+      es => {
+      val fa = a(es)
+      val fb = b(es)
+      Map2Future(fa, fb)(f)
+    }
+
+    /*
      * for Exercise 7.3, cheated from the companion book
      */
     private case class Map2Future[A, B, C](fa: Future[A],
@@ -67,7 +78,7 @@ object Parallel {
       }
     }
 
-    def map2[A, B, C](a: Par[A], b: Par[B])
+    def map2Old[A, B, C](a: Par[A], b: Par[B])
       (f: (A, B) => C): Par[C] = (es: ExecutorService) => {
       val af = a(es)
       val bf = b(es)
