@@ -35,6 +35,34 @@ object Parallel {
       def cancel(evenIfRunning: Boolean): Boolean = false
     }
 
+
+    /*
+     * for Exercise 7.3, cheated from the companion book
+     */
+    private case class Map2Future[A, B, C](fa: Future[A],
+      fb: Future[B])(f: (A, B) => C) extends Future[C] {
+
+      @volatile
+      var cache: Option[C] = None
+      def isDone = ! cache.isEmpty
+      def get = compute(Long.MaxValue)
+      def get(timeout: Long, units: TimeUnit) =
+        compute(TimeUnit.MILLISECONDS.convert(timeout, units))
+      def isCancelled = fa.isCancelled || fb.isCancelled
+      def cancel(evenIfRunning: Boolean) =
+        fa.cancel(evenIfRunning) && fb.cancel(evenIfRunning)
+
+      private def compute(timeInMSec: Long): C = cache match {
+        case Some(c) => c
+        case None    =>
+          val a = fa.get(timeInMSec/2, TimeUnit.MILLISECONDS)
+          val b = fb.get(timeInMSec/2, TimeUnit.MILLISECONDS)
+          val result = f(a, b)
+          cache = Some(result)
+          result
+      }
+    }
+
     def map2[A, B, C](a: Par[A], b: Par[B])
       (f: (A, B) => C): Par[C] = (es: ExecutorService) => {
       val af = a(es)
