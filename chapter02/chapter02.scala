@@ -87,6 +87,13 @@ object Chapter2 {
   def curry[A,B,C](f: (A, B) => C): A => (B => C) =
     (a: A) => ((b: B) => f(a, b))
 
+  /*
+   * Exercise 2.3 (Aaron's try)
+   */
+
+  def curryAaron[A,B,C](f: (A, B) => C): A => (B => C) =
+    (a: A) => (b: B) => f(a, b)
+
 
   /*
    * Exercise 2.4
