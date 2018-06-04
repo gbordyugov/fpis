@@ -55,6 +55,10 @@ object Parallel {
       private def compute(timeInMSec: Long): C = cache match {
         case Some(c) => c
         case None    =>
+          /*
+           * that's really naive, it can happen that one leg takes
+           * longer to evaluate than the other one
+           */
           val a = fa.get(timeInMSec/2, TimeUnit.MILLISECONDS)
           val b = fb.get(timeInMSec/2, TimeUnit.MILLISECONDS)
           val result = f(a, b)
