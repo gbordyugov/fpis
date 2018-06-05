@@ -116,5 +116,11 @@ object Parallel {
     def sequence[A](ps: List[Par[A]]): Par[List[A]] =
       ps.foldRight(unit[List[A]](List.empty))
         ((a, b) => map2(a, b)(_ :: _))
+
+
+    def parMap[A, B](ps: List[A])(f: A => B): Par[List[B]] = fork {
+      val fbs: List[Par[B]] = ps.map(asyncF(f))
+      sequence(fbs)
+    }
   }
 }
