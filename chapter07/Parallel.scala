@@ -114,11 +114,7 @@ object Parallel {
      */
 
     def sequence[A](ps: List[Par[A]]): Par[List[A]] =
-      ps.foldRight(unit(List.empty: List[A]))
-        (???)
-      /*
-      ps.foldRight(unit(List.empty: List[A]))
+      ps.foldRight(unit[List[A]](List.empty))
         ((a, b) => map2(a, b)(_ :: _))
-       */
   }
 }
