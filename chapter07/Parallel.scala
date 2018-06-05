@@ -118,6 +118,11 @@ object Parallel {
         ((a, b) => map2(a, b)(_ :: _))
 
 
+    /*
+     * here and below, we fork first in order to be able to return
+     * immediately. After this computation will be passed to run(),
+     * it will spawn additional ps.length threads
+     */
     def parMap[A, B](ps: List[A])(f: A => B): Par[List[B]] = fork {
       val fbs: List[Par[B]] = ps.map(asyncF(f))
       sequence(fbs)
