@@ -122,5 +122,17 @@ object Parallel {
       val fbs: List[Par[B]] = ps.map(asyncF(f))
       sequence(fbs)
     }
+
+
+    /*
+     * Exercise 7.6
+     */
+
+    def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] =
+      fork {
+        val fbs: List[Par[B]] = as.filter(asyncF(f))
+        sequence(fbs)
+      }
+      }
   }
 }
