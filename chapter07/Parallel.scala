@@ -136,9 +136,11 @@ object Parallel {
 
     def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] =
       fork {
-        val fPar: A => Par[Boolean] = asyncF(f)
-        val fbs: List[Par[A]] = as.filter(fPar)
-        sequence(fbs)
+        val indicators: Par[List[Boolean]] = parMap(as)(f)
+        map2(indicators, unit(as)) { (i, a) => {
+            i.zip(a).filter(_._1).map(_._2)
+          }
+        }
       }
 
     def equal[A](e: ExecutorService)
