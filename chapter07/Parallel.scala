@@ -149,5 +149,14 @@ object Parallel {
     def equal[A](e: ExecutorService)
       (p: Par[A], q: Par[A]): Boolean =
       p(e).get == q(e).get
+
+
+    /*
+     * Exercise 7.7
+     *
+     * map(y)(id) == y // apply map(_)(f compose g) on both sides
+     * map(map(y)(id))(f compose g) = map(y)(f compose g)
+     *
+     */
   }
 }
