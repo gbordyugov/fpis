@@ -1,5 +1,5 @@
 import java.util.concurrent.{ExecutorService, Future, TimeUnit,
-  Callable}
+  Callable, Executors}
 
 object Parallel {
 
