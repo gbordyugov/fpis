@@ -113,9 +113,10 @@ object Parallel {
      * Exercise 7.5
      */
 
-    def sequence[A](ps: List[Par[A]]): Par[List[A]] =
-      ps.foldRight(unit[List[A]](List.empty))
-        ((a, b) => map2(a, b)(_ :: _))
+    def sequence[A](ps: List[Par[A]]): Par[List[A]] = {
+      val zero: Par[List[A]] = unit(List.empty)
+      ps.foldRight(zero)((a, b) => map2(a, b)(_ :: _))
+    }
 
 
     /*
@@ -123,7 +124,7 @@ object Parallel {
      * immediately. After this computation will be passed to run(),
      * it will spawn additional ps.length threads
      */
-    def parMap[A, B](ps: List[A])(f: A => B): Par[List[B]] = fork {
+    def parMap[A, B](ps: List[A])(f: A=>B): Par[List[B]] = fork {
       val fbs: List[Par[B]] = ps.map(asyncF(f))
       sequence(fbs)
     }
@@ -135,9 +136,13 @@ object Parallel {
 
     def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] =
       fork {
-        val fbs: List[Par[B]] = as.filter(asyncF(f))
+        val fPar: A => Par[Boolean] = asyncF(f)
+        val fbs: List[Par[A]] = as.filter(fPar)
         sequence(fbs)
       }
-      }
+
+    def equal[A](e: ExecutorService)
+      (p: Par[A], q: Par[A]): Boolean =
+      p(e).get == q(e).get
   }
 }
