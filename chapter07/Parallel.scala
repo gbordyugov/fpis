@@ -66,15 +66,18 @@ object Parallel {
       def cancel(evenIfRunning: Boolean) =
         fa.cancel(evenIfRunning) && fb.cancel(evenIfRunning)
 
-      private def compute(timeInMSec: Long): C = cache match {
+      private def compute(timeMs: Long): C = cache match {
         case Some(c) => c
         case None    =>
           /*
            * that's really naive, it can happen that one leg takes
            * longer to evaluate than the other one
            */
-          val a = fa.get(timeInMSec/2, TimeUnit.MILLISECONDS)
-          val b = fb.get(timeInMSec/2, TimeUnit.MILLISECONDS)
+          val startMs = System.currentTimeMillis()
+          val a = fa.get(timeMs, TimeUnit.MILLISECONDS)
+          val usedMs = System.currentTimeMillis() - startMs
+          val availableMs = timeMs - usedMs
+          val b = fb.get(availableMs, TimeUnit.MILLISECONDS)
           val result = f(a, b)
           cache = Some(result)
           result
