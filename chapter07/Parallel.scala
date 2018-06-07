@@ -160,5 +160,13 @@ object Parallel {
      * skipping for now
      *
      */
+
+
+
+    /*
+     * Exercise 7.8
+     *
+     * if we fork many enough times, we'll run of locked Threads
+     */
   }
 }
