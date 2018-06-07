@@ -168,5 +168,13 @@ object Parallel {
      *
      * if we fork many enough times, we'll run of locked Threads
      */
+
+
+    /*
+     * Exercise 7.9
+     *
+     * see Exercise 7.8
+     *
+     */
   }
 }
