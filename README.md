@@ -2,3 +2,4 @@
 
 Open/skipped exercises:
   - Exercise 7.2: I had no idea
+  - Exercise 7.7

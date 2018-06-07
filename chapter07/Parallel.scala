@@ -156,6 +156,8 @@ object Parallel {
      *
      * map(y)(id) == y // apply map(_)(f compose g) on both sides
      * map(map(y)(id))(f compose g) = map(y)(f compose g)
+     * ...
+     * skipping for now
      *
      */
   }
