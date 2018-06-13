@@ -1,4 +1,4 @@
-import java.util.concurrent.ExecutorService
+import java.util.concurrent.{ExecutorService, Callable}
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
@@ -22,7 +22,18 @@ object NonBlocking {
 
   def unit[A](a: A): Par[A] =
     es => new Future[A] {
-      def apply(cb: A => Unit): Unit =
-        cb(a)
+      def apply(callback: A => Unit): Unit =
+        callback(a)
     }
+
+  def fork[A](a: => Par[A]): Par[A] =
+    es => new Future[A] {
+      def apply(callback: A => Unit): Unit =
+        eval(es)(a(es)(callback))
+    }
+  def eval(es: ExecutorService)(r: => Unit): Unit =
+    es.submit(new Callable[Unit] {
+      def call = r
+      }
+    )
 }
