@@ -181,5 +181,13 @@ object Parallel {
     def badFork[A](fa: => Par[A]): Par[A] =
       // doesn't really do any forking
       es => fa(es)
+
+
+    /*
+     * actually it's a delay - it avoid evaluating until the actual
+     * result is neeed
+     */
+    def delay[A](fa: => Par[A]): Par[A] =
+      es => fa(es)
   }
 }
