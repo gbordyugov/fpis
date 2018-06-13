@@ -176,5 +176,10 @@ object Parallel {
      * see Exercise 7.8
      *
      */
+
+
+    def badFork[A](fa: => Par[A]): Par[A] =
+      // doesn't really do any forking
+      es => fa(es)
   }
 }
