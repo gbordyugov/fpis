@@ -18,4 +18,11 @@ object NonBlocking {
     }
     ref.get
   }
+
+
+  def unit[A](a: A): Par[A] =
+    es => new Future[A] {
+      def apply(cb: A => Unit): Unit =
+        cb(a)
+    }
 }
