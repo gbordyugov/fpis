@@ -187,6 +187,18 @@ object ListChapter {
     }
 
 
+    // def foldRight[A, C](as: List[A], z: C)(f: (A, C) => C): C =
+    def foldLeft_[A, B](as: List[A], z: B)(f: (B, A) => B): B = {
+      val id: B => B = b => b
+      val g: (A, B => B) => (B => B) = (a, k) => {
+        b => k(f(b, a))
+        // b => f(k(b), a)
+      }
+      val h: B => B = foldRight(as, id)(g)
+      h(z)
+    }
+
+
     /*
      * Exercise 3.14
      */
