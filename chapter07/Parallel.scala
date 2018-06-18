@@ -189,5 +189,16 @@ object Parallel {
      */
     def delay[A](fa: => Par[A]): Par[A] =
       es => fa(es)
+
+
+    /*
+     * Exercise 7.11
+     */
+
+    def choiceN[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
+      es => {
+        val k = run(es)(n).get
+        choices(k)(es)
+      }
   }
 }
