@@ -36,4 +36,29 @@ object NonBlocking {
       def call = r
       }
     )
+
+  /*
+   * Exercise 7.10
+   */
+
+  object Exercise710 {
+    sealed trait Future[A] {
+      def apply(callback: A => Unit)(failure: Exception => Unit): Unit
+    }
+
+    type Par[A] = ExecutorService => Future[A]
+
+    def run[A](es: ExecutorService)(p: Par[A]): A = {
+      val ref = new AtomicReference[A]
+      val latch = new CountDownLatch(1)
+      p(es) { a =>
+        ref.set(a)
+        latch.countDown
+      } { e =>
+        ???
+        latch.countDown
+      }
+      ref.get
+    }
+  }
 }
