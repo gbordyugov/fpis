@@ -203,5 +203,17 @@ object Parallel {
 
     def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
       choiceN(map(cond){if (_) 0 else 1})(List(t, f))
+
+
+    /*
+     * Exercise 7.12
+     */
+
+    def choiceMap[K, V](key: Par[K])(chs: Map[K, Par[V]]): Par[V] =
+      es => {
+        val k = run(es)(key).get
+        chs(k)(es)
+      }
+
   }
 }
