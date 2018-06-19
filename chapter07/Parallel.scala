@@ -254,5 +254,8 @@ object Parallel {
      */
     def flatMapByJoin[A, B](pa: Par[A])(f: A => Par[B]): Par[B] =
       join(map(pa)(f))
+
+    def flatMapByMap2[A, B](pa: Par[A])(f: A => Par[B]): Par[B] =
+      join(map2(pa, unit(1)){(a, b) => f(a)})
   }
 }
