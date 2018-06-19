@@ -215,5 +215,15 @@ object Parallel {
         chs(k)(es)
       }
 
+
+    /*
+     * Exercise 7.13
+     */
+
+    def chooser[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] =
+      es => {
+        val a = run(es)(pa).get
+        choices(a)(es)
+      }
   }
 }
