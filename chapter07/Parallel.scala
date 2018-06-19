@@ -236,10 +236,10 @@ object Parallel {
     /*
      * my favourite one!
      */
-    def flatMap[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] =
+    def flatMap[A, B](pa: Par[A])(f: A => Par[B]): Par[B] =
       es => {
         val a = run(es)(pa).get
-        choices(a)(es)
+        f(a)(es)
       }
 
     /*
@@ -248,5 +248,11 @@ object Parallel {
 
     def join[A](a: Par[Par[A]]): Par[A] =
       flatMap(a)(x => x)
+
+    /*
+     * that's double-recursive, never use it
+     */
+    def flatMapByJoin[A, B](pa: Par[A])(f: A => Par[B]): Par[B] =
+      join(map(pa)(f))
   }
 }
