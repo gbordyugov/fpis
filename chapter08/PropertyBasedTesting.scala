@@ -1,4 +1,4 @@
-objecg PropertyBasedTesting {
+object PropertyBasedTesting {
   /*
    * Exercise 8.1
    *
@@ -19,4 +19,8 @@ objecg PropertyBasedTesting {
    * max of any permutation should be the same
    * max of a non-empty list should be max(head, max(tail))
    */
+
+  trait Prop {
+    def &&(p: Prop): Prop
+  }
 }
