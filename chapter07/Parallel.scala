@@ -241,5 +241,12 @@ object Parallel {
         val a = run(es)(pa).get
         choices(a)(es)
       }
+
+    /*
+     * Exercise 7.14
+     */
+
+    def join[A](a: Par[Par[A]]): Par[A] =
+      flatMap(a)(x => x)
   }
 }
