@@ -232,5 +232,14 @@ object Parallel {
 
     def choiceNByChooser[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
       chooser(n)(choices(_))
+
+    /*
+     * my favourite one!
+     */
+    def flatMap[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] =
+      es => {
+        val a = run(es)(pa).get
+        choices(a)(es)
+      }
   }
 }
