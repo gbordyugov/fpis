@@ -225,5 +225,9 @@ object Parallel {
         val a = run(es)(pa).get
         choices(a)(es)
       }
+
+    def choiceByChooser[A, B](cond: Par[Boolean])
+      (t: Par[A], f: Par[A]): Par[A] =
+        chooser(cond){if (_) t else f}
   }
 }
