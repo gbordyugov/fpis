@@ -229,5 +229,8 @@ object Parallel {
     def choiceByChooser[A, B](cond: Par[Boolean])
       (t: Par[A], f: Par[A]): Par[A] =
         chooser(cond){if (_) t else f}
+
+    def choiceNByChooser[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
+      chooser(n)(choices(_))
   }
 }
