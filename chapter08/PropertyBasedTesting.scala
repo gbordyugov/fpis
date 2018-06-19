@@ -21,6 +21,20 @@ object PropertyBasedTesting {
    */
 
   trait Prop {
+    def check: Unit
     def &&(p: Prop): Prop
+  }
+
+  /*
+   * Exercise 8.3
+   */
+  object Exercise83 {
+    trait Prop {
+      def check: Boolean
+      def &&(that: Prop): Prop = new Prop {
+        // this is the wrong `this`!
+        def check = this.check && that.check
+      }
+    }
   }
 }
