@@ -29,11 +29,10 @@ object PropertyBasedTesting {
    * Exercise 8.3
    */
   object Exercise83 {
-    trait Prop {
+    trait Prop { outer =>
       def check: Boolean
       def &&(that: Prop): Prop = new Prop {
-        // this is the wrong `this`!
-        def check = this.check && that.check
+        def check = outer.check && that.check
       }
     }
   }
