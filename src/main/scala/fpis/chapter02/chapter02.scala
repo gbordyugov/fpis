@@ -1,3 +1,5 @@
+package fpis.chapter02
+
 object Chapter2 {
   
   object MyModule {
