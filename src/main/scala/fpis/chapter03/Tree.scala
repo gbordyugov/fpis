@@ -1,3 +1,5 @@
+package fpis.chapter03
+
 object TreeChapter{
   sealed trait Tree[+A]
   case class Leaf[A](value: A) extends Tree[A]
