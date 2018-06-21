@@ -1,7 +1,9 @@
+package fpis.chapter07
+
 import java.util.concurrent.{ExecutorService, Future, TimeUnit,
   Callable, Executors}
 
-object Parallel {
+object Par {
 
   /*
    * Exercise 7.1
