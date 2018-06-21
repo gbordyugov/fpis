@@ -1,4 +1,4 @@
-object Randomness {
+object RandomnessMisc {
   def rollDie: Int = {
     val rng = new scala.util.Random
     rng.nextInt(6)
