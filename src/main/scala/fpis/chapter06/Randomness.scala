@@ -1,13 +1,14 @@
-object RandomnessMisc {
+package fpis.chapter06
+
+trait RNG {
+  def nextInt: (Int, RNG)
+}
+
+object RNG {
   def rollDie: Int = {
     val rng = new scala.util.Random
     rng.nextInt(6)
   }
-
-  trait RNG {
-    def nextInt: (Int, RNG)
-  }
-
 
   case class SimpleRNG(seed: Long) extends RNG {
     def nextInt: (Int, RNG) = {
@@ -184,44 +185,44 @@ object RandomnessMisc {
     (f: (A, B) => C): Rand[C] =
     flatMap(ra)(a => flatMap(rb)(b => unit[C](f(a, b))))
 
+}
 
 
-  /*
-   * Exercise 6.10
-   */
+/*
+ * Exercise 6.10
+ */
 
-  case class State[S, +A](run: S => (A, S)) {
-    def map[B](f: A => B): State[S, B] =
-      State { s1 => {
-        val (a, s2) = run(s1)
-        (f(a), s2)
-      }
-    }
-
-    def flatMap[B] (f: A => State[S, B]): State[S, B] =
-      State { s1 => {
-        val (a, s2) = run(s1)
-        f(a).run(s2)
-      }
+case class State[S, +A](run: S => (A, S)) {
+  def map[B](f: A => B): State[S, B] =
+    State { s1 => {
+      val (a, s2) = run(s1)
+      (f(a), s2)
     }
   }
 
-  object State {
-    def unit[S, A](a: A): State[S, A] = State(s => (a, s))
-
-    def map2[S, A, B, C](sa: State[S, A], sb: State[S, B])
-      (f: (A, B) => C): State[S, C] = State { s1 => {
-        val (a, s2) = sa.run(s1)
-        val (b, s3) = sb.run(s2)
-        (f(a, b), s3)
-      }
+  def flatMap[B] (f: A => State[S, B]): State[S, B] =
+    State { s1 => {
+      val (a, s2) = run(s1)
+      f(a).run(s2)
     }
-
-    def sequence[S, A](sas: List[State[S, A]]): State[S, List[A]] =
-      sas.foldRight(unit[S, List[A]](List.empty)) { (a, b) =>
-        map2(a, b)(_ :: _)
-      }
   }
+}
+
+object State {
+  def unit[S, A](a: A): State[S, A] = State(s => (a, s))
+
+  def map2[S, A, B, C](sa: State[S, A], sb: State[S, B])
+    (f: (A, B) => C): State[S, C] = State { s1 => {
+      val (a, s2) = sa.run(s1)
+      val (b, s3) = sb.run(s2)
+      (f(a, b), s3)
+    }
+  }
+
+  def sequence[S, A](sas: List[State[S, A]]): State[S, List[A]] =
+    sas.foldRight(unit[S, List[A]](List.empty)) { (a, b) =>
+      map2(a, b)(_ :: _)
+    }
 
 
   def modify[S](f: S => S): State[S, Unit] = for {
@@ -232,46 +233,46 @@ object RandomnessMisc {
   def get[S]: State[S, S] = State(s => (s, s))
 
   def set[S](s: S): State[S, Unit] = State(_ => ((), s))
+}
+
+/*
+ * Exercise 6.13
+ */
+
+object Machine {
+  import State._
+
+  trait Input
+  case object Coin extends Input
+  case object Turn extends Input
+
+  case class Machine(locked: Boolean, candies: Int, coins: Int)
+
+  def update(i: Input)(m: Machine): Machine = (i, m) match {
+    case (_, Machine(_, 0, _)) => m
+    case (Turn, Machine(true,  _, _)) => m
+    case (Coin, Machine(false, _, _)) => m
+    case (Turn, Machine(false, ca, co)) => Machine(true, ca-1, co)
+    case (Coin, Machine(true, ca, co)) if ca > 0 =>
+      Machine(false, ca, co+1)
+  }
+
+  def modifyMachine(i: Input): State[Machine, Unit] =
+    modify[Machine](update(i)(_))
+
+  type Inputs = List[Input]
+  def simulate(inputs: Inputs): State[Machine, (Int,Int)] = for {
+    _ <- State.sequence[Machine, Unit](inputs.map(modifyMachine))
+    m <- get
+  } yield ((m.candies, m.coins))
+
+  val tmp = simulate(List(Coin, Turn, Coin, Turn))
+    .run(Machine(true, 10, 10))
 
   /*
-   * Exercise 6.13
+   * what I learned here:
+   * State[S, A] describe really the transitions, not the underlying
+   * state per se. It has its only member, which is a function,
+   * by applying to a state, we modify it
    */
-
-  object Machine {
-    import State._
-
-    trait Input
-    case object Coin extends Input
-    case object Turn extends Input
-
-    case class Machine(locked: Boolean, candies: Int, coins: Int)
-
-    def update(i: Input)(m: Machine): Machine = (i, m) match {
-      case (_, Machine(_, 0, _)) => m
-      case (Turn, Machine(true,  _, _)) => m
-      case (Coin, Machine(false, _, _)) => m
-      case (Turn, Machine(false, ca, co)) => Machine(true, ca-1, co)
-      case (Coin, Machine(true, ca, co)) if ca > 0 =>
-        Machine(false, ca, co+1)
-    }
-
-    def modifyMachine(i: Input): State[Machine, Unit] =
-      modify[Machine](update(i)(_))
-
-    type Inputs = List[Input]
-    def simulate(inputs: Inputs): State[Machine, (Int,Int)] = for {
-      _ <- State.sequence[Machine, Unit](inputs.map(modifyMachine))
-      m <- get
-    } yield ((m.candies, m.coins))
-
-    val tmp = simulate(List(Coin, Turn, Coin, Turn))
-      .run(Machine(true, 10, 10))
-
-    /*
-     * what I learned here:
-     * State[S, A] describe really the transitions, not the underlying
-     * state per se. It has its only member, which is a function,
-     * by applying to a state, we modify it
-     */
-  }
 }
