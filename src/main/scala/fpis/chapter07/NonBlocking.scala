@@ -1,3 +1,5 @@
+package fpis.chapter07
+
 import java.util.concurrent.{ExecutorService, Callable}
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
