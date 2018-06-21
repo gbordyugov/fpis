@@ -1,3 +1,5 @@
+package fpis.chapter08
+
 object PropertyBasedTesting {
   /*
    * Exercise 8.1
