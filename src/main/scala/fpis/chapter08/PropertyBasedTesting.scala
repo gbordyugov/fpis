@@ -63,4 +63,7 @@ object Gen {
 
   def boolean: Gen[Boolean] = 
     Gen[Boolean](State(nonNegativeInt _).map{ _%2 > 0})
+
+  def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] =
+    Gen[List[A]](State.sequence(List.fill(n)(g.sample)))
 }
