@@ -60,4 +60,7 @@ object Gen {
    */
   def unit[A](a: => A): Gen[A] =
     Gen[A](State.unit(a))
+
+  def boolean: Gen[Boolean] = 
+    Gen[Boolean](State(nonNegativeInt _).map{ _%2 > 0})
 }
