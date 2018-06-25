@@ -1,6 +1,7 @@
 package fpis.chapter08
 
 import fpis.chapter06.{State, RNG}
+import fpis.chapter06.RNG.nonNegativeInt
 
 /*
  * Exercise 8.1
@@ -48,5 +49,8 @@ object Gen {
   /*
    * Exercise 8.4
    */
-  def choose(start: Int, stopExclusive: Int): Gen[Int] = ???
+  // case class State[S, +A](run: S => (A, S)) {
+  def choose(start: Int, stopExclusive: Int): Gen[Int] =
+    Gen[Int](State(nonNegativeInt _).map{ i =>
+      start + i % (stopExclusive - start)})
 }

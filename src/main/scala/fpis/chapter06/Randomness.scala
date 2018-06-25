@@ -34,9 +34,9 @@ object RNG {
   def nonNegativeInt(rng1: RNG): (Int, RNG) = {
     val (i, rng2) = rng1.nextInt
     i match {
-      case j if j >= 0          => (j,  rng2)
-      case j if j> Int.MinValue => (-j, rng2)
-      case _                    => (0,  rng2)
+      case j if j >= 0            => ( j,  rng2)
+      case j if j >  Int.MinValue => (-j,  rng2)
+      case _                      => ( 0,  rng2)
     }
   }
 
