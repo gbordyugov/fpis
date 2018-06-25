@@ -53,4 +53,11 @@ object Gen {
   def choose(start: Int, stopExclusive: Int): Gen[Int] =
     Gen[Int](State(nonNegativeInt _).map{ i =>
       start + i % (stopExclusive - start)})
+
+
+  /*
+   * Exercise 8.5
+   */
+  def unit[A](a: => A): Gen[A] =
+    Gen[A](State.unit(a))
 }
