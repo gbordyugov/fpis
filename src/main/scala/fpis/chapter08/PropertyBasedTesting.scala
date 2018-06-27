@@ -92,5 +92,5 @@ object Gen {
    */
 
   def char: Gen[Char] =
-    Gen[Char](State(nonNegativeInt _).map(97 + _ % (122-97)).map(_.asInstanceOf[Char]))
+    choose(97, 123).map(_.asInstanceOf[Char])
 }
