@@ -125,4 +125,22 @@ object Gen {
 
   def union[A](g1: Gen[A], g2: Gen[A]): Gen[A] =
     boolean.flatMap(if (_) g1 else g2)
+
+
+  /*
+   * Exercise 8.8
+   */
+
+  def positiveInt: Gen[Int] =
+    Gen[Int](State(nonNegativeInt _))
+
+  def double: Gen[Double] =
+    positiveInt.map(_ / Int.MaxValue)
+
+  def weighted[A](p1: (Gen[A], Double), p2: (Gen[A], Double)): Gen[A] = {
+    val (g1, w1) = p1
+    val (g2, w2) = p2
+    val threshold = w1/(w1 + w2)
+    double.flatMap { d =>  if (d >= threshold) g1 else g2 }
+  }
 }
