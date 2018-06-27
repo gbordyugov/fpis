@@ -93,4 +93,7 @@ object Gen {
 
   def char: Gen[Char] =
     choose(97, 123).map(_.asInstanceOf[Char])
+
+  def stringN(n: Int): Gen[String] =
+    listOfN(n, char).map(_.mkString)
 }
