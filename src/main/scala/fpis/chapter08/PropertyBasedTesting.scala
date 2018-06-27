@@ -83,4 +83,12 @@ object Gen {
   def option[A](g: Gen[A]): Gen[Option[A]] =
     Gen[Option[A]](g.sample.map(Some(_)))
 
+
+  /*
+   * Generating strings
+   */
+
+  def char: Gen[Char] =
+    Gen[Char](State(nonNegativeInt _).map(97 + _ % (122-97)).map(_.asInstanceOf[Char]))
+
 }
