@@ -75,4 +75,12 @@ object Gen {
   def pair[A](g: Gen[A]): Gen[(A, A)] =
     Gen[(A, A)](for { a <- g.sample; b <- g.sample } yield((a, b)))
 
+
+  /*
+   * Given Gen[A], produce Gen[Option[A]]
+   */
+
+  def option[A](g: Gen[A]): Gen[Option[A]] =
+    Gen[Option[A]](g.sample.map(Some(_)))
+
 }
