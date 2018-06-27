@@ -43,6 +43,8 @@ object Exercise83 {
 
 
 case class Gen[A](sample: State[RNG, A]) {
+  import Gen._
+
   def map[B](f: A => B): Gen[B] =
     Gen[B](sample.map(f))
 
@@ -53,6 +55,17 @@ case class Gen[A](sample: State[RNG, A]) {
 
   def flatMap[B](f: A => Gen[B]): Gen[B] =
     Gen[B](sample.flatMap(f(_).sample))
+
+  def listOfN(size: Gen[Int]): Gen[List[A]] = {
+    size.flatMap { s =>
+      (1 to s).foldRight (unit(List(): List[A])) { (i, list) => for {
+            h <- this
+            t <- list
+          } yield h :: t
+        }
+    }
+  }
+
 }
 
 
