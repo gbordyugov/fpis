@@ -66,4 +66,13 @@ object Gen {
 
   def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] =
     Gen[List[A]](State.sequence(List.fill(n)(g.sample)))
+
+
+  /*
+   * Given Gen[Int] generator, produce Gen[(Int, Int)]
+   */
+
+  def pair[A](g: Gen[A]): Gen[(A, A)] =
+    Gen[(A, A)](for { a <- g.sample; b <- g.sample } yield((a, b)))
+
 }
