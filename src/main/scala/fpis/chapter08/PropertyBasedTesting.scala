@@ -117,4 +117,12 @@ object Gen {
 
   def stringN(n: Int): Gen[String] =
     listOfN(n, char).map(_.mkString)
+
+
+  /*
+   * Exercise 8.7
+   */
+
+  def union[A](g1: Gen[A], g2: Gen[A]): Gen[A] =
+    boolean.flatMap(if (_) g1 else g2)
 }
