@@ -45,6 +45,9 @@ object Exercise83 {
 case class Gen[A](sample: State[RNG, A]) {
   def map[B](f: A => B): Gen[B] =
     Gen[B](sample.map(f))
+
+  def flatMap[B](f: A => Gen[B]): Gen[B] =
+    ???
 }
 
 
