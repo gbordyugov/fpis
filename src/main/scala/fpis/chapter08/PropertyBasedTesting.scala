@@ -42,7 +42,10 @@ object Exercise83 {
 }
 
 
-case class Gen[A](sample: State[RNG, A])
+case class Gen[A](sample: State[RNG, A]) {
+  def map[B](f: A => B): Gen[B] =
+    Gen[B](sample.map(f))
+}
 
 
 object Gen {
@@ -90,5 +93,4 @@ object Gen {
 
   def char: Gen[Char] =
     Gen[Char](State(nonNegativeInt _).map(97 + _ % (122-97)).map(_.asInstanceOf[Char]))
-
 }
