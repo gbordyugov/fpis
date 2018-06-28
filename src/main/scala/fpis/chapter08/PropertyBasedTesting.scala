@@ -24,9 +24,21 @@ import fpis.chapter06.RNG.nonNegativeInt
  * max of a non-empty list should be max(head, max(tail))
  */
 
+/*
 trait Prop {
   def check: Unit
   def &&(p: Prop): Prop
+}
+*/
+
+
+object Prop {
+  type FailedCase = String
+  type SuccessCount = Int
+  type TestCases = Int
+  type Result = Option[(FailedCase, SuccessCount)]
+
+  case class Prop(run: TestCases => Result)
 }
 
 /*
