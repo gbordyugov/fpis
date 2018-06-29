@@ -308,9 +308,8 @@ object List {
 
   def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
     val suffs = suffices(sup)
-    val prefs = prefices(sup)
-    member(append(suffs, prefs), sub)
-    member(append(suffices(sup), prefices(sup)), sub)
+    val substrs = flatMap(suffs)(prefices)
+    member(substrs, sub)
   }
 
   def member[A](as: List[A], a: A): Boolean =
