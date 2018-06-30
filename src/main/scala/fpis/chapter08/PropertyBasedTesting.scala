@@ -39,7 +39,7 @@ object Prop {
   type SuccessCount = Int
   type TestCases = Int
 
-  case class Prop(run: TestCases => Result)
+  case class Prop(run: (TestCases, RNG) => Result)
 
 
   sealed trait Result {
@@ -53,6 +53,19 @@ object Prop {
   case class Falsified(failure: FailedCase,
                        successes: SuccessCount) extends Result {
     def isFalsified = true
+  }
+
+  def forAll[A](as: Gen[A])(f: A => Boolean): Prop = Prop {
+    (n, rng) => randomStream(as)(rng).zip(Stream.from(0)).take(n).map {
+      case (a, i) => try {
+        if (f(a))
+          Passed
+        else
+          Falsified(a.toString, i)
+      } catch {
+        case e: Exception => Falsified(buildMsg(a, e), i)
+      }
+    }.find(_.isFalsified).getOrElse(Passed)
   }
 
   def randomStream[A](g: Gen[A])(rng: RNG): Stream[A] =
