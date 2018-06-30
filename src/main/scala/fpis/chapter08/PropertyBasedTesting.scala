@@ -123,6 +123,16 @@ object Prop {
       case Passed =>
         println(s"+ OK, passed $testCases tests.")
     }
+
+
+  def test1(): Unit = {
+    import Gen.listOf
+    val smallInt = Gen.choose(-10, 10)
+    val maxProp = forAll(listOf(smallInt)) { ns =>
+      val max = ns.max
+      !ns.exists(_ > max)
+    }
+  }
 }
 
 /*
@@ -188,7 +198,6 @@ case class Gen[+A](sample: State[RNG, A]) {
         }
     }
   }
-
 }
 
 
