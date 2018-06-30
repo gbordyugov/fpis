@@ -117,6 +117,8 @@ case class SGen[+A](forSize: Int => Gen[A]) {
    */
   def map[B](f: A => B): SGen[B] =
     SGen(forSize(_).map(f))
+
+  def apply(n: Int): Gen[A] = forSize(n)
 }
 
 
