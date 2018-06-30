@@ -39,7 +39,18 @@ object Prop {
   type SuccessCount = Int
   type TestCases = Int
 
-  case class Prop(run: (TestCases, RNG) => Result)
+  case class Prop(run: (TestCases, RNG) => Result) {
+    /*
+     * Exercise 8.9
+     */
+    def &&(that: Prop): Prop =
+      Prop {
+        (n, rng) => run(n, rng) match {
+          case Passed => that.run(n, rng)
+          case result => result
+        }
+      }
+  }
 
 
   sealed trait Result {
