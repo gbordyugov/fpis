@@ -149,6 +149,9 @@ case class Gen[+A](sample: State[RNG, A]) {
   def flatMap[B](f: A => Gen[B]): Gen[B] =
     Gen[B](sample.flatMap(f(_).sample))
 
+  def listOfN(size: Int): Gen[List[A]] =
+    Gen.listOfN(size, this)
+
   def listOfN(size: Gen[Int]): Gen[List[A]] = {
     size.flatMap { s =>
       (1 to s).foldRight (unit(List(): List[A])) { (i, list) => for {
@@ -235,4 +238,11 @@ object Gen {
     val threshold = w1/(w1 + w2)
     double.flatMap { d =>  if (d >= threshold) g1 else g2 }
   }
+
+
+  /*
+   * Exercise 8.12
+   */
+  def listOf[A](g: Gen[A]): SGen[List[A]] =
+    SGen(n => g.listOfN(n))
 }
