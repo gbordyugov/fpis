@@ -132,6 +132,7 @@ object Prop {
       val max = ns.max
       !ns.exists(_ > max)
     }
+    run(maxProp)
   }
 }
 
