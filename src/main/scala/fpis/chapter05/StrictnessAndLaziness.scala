@@ -199,6 +199,17 @@ sealed trait Stream[+A] {
       }
     }
 
+  def zip[B](that: Stream[B]): Stream[(A, B)] = (this, that) match {
+    case (Cons(a, b), Cons(x, y)) => cons((a(), x()), b().zip(y()))
+    case _                        => Empty
+  }
+
+  def find(p: A => Boolean): Option[A] = this match {
+    case Empty                => None
+    case Cons(h, t) if p(h()) => Some(h())
+    case Cons(h, t)           => t().find(p)
+  }
+
   def zipAll[B](that: Stream[B]): Stream[(Option[A], Option[B])] =
     unfold((this, that)) { _ match  {
         case (Cons(a, b), Cons(x, y)) =>
