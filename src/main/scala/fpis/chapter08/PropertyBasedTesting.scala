@@ -39,25 +39,26 @@ object Prop {
   type SuccessCount = Int
   type TestCases = Int
 
-  case class Prop(run: (TestCases, RNG) => Result) {
+  type MaxSize = Int
+  case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
     /*
      * Exercise 8.9
      */
     def &&(that: Prop): Prop =
       Prop {
-        (n, rng) => run(n, rng) match {
-          case Passed => that.run(n, rng)
+        (ms, n, rng) => run(ms, n, rng) match {
+          case Passed => that.run(ms, n, rng)
           case result => result
         }
       }
 
     def ||(that: Prop): Prop =
       Prop {
-        (n, rng) => run(n, rng) match {
+        (ms, n, rng) => run(ms, n, rng) match {
           case Passed => Passed
           // this drops the information from the first run
           // potential bug
-          case result => that.run(n, rng)
+          case result => that.run(ms, n, rng)
         }
       }
   }
@@ -77,7 +78,7 @@ object Prop {
   }
 
   def forAll[A](as: Gen[A])(f: A => Boolean): Prop = Prop {
-    (n, rng) => randomStream(as)(rng).zip(Stream.from(0)).take(n).map {
+    (ms, n, rng) => randomStream(as)(rng).zip(Stream.from(0)).take(n).map {
       case (a, i) => try {
         if (f(a))
           Passed
