@@ -111,7 +111,10 @@ object Exercise83 {
 }
 
 
-case class Gen[A](sample: State[RNG, A]) {
+case class SGen[+A](forSize: Int => Gen[A])
+
+
+case class Gen[+A](sample: State[RNG, A]) {
   import Gen._
 
   def map[B](f: A => B): Gen[B] =
