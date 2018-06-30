@@ -3,6 +3,8 @@ package fpis.chapter08
 import fpis.chapter06.{State, RNG}
 import fpis.chapter06.RNG.nonNegativeInt
 
+import fpis.chapter05.Stream
+
 /*
  * Exercise 8.1
  *
@@ -52,6 +54,14 @@ object Prop {
                        successes: SuccessCount) extends Result {
     def isFalsified = true
   }
+
+  def randomStream[A](g: Gen[A])(rng: RNG): Stream[A] =
+    Stream.unfold(rng)(rng => Some(g.sample.run(rng)))
+
+  def buildMsg[A](s: A, e: Exception): String =
+    s"test case: $s\n" +
+    s"generated an exception: ${e.getMessage}\n" +
+    s"stack trace:\n ${e.getStackTrace.mkString("\n")}"
 }
 
 /*
