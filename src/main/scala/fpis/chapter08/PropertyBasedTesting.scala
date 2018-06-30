@@ -111,7 +111,13 @@ object Exercise83 {
 }
 
 
-case class SGen[+A](forSize: Int => Gen[A])
+case class SGen[+A](forSize: Int => Gen[A]) {
+  /*
+   * Exercise 8.11
+   */
+  def map[B](f: A => B): SGen[B] =
+    SGen(forSize(_).map(f))
+}
 
 
 case class Gen[+A](sample: State[RNG, A]) {
