@@ -142,7 +142,6 @@ object Gen {
   /*
    * Exercise 8.4
    */
-  // case class State[S, +A](run: S => (A, S)) {
   def choose(start: Int, stopExclusive: Int): Gen[Int] =
     Gen[Int](State(nonNegativeInt _).map{ i =>
       start + i % (stopExclusive - start)})
