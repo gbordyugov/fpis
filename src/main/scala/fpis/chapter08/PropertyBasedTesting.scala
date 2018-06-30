@@ -50,6 +50,16 @@ object Prop {
           case result => result
         }
       }
+
+    def ||(that: Prop): Prop =
+      Prop {
+        (n, rng) => run(n, rng) match {
+          case Passed => Passed
+          // this drops the information from the first run
+          // potential bug
+          case result => that.run(n, rng)
+        }
+      }
   }
 
 
