@@ -78,6 +78,10 @@ object Prop {
   }
 
   def forAll[A](as: Gen[A])(f: A => Boolean): Prop = Prop {
+    /*
+     * generate a numerated stream of As and check them using the
+     * prediate
+     */
     (_, n, rng) => randomStream(as)(rng).zip(Stream.from(0)).take(n).map {
       case (a, i) => try {
         if (f(a))
