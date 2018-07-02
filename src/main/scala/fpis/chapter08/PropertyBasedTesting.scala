@@ -192,6 +192,11 @@ object Prop {
     else
       Falsified("()", 0)
   }
+
+
+  /*
+   * Exercise 8.15 skipped
+   */
 }
 
 /*

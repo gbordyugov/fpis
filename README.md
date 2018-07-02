@@ -3,3 +3,4 @@
 Open/skipped exercises:
   - Exercise 7.2: I had no idea
   - Exercise 7.7
+  - Exercise 8.15 is a larger project
