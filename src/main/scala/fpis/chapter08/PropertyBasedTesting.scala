@@ -52,6 +52,7 @@ object Prop {
       Prop {
         (ms, n, rng) => run(ms, n, rng) match {
           case Passed => that.run(ms, n, rng)
+          case Proved => that.run(ms, n, rng)
           case result => result
         }
       }
@@ -60,6 +61,7 @@ object Prop {
       Prop {
         (ms, n, rng) => run(ms, n, rng) match {
           case Passed => Passed
+          case Proved => Proved
           // this drops the information from the first run
           // potential bug
           case result => that.run(ms, n, rng)
@@ -73,6 +75,10 @@ object Prop {
   }
 
   case object Passed extends Result {
+    def isFalsified = false
+  }
+
+  case object Proved extends Result {
     def isFalsified = false
   }
 
@@ -130,6 +136,8 @@ object Prop {
         println(s"! Falsified after $n passed tests:\n $msg")
       case Passed =>
         println(s"+ OK, passed $testCases tests.")
+      case Proved =>
+        println(s"+ OK, proved property.")
     }
 
 
