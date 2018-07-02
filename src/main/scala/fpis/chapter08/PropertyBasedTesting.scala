@@ -1,9 +1,13 @@
 package fpis.chapter08
 
+import java.util.concurrent.{ExecutorService, Executors}
+
 import fpis.chapter06.{State, RNG}
 import fpis.chapter06.RNG.nonNegativeInt
 
 import fpis.chapter05.Stream
+
+import fpis.chapter07.Par._
 
 /*
  * Exercise 8.1
@@ -143,6 +147,7 @@ object Prop {
   /*
    * Exercise 8.14
    */
+
   def testSorted(): Unit = {
     import Gen.listOf1
     val smallInt = Gen.choose(-100, 100)
@@ -152,6 +157,26 @@ object Prop {
         ! sorted.zip(sorted.tail).exists { case (a, b) => a > b }
     }
     run(maxProp)
+  }
+
+
+  /*
+   * Testing parallel library
+   */
+
+  def testPar(): Unit = {
+    val ES: ExecutorService = Executors.newCachedThreadPool
+    val p1 = forAll(Gen.unit(Par.unit(1)))(i =>
+        Par.map(i)(_ + 1)(ES).get == Par.unit(2)(ES).get)
+    run(p1)
+  }
+
+
+  def check(p: => Boolean): Prop = Prop { (_, _, _) =>
+    if (p)
+      Passed
+    else
+      Falsified("()", 0)
   }
 }
 
