@@ -130,9 +130,9 @@ object Prop {
 
 
   def test1(): Unit = {
-    import Gen.listOf
+    import Gen.listOf1
     val smallInt = Gen.choose(-10, 10)
-    val maxProp = forAll(listOf(smallInt)) { ns =>
+    val maxProp = forAll(listOf1(smallInt)) { ns =>
       val max = ns.max
       !ns.exists(_ > max)
     }
@@ -280,4 +280,11 @@ object Gen {
    */
   def listOf[A](g: Gen[A]): SGen[List[A]] =
     SGen(n => g.listOfN(n))
+
+
+  /*
+   * Exercise 8.13
+   */
+  def listOf1[A](g: Gen[A]): SGen[List[A]] =
+    SGen(n => g.listOfN(n max 1))
 }
