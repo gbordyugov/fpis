@@ -129,12 +129,27 @@ object Prop {
     }
 
 
-  def test1(): Unit = {
+  def testMax(): Unit = {
     import Gen.listOf1
     val smallInt = Gen.choose(-10, 10)
     val maxProp = forAll(listOf1(smallInt)) { ns =>
       val max = ns.max
       !ns.exists(_ > max)
+    }
+    run(maxProp)
+  }
+
+
+  /*
+   * Exercise 8.14
+   */
+  def testSorted(): Unit = {
+    import Gen.listOf1
+    val smallInt = Gen.choose(-100, 100)
+    val maxProp = forAll(listOf1(smallInt)) { ns =>
+      val sorted = ns.sorted
+      sorted.isEmpty || sorted.tail.isEmpty ||
+        ! sorted.zip(sorted.tail).exists { case (a, b) => a > b }
     }
     run(maxProp)
   }
