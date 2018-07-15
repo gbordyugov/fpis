@@ -197,6 +197,9 @@ object Prop {
   /*
    * Exercise 8.15 skipped
    */
+
+  def equal[A](p1: Par[A], p2: Par[A]): Par[Boolean] =
+    Par.map2(p1, p2)(_ == _)
 }
 
 /*
