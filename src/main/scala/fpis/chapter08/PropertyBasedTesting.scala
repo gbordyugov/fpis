@@ -201,7 +201,6 @@ object Prop {
     def forAllPar[A](g: Gen[A])(f: A => Par[Boolean]): Prop = {
       forAll(S.map2(g)((_,_))) { case (s, a) => f(a)(s).get }
     }
-
   }
 
 
@@ -283,6 +282,9 @@ case class Gen[+A](sample: State[RNG, A]) {
   def listOfN(size: Gen[Int]): Gen[List[A]] = {
     size.flatMap { s => Gen.listOfN(s, this) }
   }
+
+  def **[B](g: Gen[B]): Gen[(A, B)] =
+    (this map2 g)((_, _))
 }
 
 
