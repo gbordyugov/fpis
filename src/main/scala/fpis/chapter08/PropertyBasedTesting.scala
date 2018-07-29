@@ -174,19 +174,23 @@ object Prop {
 
   def testPar(): Unit = {
     val ES: ExecutorService = Executors.newCachedThreadPool
+
     val p1 = forAll(Gen.unit(Par.unit(1)))(i =>
         Par.map(i)(_ + 1)(ES).get == Par.unit(2)(ES).get)
+
     val p2 = check {
       val p1 = Par.map(Par.unit(1))(_ + 1)
       val p2 = Par.unit(2)
       p1(ES).get == p2(ES).get
     }
+
     val p3 = check {
       equal(
         Par.map(Par.unit(1))(_ + 1),
         Par.unit(2)
       )(ES).get
     }
+
     run(p1)
     run(p2)
     run(p3)
@@ -205,6 +209,14 @@ object Prop {
 
     def checkPar(p: Par[Boolean]): Prop =
       forAllPar(Gen.unit(()))(_ => p)
+
+    val p4 = checkPar {
+      equal (
+        Par.map(Par.unit(1))(_ + 1),
+        Par.unit(2)
+        )
+    }
+    run(p4)
   }
 
 
