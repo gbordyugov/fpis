@@ -192,6 +192,13 @@ object Prop {
     run(p3)
   }
 
+  def moreTestPar(): Unit = {
+    import Gen.{weighted, unit, choose}
+		val S = weighted(
+			choose(1,4).map(Executors.newFixedThreadPool) -> .75,
+      unit(Executors.newCachedThreadPool)           -> .25)
+  }
+
 
   def check(p: => Boolean): Prop = Prop { (_, _, _) =>
     if (p)
