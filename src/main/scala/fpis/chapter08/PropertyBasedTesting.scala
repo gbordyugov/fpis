@@ -376,3 +376,7 @@ object Gen {
   def listOf1[A](g: Gen[A]): SGen[List[A]] =
     SGen(n => g.listOfN(n max 1))
 }
+
+object ** {
+  def unapply[A, B](p: (A, B)) = Some(p)
+}
