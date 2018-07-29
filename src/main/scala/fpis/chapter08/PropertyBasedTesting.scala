@@ -199,7 +199,8 @@ object Prop {
       unit(Executors.newCachedThreadPool)           -> .25)
 
     def forAllPar[A](g: Gen[A])(f: A => Par[Boolean]): Prop = {
-      forAll(S.map2(g)((_,_))) { case (s, a) => f(a)(s).get }
+      // object ** is defined at the end of the file
+      forAll(S ** g) { case s ** a => f(a)(s).get }
     }
   }
 
