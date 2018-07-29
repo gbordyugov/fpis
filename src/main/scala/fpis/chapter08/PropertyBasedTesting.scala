@@ -202,6 +202,9 @@ object Prop {
       // object ** is defined at the end of the file
       forAll(S ** g) { case s ** a => f(a)(s).get }
     }
+
+    def checkPar(p: Par[Boolean]): Prop =
+      forAllPar(Gen.unit(()))(_ => p)
   }
 
 
@@ -211,6 +214,7 @@ object Prop {
     else
       Falsified("()", 0)
   }
+
 
 
   /*
