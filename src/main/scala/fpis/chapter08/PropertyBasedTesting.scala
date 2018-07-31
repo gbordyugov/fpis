@@ -7,7 +7,8 @@ import fpis.chapter06.RNG.nonNegativeInt
 
 import fpis.chapter05.Stream
 
-import fpis.chapter07.Par._
+import fpis.chapter07.Par
+import fpis.chapter07.Par.Par
 
 /*
  * Exercise 8.1
