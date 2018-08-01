@@ -97,7 +97,10 @@ object Par {
       /*
        * this will block the caller's thread
        */
-      def call = a(es).get
+      def call = {
+        println("call")
+        a(es).get
+      }
     })
 
   /*
@@ -264,10 +267,15 @@ object Par {
 
 object Examples {
   val es = Executors.newFixedThreadPool(2)
-  val p = Par.unit(1)
+  val p = Par.lazyUnit(1)
 
   val things = (1 to 500).map(Par.lazyUnit(_)).toList
   val thing = Par.sequence(things)
 
   val anotherThing = Par.map2(Par.lazyUnit(1), Par.lazyUnit(1))(_ + _)
+
+  val p1 = Par.unit(1)
+  val p2 = Par.fork(p1)
+  val p3 = Par.fork(p2)
+  val p4 = Par.fork(p3)
 }
