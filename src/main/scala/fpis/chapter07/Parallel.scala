@@ -259,3 +259,10 @@ object Par {
     (f: (A, B) => C): Par[C] =
       flatMap(pa){a => flatMap(pb){b => unit(f(a, b))}}
 }
+
+
+
+object Examples {
+  val es = Executors.newFixedThreadPool(2)
+  val p = Par.unit(1)
+}
