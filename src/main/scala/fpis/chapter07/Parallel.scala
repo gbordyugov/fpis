@@ -282,4 +282,7 @@ object Examples {
   val p2 = Par.fork(p1)
   val p3 = Par.fork(p2)
   val p4 = Par.fork(p3)
+
+  val lst = Par.unit(List(3, 4, 1, 2))
+  val sortedLst = Par.map(lst)(_.sorted)
 }
