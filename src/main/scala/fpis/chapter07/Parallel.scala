@@ -265,4 +265,8 @@ object Par {
 object Examples {
   val es = Executors.newFixedThreadPool(2)
   val p = Par.unit(1)
+
+  val things = (1 to 500).map(Par.unit(_)).toList
+  val thing = Par.sequence(things)
+
 }
