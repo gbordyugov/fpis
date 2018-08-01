@@ -107,6 +107,10 @@ object Par {
    * Exercise 7.4
    */
 
+  /*
+   * this one takes a function and turns it into another function
+   * that does its dirty job in the background
+   */
   def asyncF[A, B](f: A => B): A => Par[B] =
     a => lazyUnit(f(a))
 
