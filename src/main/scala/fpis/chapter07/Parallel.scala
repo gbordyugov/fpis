@@ -266,7 +266,8 @@ object Examples {
   val es = Executors.newFixedThreadPool(2)
   val p = Par.unit(1)
 
-  val things = (1 to 500).map(Par.unit(_)).toList
+  val things = (1 to 500).map(Par.lazyUnit(_)).toList
   val thing = Par.sequence(things)
 
+  val anotherThing = Par.map2(Par.lazyUnit(1), Par.lazyUnit(1))(_ + _)
 }
