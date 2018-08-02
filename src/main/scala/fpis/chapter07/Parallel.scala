@@ -285,4 +285,14 @@ object Examples {
 
   val lst = Par.unit(List(3, 4, 1, 2))
   val sortedLst = Par.map(lst)(_.sorted)
+
+  def sumSeq(s: Seq[Int]): Par.Par[Int] = {
+    val length = s.length
+    if (length <= 100)
+      Par.lazyUnit(s.foldRight(0)(_ + _))
+    else {
+      val (l, r) = s.splitAt(length/2)
+      Par.map2(sumSeq(l), sumSeq(r))(_ + _)
+    }
+  }
 }
