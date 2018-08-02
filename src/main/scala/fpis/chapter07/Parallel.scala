@@ -271,6 +271,8 @@ object Par {
 
 object Examples {
   val es = Executors.newFixedThreadPool(2)
+  def run[A](p: Par.Par[A]) = Par.run(es)(p).get
+
   val p = Par.lazyUnit(1)
 
   val things = (1 to 500).map(Par.lazyUnit(_)).toList
