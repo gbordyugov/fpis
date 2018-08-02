@@ -98,7 +98,7 @@ object Par {
        * this will block the caller's thread
        */
       def call = {
-        println("call")
+        println("forking")
         a(es).get
       }
     })
