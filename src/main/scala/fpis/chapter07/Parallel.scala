@@ -259,12 +259,12 @@ object Par {
   def flatMapByJoin[A, B](pa: Par[A])(f: A => Par[B]): Par[B] =
       join(map(pa)(f))
 
-    def flatMapByMap2[A, B](pa: Par[A])(f: A => Par[B]): Par[B] =
-      join(map2(pa, unit(1)){(a, b) => f(a)})
+  def flatMapByMap2[A, B](pa: Par[A])(f: A => Par[B]): Par[B] =
+    join(map2(pa, unit(1)){(a, b) => f(a)})
 
-    def map2ByFlatMap[A, B, C](pa: Par[A], pb: Par[B])
+  def map2ByFlatMap[A, B, C](pa: Par[A], pb: Par[B])
     (f: (A, B) => C): Par[C] =
-      flatMap(pa){a => flatMap(pb){b => unit(f(a, b))}}
+    flatMap(pa){a => flatMap(pb){b => unit(f(a, b))}}
 }
 
 
