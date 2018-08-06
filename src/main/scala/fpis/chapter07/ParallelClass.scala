@@ -20,10 +20,12 @@ object Par {
    * Par[A] is parameterised by an ExecutorService
    */
   case class Par[A](run: ExecutorService => Future[A]) { self =>
+    def apply(es: ExecutorService) = run(es)
+
     def map2[B, C](that: Par[B])(f: (A, B) => C): Par[C] = 
       Par[C](es => {
-        val x = this.run(es)
-        val y = that.run(es)
+        val x = this(es)
+        val y = that(es)
         Map2Future(x, y)(f)
       })
 
@@ -36,7 +38,7 @@ object Par {
          * this will block the caller's thread
          */
         def call = {
-          self.run(es).get
+          self(es).get
         }
       }))
 
@@ -138,7 +140,7 @@ object Par {
   }
 
   def equal[A](e: ExecutorService) (p: Par[A], q: Par[A]): Boolean =
-    p.run(e).get == q.run(e).get
+    p(e).get == q(e).get
 
 
   /*
@@ -170,7 +172,7 @@ object Par {
 
   def badFork[A](fa: => Par[A]): Par[A] =
     // doesn't really do any forking
-  Par[A](es => fa.run(es))
+  Par[A](es => fa(es))
 
 
   /*
@@ -178,7 +180,7 @@ object Par {
    * result is neeed
    */
   def delay[A](fa: => Par[A]): Par[A] =
-    Par[A](es => fa.run(es))
+    Par[A](es => fa(es))
 
 
   /*
@@ -187,8 +189,8 @@ object Par {
 
   def choiceN[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
     Par[A](es => {
-      val k = n.run(es).get
-      choices(k).run(es)
+      val k = n(es).get
+      choices(k)(es)
     })
 
   def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
@@ -201,8 +203,8 @@ object Par {
 
   def choiceMap[K, V](key: Par[K])(chs: Map[K, Par[V]]): Par[V] =
     Par[V](es => {
-      val k = key.run(es).get
-      chs(k).run(es)
+      val k = key(es).get
+      chs(k)(es)
     })
 
 
@@ -212,8 +214,8 @@ object Par {
 
   def chooser[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] =
     Par[B](es => {
-      val a = pa.run(es).get
-      choices(a).run(es)
+      val a = pa(es).get
+      choices(a)(es)
     })
 
   def choiceByChooser[A, B](cond: Par[Boolean])
@@ -226,8 +228,8 @@ object Par {
    * my favourite one!
    */
   def flatMap[A, B](pa: Par[A])(f: A => Par[B]): Par[B] = Par[B](es => {
-    val a = pa.run(es).get
-    f(a).run(es)
+    val a = pa(es).get
+    f(a)(es)
   })
 
   /*
