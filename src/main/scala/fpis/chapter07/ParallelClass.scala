@@ -254,8 +254,28 @@ object Par {
 }
 
 object Examples {
-  val es = Executors.newFixedThreadPool(2)
+  val es = Executors.newFixedThreadPool(16)
 
   val p1 = Par.unit(1)
   val p2 = Par.lazyUnit(1)
+
+  def mergeSort(s: List[Int]): Par.Par[List[Int]] = {
+    def merge(a: List[Int], b: List[Int], acc: List[Int] = List()): List[Int] = (a, b) match {
+      case (a, Nil) => a
+      case (Nil, b) => b
+      case (x::xs, y::ys) =>
+        if (x <= y)
+          x :: merge(xs, y :: ys)
+        else
+          y :: merge(x :: xs, ys)
+    }
+    val length = s.length
+    if (length < 2)
+      Par.unit(s)
+    else {
+      val (l, r) = s.splitAt(length/2)
+      val (lSorted, rSorted) = (mergeSort(l), mergeSort(r))
+      lSorted.map2(rSorted)((a, b) => merge(a, b)).fork
+    }
+  }
 }
