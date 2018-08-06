@@ -1,5 +1,7 @@
+
 package fpis.chapter07class
 
+import annotation.tailrec
 import java.util.concurrent.{ExecutorService, Future, TimeUnit,
 Callable, Executors}
 
@@ -259,16 +261,19 @@ object Examples {
   val p1 = Par.unit(1)
   val p2 = Par.lazyUnit(1)
 
-  def mergeSort(s: List[Int]): Par.Par[List[Int]] = {
-    def merge(a: List[Int], b: List[Int], acc: List[Int] = List()): List[Int] = (a, b) match {
-      case (a, Nil) => a
-      case (Nil, b) => b
-      case (x::xs, y::ys) =>
-        if (x <= y)
-          x :: merge(xs, y :: ys)
+  @tailrec
+  def merge(a: List[Int], b: List[Int], acc: List[Int] = List()): List[Int] =
+    (a, b) match {
+      case (Nil,   Nil)       => acc.reverse
+      case (a::as, Nil)       => merge(as, Nil, a +: acc)
+      case (Nil, b::bs)       => merge(Nil, bs, b +: acc)
+      case (a::as, b::bs)     =>
+        if (a <= b)
+          merge(as, b::bs, a +: acc)
         else
-          y :: merge(x :: xs, ys)
+          merge(a::as, bs, b +: acc)
     }
+  def mergeSort(s: List[Int]): Par.Par[List[Int]] = {
     val length = s.length
     if (length < 2)
       Par.unit(s)
