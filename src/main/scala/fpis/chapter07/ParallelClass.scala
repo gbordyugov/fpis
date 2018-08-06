@@ -40,6 +40,7 @@ object Par {
          * this will block the caller's thread
          */
         def call = {
+          println("fork")
           self(es).get
         }
       }))
@@ -256,7 +257,7 @@ object Par {
 }
 
 object Examples {
-  val es = Executors.newFixedThreadPool(16)
+  val es = Executors.newFixedThreadPool(2)
 
   val p1 = Par.unit(1)
   val p2 = Par.lazyUnit(1)
@@ -279,6 +280,7 @@ object Examples {
       Par.unit(s)
     else {
       val (l, r) = s.splitAt(length/2)
+      println((l, r))
       val (lSorted, rSorted) = (mergeSort(l), mergeSort(r))
       lSorted.map2(rSorted)((a, b) => merge(a, b)).fork
     }
