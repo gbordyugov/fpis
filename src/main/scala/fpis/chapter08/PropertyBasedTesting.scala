@@ -222,6 +222,15 @@ object Prop {
     val pint = Gen.choose(0, 10).map(Par.unit(_))
     val p5 = forAllPar(pint)(n => equal(Par.map(n)(y => y), n))
     run(p5)
+
+    /*
+     * Exercise 8.16
+     */
+    def parInt(i: Int) = {
+      val lstPar = Par.map(Par.unit(i))(List.fill(10)(_))
+      Par.fork(Par.map(lstPar)(lst => lst.foldLeft(0)(_ + _)))
+    }
+    val pint816: Gen[Par[Int]] = Gen.choose(0, 10).map(parInt)
   }
 
 
