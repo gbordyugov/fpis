@@ -270,6 +270,14 @@ object Prop {
 
 
   /*
+   * Exercise 8.19
+   */
+
+  def genStringIntFn(g: Gen[Int]): Gen[String => Int] =
+    g.map(i => (s => i + s.length))
+
+
+  /*
    * Exercise 8.20 skipped
    */
 }
