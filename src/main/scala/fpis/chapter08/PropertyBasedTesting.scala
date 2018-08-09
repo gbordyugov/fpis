@@ -267,6 +267,11 @@ object Prop {
   val prop818 = forAll(contents.listOfN(length)) { lst =>
     (lst.takeWhile(_ < 50) ++ lst.takeWhile(_ < 50)).length == lst.length
   }
+
+
+  /*
+   * Exercise 8.20 skipped
+   */
 }
 
 /*
