@@ -238,7 +238,6 @@ object Prop {
     val pint817 = Gen.choose(0, 10).map(Par.unit(_))
     val p6 = forAllPar(pint)(n => equal(Par.fork(n), n))
     run(p6)
-
   }
 
 
@@ -257,6 +256,17 @@ object Prop {
 
   def equal[A](p1: Par[A], p2: Par[A]): Par[Boolean] =
     Par.map2(p1, p2)(_ == _)
+
+
+  /*
+   * Exercise 8.18
+   */
+
+  val contents = Gen.choose(0, 100)
+  val length   = Gen.choose(1, 100)
+  val prop818 = forAll(contents.listOfN(length)) { lst =>
+    (lst.takeWhile(_ < 50) ++ lst.takeWhile(_ < 50)).length == lst.length
+  }
 }
 
 /*
