@@ -218,6 +218,10 @@ object Prop {
         )
     }
     run(p4)
+
+    val pint = Gen.choose(0, 10).map(Par.unit(_))
+    val p5 = forAllPar(pint)(n => equal(Par.map(n)(y => y), n))
+    run(p5)
   }
 
 
