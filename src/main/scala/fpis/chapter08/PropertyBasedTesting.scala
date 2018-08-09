@@ -231,6 +231,14 @@ object Prop {
       Par.fork(Par.map(lstPar)(lst => lst.foldLeft(0)(_ + _)))
     }
     val pint816: Gen[Par[Int]] = Gen.choose(0, 10).map(parInt)
+
+    /*
+     * Exercise 8.17
+     */
+    val pint817 = Gen.choose(0, 10).map(Par.unit(_))
+    val p6 = forAllPar(pint)(n => equal(Par.fork(n), n))
+    run(p6)
+
   }
 
 
