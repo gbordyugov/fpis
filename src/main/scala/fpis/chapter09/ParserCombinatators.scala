@@ -5,8 +5,24 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   def char(c: Char): Parser[Char]
 
   def or[A](s1: Parser[A], s2: Parser[A]): Parser[A]
+
+  /*
+   * OK, here's something going on: this one promotes a string to a
+   * parser...
+   */
   implicit def string(s: String): Parser[String]
+
+  /*
+   * ... and we would like to promote a parser to ParserOps,
+   * but it wouldn't go, since scala doesn't chain implicit
+   * convertions...
+   */
   implicit def operators[A](p: Parser[A]) = ParserOps[A](p)
+
+  /*
+   * ... except if the convertion function itself has an implicit
+   * parameter. We use it here to make ParserOps[String] out of String
+   */
   implicit def asStringParser[A](a: A)
     (implicit f: A => Parser[String]): ParserOps[String] =
       ParserOps(f(a))
