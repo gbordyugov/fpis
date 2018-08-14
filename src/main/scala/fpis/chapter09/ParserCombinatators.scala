@@ -22,6 +22,8 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   /*
    * ... except if the convertion function itself has an implicit
    * parameter. We use it here to make ParserOps[String] out of String
+   *
+   * see https://stackoverflow.com/questions/5332801/how-can-i-chain-implicits-in-scala/5332804
    */
   implicit def asStringParser[A](a: A)
     (implicit f: A => Parser[String]): ParserOps[String] =
