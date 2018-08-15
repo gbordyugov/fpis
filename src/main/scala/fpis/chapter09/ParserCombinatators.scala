@@ -13,6 +13,9 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   def or[A](s1: Parser[A], s2: Parser[A]): Parser[A]
 
+  def succeed[A](a: A): Parser[A] =
+    string("").map(_ => a)
+
   /*
    * OK, here's something going on: this one promotes a string to a
    * parser...
