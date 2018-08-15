@@ -17,6 +17,11 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     string("").map(_ => a)
 
   /*
+   * parses A and returns the digested portion of the string
+   */
+  def slice[A](p: Parser[A]): Parser[String]
+
+  /*
    * OK, here's something going on: this one promotes a string to a
    * parser...
    */
