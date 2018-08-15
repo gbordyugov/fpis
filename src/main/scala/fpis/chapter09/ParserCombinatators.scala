@@ -27,6 +27,12 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   def product[A,B](a: Parser[A], b: Parser[B]): Parser[(A, B)]
 
   /*
+   * Exercise 9.1
+   */
+  def map2[A,B,C](a: Parser[A], b: Parser[B])(f: (A, B) => C): Parser[C] =
+    map(product(a, b)){case (a, b) => f(a, b)}
+
+  /*
    * OK, here's something going on: this one promotes a string to a
    * parser...
    */
