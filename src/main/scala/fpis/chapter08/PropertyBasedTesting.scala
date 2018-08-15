@@ -39,36 +39,39 @@ trait Prop {
 */
 
 
+import Prop._
+
+case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
+  /*
+   * Exercise 8.9
+   */
+  def &&(that: Prop): Prop =
+    Prop {
+      (ms, n, rng) => run(ms, n, rng) match {
+        case Passed => that.run(ms, n, rng)
+        case Proved => that.run(ms, n, rng)
+        case result => result
+      }
+    }
+
+  def ||(that: Prop): Prop =
+    Prop {
+      (ms, n, rng) => run(ms, n, rng) match {
+        case Passed => Passed
+        case Proved => Proved
+        // this drops the information from the first run
+        // potential bug
+        case result => that.run(ms, n, rng)
+      }
+    }
+}
+
 object Prop {
   type FailedCase = String
   type SuccessCount = Int
   type TestCases = Int
 
   type MaxSize = Int
-  case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
-    /*
-     * Exercise 8.9
-     */
-    def &&(that: Prop): Prop =
-      Prop {
-        (ms, n, rng) => run(ms, n, rng) match {
-          case Passed => that.run(ms, n, rng)
-          case Proved => that.run(ms, n, rng)
-          case result => result
-        }
-      }
-
-    def ||(that: Prop): Prop =
-      Prop {
-        (ms, n, rng) => run(ms, n, rng) match {
-          case Passed => Passed
-          case Proved => Proved
-          // this drops the information from the first run
-          // potential bug
-          case result => that.run(ms, n, rng)
-        }
-      }
-  }
 
 
   sealed trait Result {
@@ -84,9 +87,9 @@ object Prop {
   }
 
   case class Falsified(failure: FailedCase,
-                       successes: SuccessCount) extends Result {
-    def isFalsified = true
-  }
+    successes: SuccessCount) extends Result {
+      def isFalsified = true
+    }
 
   def forAll[A](as: Gen[A])(f: A => Boolean): Prop = Prop {
     /*
