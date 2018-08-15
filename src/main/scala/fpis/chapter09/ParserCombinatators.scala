@@ -4,6 +4,8 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   def run[A](p: Parser[A])(input: String): Either[ParseError, A]
   def char(c: Char): Parser[Char]
 
+  def map[A, B](a: Parser[A])(f: A => B): Parser[B]
+
   def or[A](s1: Parser[A], s2: Parser[A]): Parser[A]
 
   /*
