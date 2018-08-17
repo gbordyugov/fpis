@@ -16,7 +16,7 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   def map[A, B](a: Parser[A])(f: A => B): Parser[B]
 
-  def or[A](s1: Parser[A], s2: Parser[A]): Parser[A]
+  def or[A](s1: Parser[A], s2: => Parser[A]): Parser[A]
 
   def succeed[A](a: A): Parser[A] =
     string("").map(_ => a)
