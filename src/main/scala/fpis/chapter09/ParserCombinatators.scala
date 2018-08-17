@@ -30,8 +30,10 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   /*
    * A followed by B
+   *
+   * Implemented as part of Exercise 9.7 in terms of flatMap()
    */
-  def product[A,B](a: Parser[A], b: => Parser[B]): Parser[(A, B)]
+  // def product[A,B](a: Parser[A], b: => Parser[B]): Parser[(A, B)]
 
   /*
    * Exercise 9.1
@@ -72,6 +74,12 @@ trait Parsers[ParseError, Parser[+_]] { self =>
       map(listOfN(n, char('a'))) { chars => (n, chars) }
     }
   }
+
+  /*
+   * Exercise 9.7
+   */
+  def product[A, B](a: Parser[A], b: Parser[B]): Parser[(A, B)] =
+    flatMap(a)(a => map(b)(b => (a, b)))
 
   /*
    * OK, here's something going on: this one promotes a string to a
