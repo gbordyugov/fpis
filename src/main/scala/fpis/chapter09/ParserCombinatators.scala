@@ -2,6 +2,8 @@ package fpis.chapter09
 
 import fpis.chapter08._
 
+import scala.util.matching._
+
 trait Parsers[ParseError, Parser[+_]] { self =>
 
   def run[A](p: Parser[A])(input: String): Either[ParseError, A]
@@ -55,6 +57,21 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    * Exercise 9.5
    */
   def delay[A](p: => Parser[A]): Parser[A]
+
+  def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B]
+
+  /*
+   * Exercise 9.6
+   */
+  implicit def regex(r: Regex): Parser[String]
+
+  def nAs: Parser[(Int, List[Char])] = {
+    val regexParser = "[0-9]+".r
+    val intParser = map(regexParser)(_.toInt)
+    flatMap(intParser) { n =>
+      map(listOfN(n, char('a'))) { chars => (n, chars) }
+    }
+  }
 
   /*
    * OK, here's something going on: this one promotes a string to a
