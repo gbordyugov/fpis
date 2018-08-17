@@ -44,9 +44,9 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    * Re-defined in terms of flatMap() as part of Exercise 9.7
    */
   /*
-  def map2[A,B,C](a: Parser[A], b: => Parser[B])(f: (A, B) => C): Parser[C] =
-    map(product(a, b)){case (a, b) => f(a, b)}
-  */
+   def map2[A,B,C](a: Parser[A], b: => Parser[B])(f: (A, B) => C): Parser[C] =
+   map(product(a, b)){case (a, b) => f(a, b)}
+   */
 
   /*
    * Exercise 9.3
@@ -118,7 +118,7 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   implicit def asStringParser[A](a: A)
     (implicit f: A => Parser[String]): ParserOps[String] =
-      ParserOps(f(a))
+    ParserOps(f(a))
 
   /*
    * Re-defined in Exercise 9.4
@@ -144,17 +144,17 @@ trait Parsers[ParseError, Parser[+_]] { self =>
      */
     def productLaw[A, B, C](a: Parser[A], b: Parser[B], c: Parser[C])
       (in: Gen[String]): Prop = {
-        def flattenL[A, B, C](a: ((A, B), C)): (A, B, C) = a match {
-          case ((a, b), c) => (a, b, c)
-        }
-
-        def flattenR[A, B, C](a: (A, (B, C))): (A, B, C) = a match {
-          case (a, (b, c)) => (a, b, c)
-        }
-        val lft: Parser[(A, B, C)] = ((a ** b) ** c).map(flattenL)
-        val rgt: Parser[(A, B, C)] = (a ** (b ** c)).map(flattenR)
-        equal(lft, rgt)(in)
+      def flattenL[A, B, C](a: ((A, B), C)): (A, B, C) = a match {
+        case ((a, b), c) => (a, b, c)
       }
+
+      def flattenR[A, B, C](a: (A, (B, C))): (A, B, C) = a match {
+        case (a, (b, c)) => (a, b, c)
+      }
+      val lft: Parser[(A, B, C)] = ((a ** b) ** c).map(flattenL)
+      val rgt: Parser[(A, B, C)] = (a ** (b ** c)).map(flattenR)
+      equal(lft, rgt)(in)
+    }
 
     def mapLaw[A](p: Parser[A])(in: Gen[String]): Prop =
       equal(p, p.map(a => a))(in)
