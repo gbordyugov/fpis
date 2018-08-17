@@ -52,6 +52,11 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   }
 
   /*
+   * Exercise 9.5
+   */
+  def delay[A](p: => Parser[A]): Parser[A]
+
+  /*
    * OK, here's something going on: this one promotes a string to a
    * parser...
    */
