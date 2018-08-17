@@ -37,9 +37,13 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   /*
    * Exercise 9.1
+   *
+   * Re-defined in terms of flatMap() as part of Exercise 9.7
    */
+  /*
   def map2[A,B,C](a: Parser[A], b: => Parser[B])(f: (A, B) => C): Parser[C] =
     map(product(a, b)){case (a, b) => f(a, b)}
+  */
 
   /*
    * Exercise 9.3
@@ -80,6 +84,9 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   def product[A, B](a: Parser[A], b: Parser[B]): Parser[(A, B)] =
     flatMap(a)(a => map(b)(b => (a, b)))
+
+  def map2[A, B, C](a: Parser[A], b: Parser[B])(f: (A, B) => C): Parser[C] =
+    flatMap(a)(a => map(b)(b => f(a, b)))
 
   /*
    * OK, here's something going on: this one promotes a string to a
