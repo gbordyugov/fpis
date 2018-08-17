@@ -16,7 +16,10 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   // def many[A](p: Parser[A]): Parser[List[A]]
 
-  def map[A, B](a: Parser[A])(f: A => B): Parser[B]
+  /*
+   * redefined in Exercise 9.8 through flatMap
+   */
+  // def map[A, B](a: Parser[A])(f: A => B): Parser[B]
 
   def or[A](s1: Parser[A], s2: => Parser[A]): Parser[A]
 
@@ -87,6 +90,12 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   def map2[A, B, C](a: Parser[A], b: Parser[B])(f: (A, B) => C): Parser[C] =
     flatMap(a)(a => map(b)(b => f(a, b)))
+
+  /*
+   * Exercise 9.8
+   */
+  def map[A, B](a: Parser[A])(f: A => B): Parser[B] =
+    flatMap(a)(a => succeed(f(a)))
 
   /*
    * OK, here's something going on: this one promotes a string to a
