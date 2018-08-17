@@ -91,6 +91,7 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     def many(): Parser[List[A]] = self.many(p)
     def product[B](p2: Parser[B]) = self.product(p, p2)
     def      **[B](p2: Parser[B]) = self.product(p, p2)
+    def flatMap[B](f: A => Parser[B]): Parser[B] = self.flatMap(p)(f)
   }
 
   object Laws {
