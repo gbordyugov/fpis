@@ -62,8 +62,8 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     def or[B>:A](p2: => Parser[B]): Parser[B] = self.or(p, p2)
     def map[B](f: A => B): Parser[B] = self.map(p)(f)
     def many(): Parser[List[A]] = self.many(p)
-    def product[B>:A](p2: Parser[B]) = self.product(p, p2)
-    def      **[B>:A](p2: Parser[B]) = self.product(p, p2)
+    def product[B](p2: Parser[B]) = self.product(p, p2)
+    def      **[B](p2: Parser[B]) = self.product(p, p2)
   }
 
   object Laws {
