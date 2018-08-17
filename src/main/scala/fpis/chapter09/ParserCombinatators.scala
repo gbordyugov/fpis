@@ -44,6 +44,14 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     or(map2(p, many(p))(_ :: _), succeed(List(): List[A]))
 
   /*
+   * Exercise 9.4
+   */
+  def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]] = n match {
+    case 0 => succeed(List(): List[A])
+    case m => map2(p, listOfN(n - 1, p))(_ :: _)
+  }
+
+  /*
    * OK, here's something going on: this one promotes a string to a
    * parser...
    */
@@ -66,7 +74,10 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     (implicit f: A => Parser[String]): ParserOps[String] =
       ParserOps(f(a))
 
-  def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]]
+  /*
+   * Re-defined in Exercise 9.4
+   */
+  // def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]]
 
   case class ParserOps[A](p: Parser[A]) {
     def  |[B>:A](p2: Parser[B]): Parser[B] = self.or(p, p2)
