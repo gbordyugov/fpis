@@ -3,11 +3,16 @@ package fpis.chapter09
 import fpis.chapter08._
 
 trait Parsers[ParseError, Parser[+_]] { self =>
+
   def run[A](p: Parser[A])(input: String): Either[ParseError, A]
+
   def char(c: Char): Parser[Char] =
     string(c.toString).map(_.charAt(0))
 
-  def many[A](p: Parser[A]): Parser[List[A]]
+  /*
+   * redefined below in Exercise 9.3
+   */
+  // def many[A](p: Parser[A]): Parser[List[A]]
 
   def map[A, B](a: Parser[A])(f: A => B): Parser[B]
 
@@ -31,6 +36,12 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   def map2[A,B,C](a: Parser[A], b: Parser[B])(f: (A, B) => C): Parser[C] =
     map(product(a, b)){case (a, b) => f(a, b)}
+
+  /*
+   * Exercise 9.3
+   */
+  def many[A](p: Parser[A]): Parser[List[A]] =
+    or(???, succeed(List(): List[A]))
 
   /*
    * OK, here's something going on: this one promotes a string to a
