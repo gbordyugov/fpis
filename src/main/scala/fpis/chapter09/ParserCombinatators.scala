@@ -75,19 +75,16 @@ trait Parsers[ParseError, Parser[+_]] { self =>
      */
     def productLaw[A, B, C](a: Parser[A], b: Parser[B], c: Parser[C])
       (in: Gen[String]): Prop = {
-        def flattenL[A, B, C](a: ((A, B), C)): (A, B, C) =
-          (a._1._1, a._1._2, a._2)
+        def flattenL[A, B, C](a: ((A, B), C)): (A, B, C) = a match {
+          case ((a, b), c) => (a, b, c)
+        }
 
-        def flattenR[A, B, C](a: (A, (B, C))): (A, B, C) =
-          (a._1, a._2._1, a._2._2)
-        val lft1: Parser[((A, B), C)] = (a ** b) ** c
-        // val rgt1: Parser[(A, (B, C))] = a ** (b ** c)
-        /*
-        val lft: Parser[(A, B, C)] = lft1.ap(flattenL)
-        val rgt: Parser[(A, B, C)] = rgt1.map(flattenR)
-        equal(lft, rgt)(int)
-        */
-       ???
+        def flattenR[A, B, C](a: (A, (B, C))): (A, B, C) = a match {
+          case (a, (b, c)) => (a, b, c)
+        }
+        val lft: Parser[(A, B, C)] = ((a ** b) ** c).map(flattenL)
+        val rgt: Parser[(A, B, C)] = (a ** (b ** c)).map(flattenR)
+        equal(lft, rgt)(in)
       }
 
     def mapLaw[A](p: Parser[A])(in: Gen[String]): Prop =
