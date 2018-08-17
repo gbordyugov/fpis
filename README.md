@@ -1,4 +1,4 @@
-# My read through some of the chapter of Functional Programming in Scala
+# My read through some of the chapters of [Functional Programming in Scala](https://www.manning.com/books/functional-programming-in-scala)
 
 Open/skipped exercises:
   - Exercise 7.2: I had no idea
