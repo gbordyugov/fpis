@@ -29,12 +29,12 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   /*
    * A followed by B
    */
-  def product[A,B](a: Parser[A], b: Parser[B]): Parser[(A, B)]
+  def product[A,B](a: Parser[A], b: => Parser[B]): Parser[(A, B)]
 
   /*
    * Exercise 9.1
    */
-  def map2[A,B,C](a: Parser[A], b: Parser[B])(f: (A, B) => C): Parser[C] =
+  def map2[A,B,C](a: Parser[A], b: => Parser[B])(f: (A, B) => C): Parser[C] =
     map(product(a, b)){case (a, b) => f(a, b)}
 
   /*
