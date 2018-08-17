@@ -41,7 +41,7 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    * Exercise 9.3
    */
   def many[A](p: Parser[A]): Parser[List[A]] =
-    or(???, succeed(List(): List[A]))
+    or(map2(p, many(p))(_ :: _), succeed(List(): List[A]))
 
   /*
    * OK, here's something going on: this one promotes a string to a
