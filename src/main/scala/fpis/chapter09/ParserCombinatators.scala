@@ -130,6 +130,7 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   /*
    * Sequences two parsers, ignoring the result of the first.
    * We wrap the ignored half in slice, since we don't care about its result.
+   * (is lazy in the second argument since map2() is lazy in its second arg too
    */
   def skipL[B](p: Parser[Any], p2: => Parser[B]): Parser[B] =
     map2(slice(p), p2)((_,b) => b)
@@ -137,6 +138,7 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   /*
    * Sequences two parsers, ignoring the result of the second.
    * We wrap the ignored half in slice, since we don't care about its result.
+   * (is lazy in the second argument since map2() is lazy in its second arg too
    */
   def skipR[A](p: Parser[A], p2: => Parser[Any]): Parser[A] =
     map2(p, slice(p2))((a,b) => a)
