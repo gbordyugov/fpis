@@ -150,6 +150,16 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   def number: Parser[Int] = "[0-9]+".r.map(_.toInt)
 
+  def doubleQuote: Parser[String] = "\""
+
+  def singleQuote: Parser[String] = "'"
+
+  def singleQuoted[A](p: Parser[A]): Parser[A] =
+    between(singleQuote, singleQuote, p)
+
+  def doubleQuoted[A](p: Parser[A]): Parser[A] =
+    between(doubleQuote, doubleQuote, p)
+
   case class ParserOps[A](p: Parser[A]) {
     def  |[B>:A](p2: Parser[B]): Parser[B] = self.or(p, p2)
     def or[B>:A](p2: => Parser[B]): Parser[B] = self.or(p, p2)
