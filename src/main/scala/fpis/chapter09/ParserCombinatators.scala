@@ -127,6 +127,20 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   // def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]]
 
+  /*
+   * Sequences two parsers, ignoring the result of the first.
+   * We wrap the ignored half in slice, since we don't care about its result.
+   */
+  def skipL[B](p: Parser[Any], p2: => Parser[B]): Parser[B] =
+    map2(slice(p), p2)((_,b) => b)
+
+  /*
+   * Sequences two parsers, ignoring the result of the second.
+   * We wrap the ignored half in slice, since we don't care about its result.
+   */
+  def skipR[A](p: Parser[A], p2: => Parser[Any]): Parser[A] =
+    map2(p, slice(p2))((a,b) => a)
+
   case class ParserOps[A](p: Parser[A]) {
     def  |[B>:A](p2: Parser[B]): Parser[B] = self.or(p, p2)
     def or[B>:A](p2: => Parser[B]): Parser[B] = self.or(p, p2)
