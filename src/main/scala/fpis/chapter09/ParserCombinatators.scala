@@ -74,8 +74,6 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   implicit def regex(r: Regex): Parser[String]
 
-  def whitespace: Parser[String] = "\\s*".r
-
   def nAs: Parser[(Int, List[Char])] = {
     val regexParser = "[0-9]+".r
     val intParser = map(regexParser)(_.toInt)
@@ -142,6 +140,10 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   def skipR[A](p: Parser[A], p2: => Parser[Any]): Parser[A] =
     map2(p, slice(p2))((a,b) => a)
+
+  def whitespace: Parser[String] = "\\s*".r
+
+  def token(s: String) = s <* whitespace
 
   case class ParserOps[A](p: Parser[A]) {
     def  |[B>:A](p2: Parser[B]): Parser[B] = self.or(p, p2)
