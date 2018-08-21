@@ -151,6 +151,10 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     def product[B](p2: Parser[B]) = self.product(p, p2)
     def      **[B](p2: Parser[B]) = self.product(p, p2)
     def flatMap[B](f: A => Parser[B]): Parser[B] = self.flatMap(p)(f)
+
+    def *>[B](q: => Parser[B]  ): Parser[B] = self.skipL(p, q)
+    def <*   (q: => Parser[Any]): Parser[A] = self.skipR(p, q)
+
   }
 
   object Laws {
