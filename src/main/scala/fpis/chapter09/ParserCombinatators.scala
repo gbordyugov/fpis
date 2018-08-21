@@ -148,6 +148,8 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   def between[L, R, A](l: Parser[L], r: Parser[R], a: Parser[A]): Parser[A] =
     l *> a <* r
 
+  def number: Parser[Int] = "[0-9]+".r.map(_.toInt)
+
   case class ParserOps[A](p: Parser[A]) {
     def  |[B>:A](p2: Parser[B]): Parser[B] = self.or(p, p2)
     def or[B>:A](p2: => Parser[B]): Parser[B] = self.or(p, p2)
