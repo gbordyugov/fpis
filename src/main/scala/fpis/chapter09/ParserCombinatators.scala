@@ -150,6 +150,8 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   def number: Parser[Int] = "[0-9]+".r.map(_.toInt)
 
+  def colon: Parser[String] = ":"
+
   def doubleQuote: Parser[String] = "\""
 
   def singleQuote: Parser[String] = "'"
