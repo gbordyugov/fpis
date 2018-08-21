@@ -156,7 +156,6 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
     def *>[B](q: => Parser[B]  ): Parser[B] = self.skipL(p, q)
     def <*   (q: => Parser[Any]): Parser[A] = self.skipR(p, q)
-
   }
 
   object Laws {
