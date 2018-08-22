@@ -148,7 +148,9 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   def between[L, R, A](l: Parser[L], r: Parser[R], a: Parser[A]): Parser[A] =
     l *> a <* r
 
-  def number: Parser[Int] = "[0-9]+".r.map(_.toInt)
+  def digit: Parser[Int] = "[0-9]".r.map(_.toInt)
+
+  def letter: Parser[String] = "[a-Z_]".r
 
   def colon: Parser[String] = ":"
 
