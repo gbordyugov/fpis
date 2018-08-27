@@ -12,16 +12,6 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     string(c.toString).map(_.charAt(0))
 
   /*
-   * redefined below in Exercise 9.3
-   */
-  // def many[A](p: Parser[A]): Parser[List[A]]
-
-  /*
-   * redefined in Exercise 9.8 through flatMap
-   */
-  // def map[A, B](a: Parser[A])(f: A => B): Parser[B]
-
-  /*
    * primitive
    */
   def or[A](s1: Parser[A], s2: => Parser[A]): Parser[A]
@@ -34,12 +24,6 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   def slice[A](p: Parser[A]): Parser[String]
 
-  /*
-   * A followed by B
-   *
-   * Implemented as part of Exercise 9.7 in terms of flatMap()
-   */
-  // def product[A,B](a: Parser[A], b: => Parser[B]): Parser[(A, B)]
 
   /*
    * Exercise 9.1
@@ -47,7 +31,8 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    * Re-defined in terms of flatMap() as part of Exercise 9.7
    */
   /*
-   def map2[A,B,C](a: Parser[A], b: => Parser[B])(f: (A, B) => C): Parser[C] =
+   def map2[A,B,C](a: Parser[A], b: => Parser[B])
+   (f: (A, B) => C): Parser[C] =
    map(product(a, b)){case (a, b) => f(a, b)}
    */
 
@@ -218,7 +203,4 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     def mapLaw[A](p: Parser[A])(in: Gen[String]): Prop =
       equal(p, p.map(a => a))(in)
   }
-}
-
-object ParserCombinators {
 }
