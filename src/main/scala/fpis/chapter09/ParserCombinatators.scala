@@ -21,13 +21,16 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    */
   // def map[A, B](a: Parser[A])(f: A => B): Parser[B]
 
+  /*
+   * primitive
+   */
   def or[A](s1: Parser[A], s2: => Parser[A]): Parser[A]
 
-  def succeed[A](a: A): Parser[A] =
-    string("").map(_ => a)
+  def succeed[A](a: A): Parser[A] = string("").map(_ => a)
 
   /*
    * parses A and returns the digested portion of the string
+   * primitive
    */
   def slice[A](p: Parser[A]): Parser[String]
 
@@ -71,6 +74,7 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   /*
    * Exercise 9.6
+   * primitive
    */
   implicit def regex(r: Regex): Parser[String]
 
@@ -100,6 +104,7 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   /*
    * OK, here's something going on: this one promotes a string to a
    * parser...
+   * primitive
    */
   implicit def string(s: String): Parser[String]
 
@@ -126,18 +131,18 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   // def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]]
 
   /*
-   * Sequences two parsers, ignoring the result of the first.
-   * We wrap the ignored half in slice, since we don't care about its result.
-   * (is lazy in the second argument since map2() is lazy in its second arg too
+   * convenience combinators
+   */
+
+  /*
+   * Sequences two parsers, ignoring the result of the first or the
+   * second. We wrap the ignored half in slice, since we don't care
+   * about its result. It is lazy in the second argument since map2()
+   * is lazy in its second arg too.
    */
   def skipL[B](p: Parser[Any], p2: => Parser[B]): Parser[B] =
     map2(slice(p), p2)((_,b) => b)
 
-  /*
-   * Sequences two parsers, ignoring the result of the second.
-   * We wrap the ignored half in slice, since we don't care about its result.
-   * (is lazy in the second argument since map2() is lazy in its second arg too
-   */
   def skipR[A](p: Parser[A], p2: => Parser[Any]): Parser[A] =
     map2(p, slice(p2))((a,b) => a)
 
@@ -145,8 +150,8 @@ trait Parsers[ParseError, Parser[+_]] { self =>
 
   def token(s: String) = s <* whitespace
 
-  def between[L, R, A](l: Parser[L], r: Parser[R], a: Parser[A]): Parser[A] =
-    l *> a <* r
+  def between[L, R, A](l: Parser[L], r: Parser[R],
+    a: Parser[A]): Parser[A] = l *> a <* r
 
   def digit: Parser[Int] = "[0-9]".r.map(_.toInt)
 
@@ -164,6 +169,10 @@ trait Parsers[ParseError, Parser[+_]] { self =>
   def doubleQuoted[A](p: Parser[A]): Parser[A] =
     between(doubleQuote, doubleQuote, p)
 
+  /*
+   * the purpose of this class is that Parser[A] can be automagically
+   * promoted to a ParserOps[A], using the implicit function above
+   */
   case class ParserOps[A](p: Parser[A]) {
     def  |[B>:A](p2: Parser[B]): Parser[B] = self.or(p, p2)
     def or[B>:A](p2: => Parser[B]): Parser[B] = self.or(p, p2)
@@ -177,6 +186,9 @@ trait Parsers[ParseError, Parser[+_]] { self =>
     def <*   (q: => Parser[Any]): Parser[A] = self.skipR(p, q)
   }
 
+  /*
+   * this one is used for testing
+   */
   object Laws {
     def equal[A](p1: Parser[A], p2: Parser[A])(in: Gen[String]): Prop =
       Prop.forAll(in)(s => run(p1)(s) == run(p2)(s))
