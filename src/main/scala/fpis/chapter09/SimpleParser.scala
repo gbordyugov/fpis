@@ -4,14 +4,14 @@ import scala.util.matching.Regex
 
 import fpis.chapter09.Parsers
 
-class ParseError
+class SimpleParseError
 
-case class SimpleParser[+A](p: String => ParseError) {
+case class SimpleParser[+A](p: String => SimpleParseError) {
 }
 
 object TestingSimpleParser {
-  val parsers: Parsers[ParseError, SimpleParser] = new Parsers[ParseError, SimpleParser] {
-    def run[A](p: SimpleParser[A])(input: String): Either[ParseError, A] = ???
+  val parsers: Parsers[SimpleParseError, SimpleParser] = new Parsers[SimpleParseError, SimpleParser] {
+    def run[A](p: SimpleParser[A])(input: String): Either[SimpleParseError, A] = ???
     def delay[A](p: => SimpleParser[A]): SimpleParser[A] = ???
     def flatMap[A, B](p: SimpleParser[A])(f: A => SimpleParser[B]): SimpleParser[B] = ???
     def or[A](p: SimpleParser[A], q: => SimpleParser[A]): SimpleParser[A] = ???
