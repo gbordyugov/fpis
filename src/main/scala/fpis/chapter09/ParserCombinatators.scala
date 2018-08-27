@@ -120,6 +120,9 @@ trait Parsers[ParseError, Parser[+_]] { self =>
    * parameter. We use it here to make ParserOps[String] out of String
    *
    * see https://stackoverflow.com/questions/5332801/how-can-i-chain-implicits-in-scala/5332804
+   *
+   * in the light of the method string() above, the type A will be
+   * String most of the times
    */
   implicit def asStringParser[A](a: A)
     (implicit f: A => Parser[String]): ParserOps[String] =
