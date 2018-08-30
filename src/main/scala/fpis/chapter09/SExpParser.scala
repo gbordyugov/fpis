@@ -8,6 +8,7 @@ sealed trait Atom
 object Atom {
   case class AInt(i: Int) extends Atom
   case class AString(s: String) extends Atom
+  case class ASymbol(name: String) extends Atom
 }
 
 
