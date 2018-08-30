@@ -6,15 +6,16 @@ import fpis.chapter09.Parsers
 
 sealed trait Atom
 object Atom {
-  case class AInt(i: Int) extends Atom
-  case class AString(s: String) extends Atom
-  case class ASymbol(name: String) extends Atom
+  case class Int(value: scala.Int) extends Atom
+  case class Double(value: scala.Double) extends Atom
+  case class String(value: scala.String) extends Atom
+  case class Symbol(name: scala.String) extends Atom
 }
 
 
 object AtomTest {
-  val i = Atom.AInt(3)
-  val s = Atom.AString("string")
+  val i = Atom.Int(3)
+  val s = Atom.String("string")
 }
 
 
