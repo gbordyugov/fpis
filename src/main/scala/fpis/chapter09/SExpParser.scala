@@ -9,10 +9,13 @@ object Atom {
   case class AInt(i: Int) extends Atom
   case class AString(s: String) extends Atom
 }
+
+
 object AtomTest {
   val i = Atom.AInt(3)
   val s = Atom.AString("string")
 }
+
 
 sealed trait SExp[A] {
   case class Atom[A](value: A) extends SExp[A]
