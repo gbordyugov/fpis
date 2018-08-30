@@ -4,6 +4,10 @@ import scala.util.matching.Regex
 
 import fpis.chapter09.Parsers
 
+trait SExp[A]
+case class Atom[A](value: A) extends SExp[A]
+case class List[A](elements: List[SExp[A]]) extends SExp[A]
+
 class SimpleParseError
 
 case class SimpleParser[+A](run: String => Either[SimpleParseError, A]) {
