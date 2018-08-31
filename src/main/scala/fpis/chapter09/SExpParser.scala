@@ -40,3 +40,6 @@ object TestingSimpleParser {
     implicit def string(s: String): SimpleParser[String] = ???
   }
 }
+object DummyObject {
+  // just playing with magit
+}
