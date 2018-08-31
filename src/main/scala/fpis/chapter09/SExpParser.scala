@@ -6,10 +6,14 @@ import fpis.chapter09.Parsers
 
 sealed trait Atom
 object Atom {
-  case class Int(value: scala.Int) extends Atom
-  case class Double(value: scala.Double) extends Atom
-  case class String(value: scala.String) extends Atom
-  case class Symbol(name: scala.String) extends Atom
+  type MyInt    = scala.Int
+  type MyDouble = scala.Double
+  type MyString = java.lang.String
+
+  case class Int(value: MyInt) extends Atom
+  case class Double(value: MyDouble) extends Atom
+  case class String(value: MyString) extends Atom
+  case class Symbol(name: MyString) extends Atom
 }
 
 
