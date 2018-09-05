@@ -5,21 +5,15 @@ import scala.util.matching.Regex
 import fpis.chapter09.Parsers
 
 sealed trait Atom
-object Atom {
-  type MyInt    = scala.Int
-  type MyDouble = scala.Double
-  type MyString = java.lang.String
-
-  case class Int(value: MyInt) extends Atom
-  case class Double(value: MyDouble) extends Atom
-  case class String(value: MyString) extends Atom
-  case class Symbol(name: MyString) extends Atom
-}
+case class AtomInt   (value: Int   ) extends Atom
+case class AtomDouble(value: Double) extends Atom
+case class AtomString(value: String) extends Atom
+case class AtomSymbol(name:  String) extends Atom
 
 
 object AtomTest {
-  val i = Atom.Int(3)
-  val s = Atom.String("string")
+  val i = AtomInt(3)
+  val s = AtomString("string")
 }
 
 
