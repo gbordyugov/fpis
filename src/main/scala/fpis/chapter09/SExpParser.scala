@@ -16,11 +16,12 @@ object AtomTest {
   val s = AtomString("string")
 }
 
-
-sealed trait SExp[A] {
-  case class Atom[A](value: A) extends SExp[A]
-  case class List[A](elements: List[SExp[A]]) extends SExp[A]
-}
+/*
+ parameterized by the atom type
+ */
+sealed trait SExp[A]
+case class SExpAtom[A](value: A) extends SExp[A]
+case class SExpList[A](elements: List[SExp[A]]) extends SExp[A]
 
 class SimpleParseError
 
