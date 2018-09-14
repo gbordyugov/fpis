@@ -23,14 +23,11 @@ sealed trait SExp[A]
 case class SExpAtom[A](value: A) extends SExp[A]
 case class SExpList[A](elements: List[SExp[A]]) extends SExp[A]
 
-class SimpleParseError
-
-case class SimpleParser[+A](run: String => Either[SimpleParseError, A]) {
-}
+case class SimpleParser[+A]()
 
 object TestingSimpleParser {
-  val parsers: Parsers[SimpleParseError, SimpleParser] = new Parsers[SimpleParseError, SimpleParser] {
-    def run[A](p: SimpleParser[A])(input: String): Either[SimpleParseError, A] = p.run(input)
+  val parsers: Parsers[SimpleParser] = new Parsers[SimpleParser] {
+    def run[A](p: SimpleParser[A])(input: String): Either[ParseError, A] = ???
     def delay[A](p: => SimpleParser[A]): SimpleParser[A] = ???
     def flatMap[A, B](p: SimpleParser[A])(f: A => SimpleParser[B]): SimpleParser[B] = ???
     def or[A](p: SimpleParser[A], q: => SimpleParser[A]): SimpleParser[A] = ???
