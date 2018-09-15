@@ -2,7 +2,7 @@ package fpis.chapter09.SimpleParser
 
 import scala.util.matching.Regex
 
-import fpis.chapter09.Parsers
+import fpis.chapter09.{Parsers, ParseError, Location}
 
 sealed trait Atom
 case class AtomInt   (value: Int   ) extends Atom

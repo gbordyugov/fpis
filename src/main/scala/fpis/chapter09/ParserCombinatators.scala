@@ -4,9 +4,10 @@ import fpis.chapter08._
 
 import scala.util.matching._
 
+case class Location(input: String, offset: Int = 0)
+case class ParseError(stack: List[(Location, String)])
+
 trait Parsers[Parser[+_]] { self =>
-  case class Location(input: String, offset: Int = 0)
-  case class ParseError(stack: List[(Location, String)])
 
   def errorLocation(e: ParseError): Location = ???
   def errorMessage(e: ParseError): String = ???
