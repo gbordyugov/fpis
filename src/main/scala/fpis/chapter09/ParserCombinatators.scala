@@ -5,7 +5,7 @@ import fpis.chapter08._
 import scala.util.matching._
 
 trait Parsers[Parser[+_]] { self =>
-  class Location
+  case class Location(input: String, offset: Int = 0)
   case class ParseError(stack: List[(Location, String)])
 
   def run[A](p: Parser[A])(input: String): Either[ParseError, A]
