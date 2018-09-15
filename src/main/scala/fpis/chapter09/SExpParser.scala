@@ -32,17 +32,14 @@ object SimpleParserTest {
   type Parser[+A] = Location => Result[A]
 }
 
-object TestingSimpleParser {
-  import SimpleParserTest._
-  import SimpleParserTest.{Parser => SimpleParser}
+import SimpleParserTest._
 
-  val parsers: Parsers[Parser] = new Parsers[SimpleParser] {
-    def run[A](p: SimpleParser[A])(input: String): Either[ParseError, A] = ???
-    def delay[A](p: => SimpleParser[A]): SimpleParser[A] = ???
-    def flatMap[A, B](p: SimpleParser[A])(f: A => SimpleParser[B]): SimpleParser[B] = ???
-    def or[A](p: SimpleParser[A], q: => SimpleParser[A]): SimpleParser[A] = ???
-    def regex(r: Regex): SimpleParser[String] = ???
-    def slice[A](p: SimpleParser[A]): SimpleParser[String] = ???
-    implicit def string(s: String): SimpleParser[String] = ???
-  }
+object MyParsers extends Parsers[Parser] {
+  def run[A](p: Parser[A])(input: String): Either[ParseError, A] = ???
+  def delay[A](p: => Parser[A]): Parser[A] = ???
+  def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] = ???
+  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = ???
+  def regex(r: Regex): Parser[String] = ???
+  def slice[A](p: Parser[A]): Parser[String] = ???
+  implicit def string(s: String): Parser[String] = ???
 }
