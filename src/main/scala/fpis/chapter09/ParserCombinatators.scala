@@ -8,6 +8,9 @@ trait Parsers[Parser[+_]] { self =>
   case class Location(input: String, offset: Int = 0)
   case class ParseError(stack: List[(Location, String)])
 
+  def errorLocation(e: ParseError): Location = ???
+  def errorMessage(e: ParseError): String = ???
+
   def run[A](p: Parser[A])(input: String): Either[ParseError, A]
 
   def char(c: Char): Parser[Char] =
