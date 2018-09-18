@@ -157,7 +157,7 @@ trait Parsers[Parser[+_]] { self =>
   def between[L, R, A](l: Parser[L], r: Parser[R],
     a: Parser[A]): Parser[A] = l *> a <* r
 
-  def digit: Parser[Int] = "[0-9]".r.map(_.toInt)
+  def digit: Parser[String] = "[0-9]".r
 
   def int: Parser[Int] = "[0-9]+".r.map(_.toInt)
 
