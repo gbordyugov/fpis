@@ -18,10 +18,6 @@ object JSONParser {
   def jsonParser[Parser[+_]](p: Parsers[Parser]): Parser[JSON] = {
     import p._
 
-    def whitespace: Parser[String] = "\\s*".r
-
-    def token[A](p: Parser[A]) = p <* whitespace
-
     def between[L, R, A](l: Parser[L], r: Parser[R],
       a: Parser[A]): Parser[A] = l *> a <* r
 

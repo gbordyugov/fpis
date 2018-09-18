@@ -141,6 +141,14 @@ trait Parsers[Parser[+_]] { self =>
     map2(p, slice(p2))((a,b) => a)
 
   /*
+   *  some utilities
+   */
+
+  def whitespace: Parser[String] = "\\s*".r
+
+  def token[A](p: Parser[A]) = p <* whitespace
+
+  /*
    * the purpose of this class is that Parser[A] can be automagically
    * promoted to a ParserOps[A], using the implicit function above
    */
@@ -152,6 +160,8 @@ trait Parsers[Parser[+_]] { self =>
     def product[B](p2: Parser[B]) = self.product(p, p2)
     def      **[B](p2: Parser[B]) = self.product(p, p2)
     def flatMap[B](f: A => Parser[B]): Parser[B] = self.flatMap(p)(f)
+
+    def token(): Parser[A] = self.token(p)
 
     def *>[B](q: => Parser[B]  ): Parser[B] = self.skipL(p, q)
     def <*   (q: => Parser[Any]): Parser[A] = self.skipR(p, q)
