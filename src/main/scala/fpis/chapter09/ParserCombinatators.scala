@@ -140,29 +140,6 @@ trait Parsers[Parser[+_]] { self =>
   def skipR[A](p: Parser[A], p2: => Parser[Any]): Parser[A] =
     map2(p, slice(p2))((a,b) => a)
 
-  def whitespace: Parser[String] = "\\s*".r
-
-  def token[A](p: Parser[A]) = p <* whitespace
-
-  def between[L, R, A](l: Parser[L], r: Parser[R],
-    a: Parser[A]): Parser[A] = l *> a <* r
-
-  def digit: Parser[Int] = "[0-9]".r.map(_.toInt)
-
-  def letter: Parser[String] = "[a-Z_]".r
-
-  def colon: Parser[String] = ":"
-
-  def doubleQuote: Parser[String] = "\""
-
-  def singleQuote: Parser[String] = "'"
-
-  def singleQuoted[A](p: Parser[A]): Parser[A] =
-    between(singleQuote, singleQuote, p)
-
-  def doubleQuoted[A](p: Parser[A]): Parser[A] =
-    between(doubleQuote, doubleQuote, p)
-
   /*
    * the purpose of this class is that Parser[A] can be automagically
    * promoted to a ParserOps[A], using the implicit function above
@@ -175,8 +152,6 @@ trait Parsers[Parser[+_]] { self =>
     def product[B](p2: Parser[B]) = self.product(p, p2)
     def      **[B](p2: Parser[B]) = self.product(p, p2)
     def flatMap[B](f: A => Parser[B]): Parser[B] = self.flatMap(p)(f)
-
-    def token: Parser[A] = self.token(p)
 
     def *>[B](q: => Parser[B]  ): Parser[B] = self.skipL(p, q)
     def <*   (q: => Parser[Any]): Parser[A] = self.skipR(p, q)
