@@ -49,6 +49,12 @@ trait Parsers[Parser[+_]] { self =>
     or(map2(p, many(p))(_ :: _), succeed(List(): List[A]))
 
   /*
+   * one or more repetitions of p
+   */
+  def many1[A](p: Parser[A]): Parser[List[A]] =
+    map2(p, many(p))(_ :: _)
+
+  /*
    * Exercise 9.4
    */
   def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]] = n match {
@@ -170,6 +176,12 @@ trait Parsers[Parser[+_]] { self =>
   def eof: Parser[String] = "\\z".r
 
   def consumeAll[A](p: Parser[A]): Parser[A] = p <* eof
+
+  def sep[A](p: Parser[A], s: Parser[Any]): Parser[List[A]] =
+    sep1(p, s) or succeed(List())
+
+  def sep1[A](p: Parser[A], s: Parser[Any]): Parser[List[A]] =
+    map2(p, many(s *> p))(_ :: _)
 
 
   /*
