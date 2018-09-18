@@ -148,6 +148,26 @@ trait Parsers[Parser[+_]] { self =>
 
   def token[A](p: Parser[A]) = p <* whitespace
 
+  def between[L, R, A](l: Parser[L], r: Parser[R],
+    a: Parser[A]): Parser[A] = l *> a <* r
+
+  def digit: Parser[Int] = "[0-9]".r.map(_.toInt)
+
+  def letter: Parser[String] = "[a-Z_]".r
+
+  def colon: Parser[String] = ":"
+
+  def doubleQuote: Parser[String] = "\""
+
+  def singleQuote: Parser[String] = "'"
+
+  def singleQuoted[A](p: Parser[A]): Parser[A] =
+    between(singleQuote, singleQuote, p)
+
+  def doubleQuoted[A](p: Parser[A]): Parser[A] =
+    between(doubleQuote, doubleQuote, p)
+
+
   /*
    * the purpose of this class is that Parser[A] can be automagically
    * promoted to a ParserOps[A], using the implicit function above

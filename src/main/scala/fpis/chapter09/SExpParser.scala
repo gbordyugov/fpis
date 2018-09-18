@@ -43,3 +43,14 @@ object MyParsers extends Parsers[Parser] {
   def slice[A](p: Parser[A]): Parser[String] = ???
   implicit def string(s: String): Parser[String] = ???
 }
+
+
+object SExpParser {
+  type SExpression = SExp[Atom]
+
+  def jsonParser[Parser[+_]](p: Parsers[Parser]): Parser[SExpression] = {
+    import p._
+
+    ???
+  }
+}
