@@ -167,6 +167,10 @@ trait Parsers[Parser[+_]] { self =>
   def doubleQuoted[A](p: Parser[A]): Parser[A] =
     between(doubleQuote, doubleQuote, p)
 
+  def eof: Parser[String] = "\\z".r
+
+  def consumeAll[A](p: Parser[A]): Parser[A] = p <* eof
+
 
   /*
    * the purpose of this class is that Parser[A] can be automagically
