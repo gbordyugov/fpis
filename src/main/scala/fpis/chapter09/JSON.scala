@@ -10,3 +10,10 @@ object JSON {
   case class JArray(get: IndexedSeq[JSON]) extends JSON
   case class JObject(get: Map[String, JSON]) extends JSON
 }
+
+object JSONParser {
+  def jsonParser[Parser[+_]](p: Parsers[Parser]): Parser[JSON] = {
+    import p._
+    ???
+  }
+}
