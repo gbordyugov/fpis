@@ -159,6 +159,8 @@ trait Parsers[Parser[+_]] { self =>
 
   def digit: Parser[Int] = "[0-9]".r.map(_.toInt)
 
+  def int: Parser[Int] = "[0-9]+".r.map(_.toInt)
+
   def letter: Parser[String] = "[a-Z_]".r
 
   def colon: Parser[String] = ":"
@@ -192,10 +194,16 @@ trait Parsers[Parser[+_]] { self =>
     def  |[B>:A](p2: Parser[B]): Parser[B] = self.or(p, p2)
     def or[B>:A](p2: => Parser[B]): Parser[B] = self.or(p, p2)
     def map[B](f: A => B): Parser[B] = self.map(p)(f)
+
     def many: Parser[List[A]] = self.many(p)
+    def many1(): Parser[List[A]] = self.many1(p)
+
     def product[B](p2: Parser[B]) = self.product(p, p2)
     def      **[B](p2: Parser[B]) = self.product(p, p2)
     def flatMap[B](f: A => Parser[B]): Parser[B] = self.flatMap(p)(f)
+
+    def sep(s: Parser[Any]) = self.sep(p, s)
+    def sep1(s: Parser[Any]) = self.sep1(p, s)
 
     def token(): Parser[A] = self.token(p)
 

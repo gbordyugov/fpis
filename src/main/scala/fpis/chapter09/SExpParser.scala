@@ -1,4 +1,4 @@
-package fpis.chapter09.SimpleParser
+package fpis.chapter09.SExpParser
 
 import scala.util.matching.Regex
 
@@ -55,6 +55,10 @@ object SExpParser {
      * this promotes all strings to tokenized string parsers
      */
     implicit def tok(s: String) = p.string(s).token
+
+    def openingParen: Parser[String] = "("
+    def closingParen: Parser[String] = ")"
+    def comma:        Parser[String] = ","
 
     ???
   }
