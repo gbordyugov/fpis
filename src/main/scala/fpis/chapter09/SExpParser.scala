@@ -49,7 +49,12 @@ object SExpParser {
   type SExpression = SExp[Atom]
 
   def jsonParser[Parser[+_]](p: Parsers[Parser]): Parser[SExpression] = {
-    import p._
+    import p.{string => _, _}
+
+    /*
+     * this promotes all strings to tokenized string parsers
+     */
+    implicit def tok(s: String) = p.string(s).token
 
     ???
   }
