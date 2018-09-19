@@ -29,12 +29,10 @@ object MyParsers extends Parsers[Parser] {
   def regex(r: Regex): Parser[String] = ???
   def slice[A](p: Parser[A]): Parser[String] = ???
 
-  implicit def string(s: String): Parser[String] = {
-    val l = s.length
-    loc => loc match {
-      case Location(input, offset)
-          if s == input.slice(offset, offset+l) => Success(s, l)
-      case _ => Failure(ParseError(List((loc, "cannot parse string"))))
-    }
-  }
+  implicit def string(s: String): Parser[String] =
+    loc =>
+  if (s == loc.input.slice(loc.offset, loc.offset+s.length))
+    Success(s, s.length)
+  else
+    Failure(ParseError(List((loc, "cannot parse string"))))
 }
