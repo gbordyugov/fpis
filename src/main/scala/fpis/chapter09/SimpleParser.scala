@@ -13,6 +13,9 @@ object SimpleParserTest {
 
 import SimpleParserTest._
 
+// case class Location(input: String, offset: Int = 0)
+// case class ParseError(stack: List[(Location, String)])
+
 object MyParsers extends Parsers[Parser] {
   def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
     p(Location(input)) match {
@@ -25,5 +28,13 @@ object MyParsers extends Parsers[Parser] {
   def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = ???
   def regex(r: Regex): Parser[String] = ???
   def slice[A](p: Parser[A]): Parser[String] = ???
-  implicit def string(s: String): Parser[String] = ???
+
+  implicit def string(s: String): Parser[String] = {
+    val l = s.length
+    loc => loc match {
+      case Location(input, offset)
+          if s == input.slice(offset, offset+l) => Success(s, l)
+      case _ => Failure(ParseError(List((loc, "cannot parse string"))))
+    }
+  }
 }
