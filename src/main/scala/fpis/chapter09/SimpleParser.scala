@@ -27,7 +27,11 @@ object MyParsers extends Parsers[Parser] {
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] = ???
   def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = ???
   def regex(r: Regex): Parser[String] = ???
-  def slice[A](p: Parser[A]): Parser[String] = ???
+
+  def slice[A](p: Parser[A]): Parser[String] = loc => p(loc) match {
+    case Success(_, n) => Success(loc.input.slice(loc.offset, loc.offset+n), n)
+    case Failure(error) => Failure(error)
+  }
 
   implicit def string(s: String): Parser[String] =
     loc =>
