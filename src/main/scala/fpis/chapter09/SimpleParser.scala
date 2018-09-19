@@ -14,7 +14,12 @@ object SimpleParserTest {
 import SimpleParserTest._
 
 object MyParsers extends Parsers[Parser] {
-  def run[A](p: Parser[A])(input: String): Either[ParseError, A] = ???
+  def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
+    p(Location(input)) match {
+      case Success(a, n)  => Right(a)
+      case Failure(error) => Left(error)
+    }
+
   def delay[A](p: => Parser[A]): Parser[A] = ???
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] = ???
   def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = ???
