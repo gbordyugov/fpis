@@ -26,15 +26,15 @@ object MyParsers extends Parsers[Parser] {
   def delay[A](p: => Parser[A]): Parser[A] = ???
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] = ???
 
-  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = loc => p(loc) match {
-    case Failure(error) => q(loc)
+  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = l => p(l) match {
+    case Failure(error) => q(l)
     case a              => a
   }
 
   def regex(r: Regex): Parser[String] = ???
 
-  def slice[A](p: Parser[A]): Parser[String] = loc => p(loc) match {
-    case Success(_, n) => Success(loc.input.slice(loc.offset, loc.offset+n), n)
+  def slice[A](p: Parser[A]): Parser[String] = l => p(l) match {
+    case Success(_, n) => Success(l.input.slice(l.offset, l.offset+n), n)
     case Failure(error) => Failure(error)
   }
 
