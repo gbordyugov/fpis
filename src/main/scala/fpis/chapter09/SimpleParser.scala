@@ -25,7 +25,12 @@ object MyParsers extends Parsers[Parser] {
 
   def delay[A](p: => Parser[A]): Parser[A] = ???
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] = ???
-  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = ???
+
+  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = loc => p(loc) match {
+    case Failure(error) => q(loc)
+    case a              => a
+  }
+
   def regex(r: Regex): Parser[String] = ???
 
   def slice[A](p: Parser[A]): Parser[String] = loc => p(loc) match {
