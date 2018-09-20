@@ -2,6 +2,7 @@ package fpis.chapter09
 
 import scala.util.matching.Regex
 
+
 object SimpleParserTest {
   trait Result[+A]
 
@@ -11,10 +12,12 @@ object SimpleParserTest {
   type Parser[+A] = Location => Result[A]
 }
 
+
 import SimpleParserTest._
 
 // case class Location(input: String, offset: Int = 0)
 // case class ParseError(stack: List[(Location, String)])
+
 
 object MyParsers extends Parsers[Parser] {
   def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
@@ -55,6 +58,7 @@ object MyParsers extends Parsers[Parser] {
     Failure(ParseError(List((loc, s"cannot parse string $s"))))
 }
 
+
 object TestMyParsers {
   import MyParsers._
 
@@ -67,4 +71,10 @@ object TestMyParsers {
 
   val succ_re = run(re)("abra")
   val fail_re = run(re)("nopes")
+
+  def number: Parser[String] = regex("[0-9]+".r)
+  def a: Parser[String] = "a"
+  def nAs: Parser[Int] = number.map(_.toInt)
+
+  lazy val flatMapTest = run(number.map(_.toInt))("4")
 }
