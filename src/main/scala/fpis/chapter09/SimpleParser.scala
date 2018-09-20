@@ -48,5 +48,14 @@ object MyParsers extends Parsers[Parser] {
   if (s == loc.input.slice(loc.offset, loc.offset+s.length))
     Success(s, s.length)
   else
-    Failure(ParseError(List((loc, "cannot parse string"))))
+    Failure(ParseError(List((loc, s"cannot parse string $s"))))
+}
+
+object TestMyParsers {
+  import MyParsers._
+
+  def abra: Parser[String] = "abra"
+
+  val succ = run(abra)("abra")
+  val fail = run(abra)("abr")
 }
