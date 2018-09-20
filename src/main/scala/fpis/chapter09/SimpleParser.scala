@@ -36,7 +36,11 @@ object MyParsers extends Parsers[Parser] {
     case a              => a
   }
 
-  def regex(r: Regex): Parser[String] = ???
+  def regex(r: Regex): Parser[String] = loc =>
+  r.findPrefixOf(loc.input.drop(loc.offset)) match {
+    case Some(res) => Success(res, res.length)
+    case None      => ???
+  }
 
   def slice[A](p: Parser[A]): Parser[String] = l => p(l) match {
     case Success(_, n) => Success(l.input.slice(l.offset, l.offset+n), n)
