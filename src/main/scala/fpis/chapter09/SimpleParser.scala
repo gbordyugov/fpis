@@ -39,7 +39,7 @@ object MyParsers extends Parsers[Parser] {
   def regex(r: Regex): Parser[String] = loc =>
   r.findPrefixOf(loc.input.drop(loc.offset)) match {
     case Some(res) => Success(res, res.length)
-    case None      => ???
+    case None      => Failure(ParseError(List((loc, s"cannot parse regex $r"))))
   }
 
   def slice[A](p: Parser[A]): Parser[String] = l => p(l) match {
@@ -62,4 +62,9 @@ object TestMyParsers {
 
   val succ = run(abra)("abra")
   val fail = run(abra)("abr")
+
+  def re: Parser[String] = regex("a+".r)
+
+  val succ_re = run(re)("abra")
+  val fail_re = run(re)("nopes")
 }
