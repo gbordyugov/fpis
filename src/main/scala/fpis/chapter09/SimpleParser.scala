@@ -19,6 +19,9 @@ import SimpleParserTest._
 // case class ParseError(stack: List[(Location, String)])
 
 
+/*
+ * This can count as Exercise 9.13
+ */
 object MyParsers extends Parsers[Parser] {
   def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
     p(Location(input)) match {
