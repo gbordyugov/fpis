@@ -28,6 +28,8 @@ object MyParsers extends Parsers[Parser] {
 
   def delay[A](p: => Parser[A]): Parser[A] = ???
 
+  def succeed[A](a: A): Parser[A] = l => Success(a, 0)
+
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] =
     l => p(l) match {
       case Success(a, n) => f(a)(Location(l.input, l.offset+n))
@@ -76,5 +78,6 @@ object TestMyParsers {
   def a: Parser[String] = "a"
   def nAs: Parser[Int] = number.map(_.toInt)
 
-  lazy val flatMapTest = run(number.map(_.toInt))("4")
+  val flatMapSuccTest = run(number.map(_.toInt).flatMap(listOfN(_, a)))("4aaaa")
+  val flatMapFailTest = run(number.map(_.toInt).flatMap(listOfN(_, a)))("4aaa")
 }
