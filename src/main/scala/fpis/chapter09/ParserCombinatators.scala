@@ -1,6 +1,7 @@
 package fpis.chapter09
 
 import fpis.chapter08._
+import fpis.chapter08.Prop._
 
 import scala.util.matching._
 
@@ -245,4 +246,14 @@ trait Parsers[Parser[+_]] { self =>
     def mapLaw[A](p: Parser[A])(in: Gen[String]): Prop =
       equal(p, p.map(a => a))(in)
   }
+
+  def labelLaw[A](p: Parser[A], inputs: SGen[String]): Prop = ???
+    /*
+    forAll(inputs ** Gen.string) { case (input, msg) =>
+      run(label(msg)(p))(input) match {
+        case Left(e) => errorMessage(e) == msg
+        case _       => true
+      }
+    }
+     */
 }
