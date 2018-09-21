@@ -5,7 +5,11 @@ import fpis.chapter08._
 import scala.util.matching._
 
 case class Location(input: String, offset: Int = 0)
-case class ParseError(stack: List[(Location, String)])
+
+case class ParseError(stack: List[(Location, String)]) {
+  def push(loc: Location, msg: String): ParseError =
+    copy(stack = (loc, msg) :: stack)
+}
 
 trait Parsers[Parser[+_]] { self =>
 
