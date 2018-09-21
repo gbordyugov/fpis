@@ -4,7 +4,10 @@ import fpis.chapter08._
 
 import scala.util.matching._
 
-case class Location(input: String, offset: Int = 0)
+case class Location(input: String, offset: Int = 0) {
+  lazy val line = ???
+  lazy val col  = ???
+}
 
 case class ParseError(stack: List[(Location, String)]) {
   def push(loc: Location, msg: String): ParseError =
