@@ -196,7 +196,17 @@ trait Parsers[Parser[+_]] { self =>
   /*
    * error reporting
    */
+
+  /*
+   *  this one re-labels the error by the supplied message
+   */
   def label[A](msg: String)(p: Parser[A]): Parser[A]
+
+  /*
+   * this one add the message with the currect location on top of the error
+   * list
+   */
+  def scope[A](msg: String)(p: Parser[A]): Parser[A]
 
   /*
    * the purpose of this class is that Parser[A] can be automagically
