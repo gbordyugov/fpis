@@ -193,6 +193,10 @@ trait Parsers[Parser[+_]] { self =>
   def sep1[A](p: Parser[A], s: Parser[Any]): Parser[List[A]] =
     map2(p, many(s *> p))(_ :: _)
 
+  /*
+   * error reporting
+   */
+  def label[A](msg: String)(p: Parser[A]): Parser[A]
 
   /*
    * the purpose of this class is that Parser[A] can be automagically
@@ -217,6 +221,8 @@ trait Parsers[Parser[+_]] { self =>
 
     def *>[B](q: => Parser[B]  ): Parser[B] = self.skipL(p, q)
     def <*   (q: => Parser[Any]): Parser[A] = self.skipR(p, q)
+
+    def label(s:String) = self.label(s)(p)
   }
 
   /*

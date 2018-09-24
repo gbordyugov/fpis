@@ -41,6 +41,11 @@ object MyParsers extends Parsers[Parser] {
     }
    */
 
+  def label[A](msg: String)(p: Parser[A]): Parser[A] = l => p(l) match {
+    case Failure(ParseError(error)) => Failure(ParseError((l, msg)::error))
+    case s@Success(_, _) => s
+  }
+
   def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = l => p(l) match {
     case Failure(error) => q(l)
     case a              => a
