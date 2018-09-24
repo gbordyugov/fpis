@@ -42,7 +42,8 @@ object MyParsers extends Parsers[Parser] {
    */
 
   def label[A](msg: String)(p: Parser[A]): Parser[A] = l => p(l) match {
-    case Failure(ParseError(error)) => Failure(ParseError((l, msg)::error))
+    case Failure(ParseError(error)) =>
+      Failure(ParseError((l, msg)::error.tail)) // replace head
     case s@Success(_, _) => s
   }
 
