@@ -2,3 +2,5 @@ fpis.pdf
 Functional_Programming_in_Scala.pdf
 project/
 target/
+.ensime
+.ensime_cache/
