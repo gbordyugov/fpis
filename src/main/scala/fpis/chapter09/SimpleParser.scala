@@ -25,6 +25,11 @@ object SimpleParserTest {
       case Failure(e, c) => Failure(e, c || isCommited)
       case _ => this
     }
+
+    def advanceSuccess(n: Int): Result[A] = this match {
+      case Success(a, m) => Success(a, n+m)
+      case _             => this
+    }
   }
 
   case class Success[+A](get: A, charsConsumed: Int) extends Result[A]
