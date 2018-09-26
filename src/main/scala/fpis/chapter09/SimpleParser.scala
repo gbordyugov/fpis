@@ -2,6 +2,7 @@ package fpis.chapter09
 
 import scala.util.matching.Regex
 import scala.language.higherKinds
+import scala.language.implicitConversions
 
 
 object SimpleParserTest {
