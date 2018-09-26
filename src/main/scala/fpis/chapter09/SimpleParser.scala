@@ -34,6 +34,8 @@ object MyParsers extends Parsers[Parser] {
 
   def succeed[A](a: A): Parser[A] = l => Success(a, 0)
 
+  def fail: Parser[Any] = l => Failure(ParseError(List((l, "parser fail()"))))
+
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] = ???
   /*
     l => p(l) match {

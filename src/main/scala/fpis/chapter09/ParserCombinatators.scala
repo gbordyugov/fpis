@@ -34,6 +34,8 @@ trait Parsers[Parser[+_]] { self =>
 
   def succeed[A](a: A): Parser[A]
 
+  def fail: Parser[Any]
+
   /*
    * parses A and returns the digested portion of the string
    * primitive
