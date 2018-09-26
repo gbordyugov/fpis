@@ -62,7 +62,7 @@ object MyParsers extends Parsers[Parser] {
 
   def fail: Parser[Any] = l => Failure(ParseError(List((l, "parser fail()"))), true)
 
-  def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] = 
+  def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] =
     l => p(l) match {
       case Success(a, n)  => f(a)(l.advanceBy(n)).addCommit(n != 0).advanceSuccess(n)
       case e@Failure(_, _) => e
