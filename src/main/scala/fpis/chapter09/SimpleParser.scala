@@ -78,7 +78,7 @@ object MyParsers extends Parsers[Parser] {
   if (s == loc.input.slice(loc.offset, loc.offset+s.length))
     Success(s, s.length)
   else
-    Failure(ParseError(List((loc, s"cannot parse string $s"))))
+    Failure(loc.toError(s"cannot parse string $s"))
 }
 
 

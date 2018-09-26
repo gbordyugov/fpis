@@ -10,6 +10,8 @@ import scala.language.implicitConversions
 case class Location(input: String, offset: Int = 0) {
   lazy val line = ???
   lazy val col  = ???
+
+  def toError(msg: String): ParseError = ParseError(List((this, msg)))
 }
 
 case class ParseError(stack: List[(Location, String)]) {
