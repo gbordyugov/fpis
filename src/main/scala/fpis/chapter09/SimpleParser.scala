@@ -6,9 +6,17 @@ import scala.language.implicitConversions
 
 
 object SimpleParserTest {
-  trait Result[+A]
+  trait Result[+A] {
+    def mapError(f: ParseError => ParseError): Result[A] =
+      this match {
+        case Failure(e) => Failure(f(e))
+        case _          => this
+      }
+
+  }
 
   case class Success[+A](get: A, charsConsumed: Int) extends Result[A]
+
   case class Failure(get: ParseError) extends Result[Nothing]
 
   type Parser[+A] = Location => Result[A]
@@ -45,17 +53,19 @@ object MyParsers extends Parsers[Parser] {
     }
    */
 
+  def label[A](msg: String)(p: Parser[A]): Parser[A] =
+    l => p(l).mapError(_.label(msg))
+
+  /*
   def label[A](msg: String)(p: Parser[A]): Parser[A] = l => p(l) match {
     case Failure(ParseError(error)) =>
       Failure(ParseError((l, msg)::error.tail)) // replace head
     case s@Success(_, _) => s
   }
+   */
 
-  def scope[A](msg: String)(p: Parser[A]): Parser[A] = l => p(l) match {
-    case Failure(ParseError(error)) =>
-      Failure(ParseError((l, msg)::error)) // just extend
-    case s@Success(_, _) => s
-  }
+  def scope[A](msg: String)(p: Parser[A]): Parser[A] =
+    l => p(l).mapError(_.push(l, msg))
 
   def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = l => p(l) match {
     case Failure(error) => q(l)
