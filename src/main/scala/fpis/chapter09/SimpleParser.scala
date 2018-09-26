@@ -60,11 +60,14 @@ object MyParsers extends Parsers[Parser] {
 
   def succeed[A](a: A): Parser[A] = l => Success(a, 0)
 
-  def fail: Parser[Any] = l => Failure(ParseError(List((l, "parser fail()"))), true)
+  def fail: Parser[Any] =
+    l => Failure(ParseError(List((l, "parser fail()"))), true)
 
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] =
     l => p(l) match {
-      case Success(a, n)  => f(a)(l.advanceBy(n)).addCommit(n != 0).advanceSuccess(n)
+      case Success(a, n)  => f(a)(l.advanceBy(n))
+                                .addCommit(n != 0)
+                                .advanceSuccess(n)
       case e@Failure(_, _) => e
     }
 
@@ -79,26 +82,31 @@ object MyParsers extends Parsers[Parser] {
     case a                 => a
   }
 
-  def regex(r: Regex): Parser[String] = loc =>
-  r.findPrefixOf(loc.input.drop(loc.offset)) match {
-    case Some(res) => Success(res, res.length)
-    case None      => Failure(ParseError(List((loc, s"cannot parse regex $r"))))
+  def regex(r: Regex): Parser[String] = {
+    case l@Location(input, offset) =>
+      r.findPrefixOf(input.drop(offset)) match {
+        case Some(res) => Success(res, res.length)
+        case None      => Failure(ParseError(List((l, s"cannot parse regex $r"))))
+      }
   }
 
-  def slice[A](p: Parser[A]): Parser[String] = l => p(l) match {
-    case Success(_, n)   => Success(l.input.slice(l.offset, l.offset+n), n)
-    case f@Failure(_, _) => f
+  def slice[A](p: Parser[A]): Parser[String] = {
+    case l@Location(input, offset) => p(l) match {
+      case Success(_, n)   => Success(input.slice(offset, offset+n), n)
+      case f@Failure(_, _) => f
+    }
   }
 
   /*
    * Exercise 9.14 considered as done
    */
-  implicit def string(s: String): Parser[String] =
-    loc =>
-  if (s == loc.input.slice(loc.offset, loc.offset+s.length))
-    Success(s, s.length)
-  else
-    Failure(loc.toError(s"cannot parse string $s"))
+  implicit def string(s: String): Parser[String] = {
+    case l@Location(input, offset) =>
+      if (s == input.slice(offset, offset+s.length))
+        Success(s, s.length)
+      else
+        Failure(l.toError(s"cannot parse string $s"))
+  }
 }
 
 
