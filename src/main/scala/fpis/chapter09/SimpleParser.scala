@@ -56,14 +56,6 @@ object MyParsers extends Parsers[Parser] {
   def label[A](msg: String)(p: Parser[A]): Parser[A] =
     l => p(l).mapError(_.label(msg))
 
-  /*
-  def label[A](msg: String)(p: Parser[A]): Parser[A] = l => p(l) match {
-    case Failure(ParseError(error)) =>
-      Failure(ParseError((l, msg)::error.tail)) // replace head
-    case s@Success(_, _) => s
-  }
-   */
-
   def scope[A](msg: String)(p: Parser[A]): Parser[A] =
     l => p(l).mapError(_.push(l, msg))
 
