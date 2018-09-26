@@ -4,6 +4,8 @@ import fpis.chapter08._
 import fpis.chapter08.Prop._
 
 import scala.util.matching._
+import scala.language.higherKinds
+import scala.language.implicitConversions
 
 case class Location(input: String, offset: Int = 0) {
   lazy val line = ???

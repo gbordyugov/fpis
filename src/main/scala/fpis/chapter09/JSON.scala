@@ -1,5 +1,7 @@
 package fpis.chapter09
 
+import scala.language.higherKinds
+
 trait JSON
 
 object JSON {

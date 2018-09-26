@@ -1,5 +1,7 @@
 package fpis.chapter09.SExpParser
 
+import scala.language.higherKinds
+
 import fpis.chapter09.{Parsers, ParseError, Location}
 
 sealed trait Atom
