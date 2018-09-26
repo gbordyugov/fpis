@@ -58,7 +58,8 @@ object MyParsers extends Parsers[Parser] {
 
   def delay[A](p: => Parser[A]): Parser[A] = ???
 
-  def succeed[A](a: A): Parser[A] = l => Success(a, 0)
+  def succeed[A](a: A): Parser[A] =
+    l => Success(a, 0)
 
   def fail: Parser[Any] =
     l => Failure(ParseError(List((l, "parser fail()"))), true)
@@ -77,10 +78,11 @@ object MyParsers extends Parsers[Parser] {
   def scope[A](msg: String)(p: Parser[A]): Parser[A] =
     l => p(l).mapError(_.push(l, msg))
 
-  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = l => p(l) match {
-    case Failure(error, _) => q(l)
-    case a                 => a
-  }
+  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] =
+    l => p(l) match {
+      case Failure(error, _) => q(l)
+      case a                 => a
+    }
 
   def regex(r: Regex): Parser[String] = {
     case l@Location(input, offset) =>
