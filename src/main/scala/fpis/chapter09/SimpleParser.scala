@@ -83,6 +83,9 @@ object MyParsers extends Parsers[Parser] {
     case f@Failure(_, _) => f
   }
 
+  /*
+   * Exercise 9.14 considered as done
+   */
   implicit def string(s: String): Parser[String] =
     loc =>
   if (s == loc.input.slice(loc.offset, loc.offset+s.length))
