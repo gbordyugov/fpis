@@ -9,15 +9,23 @@ object SimpleParserTest {
   trait Result[+A] {
     def mapError(f: ParseError => ParseError): Result[A] =
       this match {
-        case Failure(e) => Failure(f(e))
-        case _          => this
+        case Failure(e, ic) => Failure(f(e), ic)
+        case _              => this
       }
+
+    def attempt[A](p: Parser[A]): Parser[A] =
+      l => p(l).uncommit
+
+    def uncommit: Result[A] = this match {
+      case Failure(e, true) => Failure(e, false)
+      case _                => this
+    }
 
   }
 
   case class Success[+A](get: A, charsConsumed: Int) extends Result[A]
 
-  case class Failure(get: ParseError) extends Result[Nothing]
+  case class Failure(get: ParseError, isCommitted: Boolean = true) extends Result[Nothing]
 
   type Parser[+A] = Location => Result[A]
 }
@@ -36,14 +44,14 @@ object MyParsers extends Parsers[Parser] {
   def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
     p(Location(input)) match {
       case Success(a, n)  => Right(a)
-      case Failure(error) => Left(error)
+      case Failure(error, _) => Left(error)
     }
 
   def delay[A](p: => Parser[A]): Parser[A] = ???
 
   def succeed[A](a: A): Parser[A] = l => Success(a, 0)
 
-  def fail: Parser[Any] = l => Failure(ParseError(List((l, "parser fail()"))))
+  def fail: Parser[Any] = l => Failure(ParseError(List((l, "parser fail()"))), true)
 
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] = ???
   /*
@@ -60,8 +68,8 @@ object MyParsers extends Parsers[Parser] {
     l => p(l).mapError(_.push(l, msg))
 
   def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = l => p(l) match {
-    case Failure(error) => q(l)
-    case a              => a
+    case Failure(error, _) => q(l)
+    case a                 => a
   }
 
   def regex(r: Regex): Parser[String] = loc =>
@@ -71,8 +79,8 @@ object MyParsers extends Parsers[Parser] {
   }
 
   def slice[A](p: Parser[A]): Parser[String] = l => p(l) match {
-    case Success(_, n) => Success(l.input.slice(l.offset, l.offset+n), n)
-    case Failure(error) => Failure(error)
+    case Success(_, n)   => Success(l.input.slice(l.offset, l.offset+n), n)
+    case f@Failure(_, _) => f
   }
 
   implicit def string(s: String): Parser[String] =
