@@ -21,6 +21,10 @@ object SimpleParserTest {
       case _                => this
     }
 
+    def addCommit(isCommited: Boolean): Result[A] = this match {
+      case Failure(e, c) => Failure(e, c || isCommited)
+      case _ => this
+    }
   }
 
   case class Success[+A](get: A, charsConsumed: Int) extends Result[A]
