@@ -12,6 +12,8 @@ case class Location(input: String, offset: Int = 0) {
   lazy val col  = ???
 
   def toError(msg: String): ParseError = ParseError(List((this, msg)))
+
+  def advanceBy(n: Int) = copy(offset = offset+n)
 }
 
 case class ParseError(stack: List[(Location, String)]) {
