@@ -1,4 +1,6 @@
-package fpis.chapter09
+package fpis.chapter09.SimpleParser
+
+import fpis.chapter09.{ParseError, Location, Parsers}
 
 import scala.util.matching.Regex
 import scala.language.higherKinds
