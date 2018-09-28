@@ -39,7 +39,9 @@ object SExpParser {
     def closingParen: Parser[String] = ")"
     def comma:        Parser[String] = ","
 
-    ???
+    def sExp: Parser[SExpression] = ???
+
+    sExp
   }
 }
 
