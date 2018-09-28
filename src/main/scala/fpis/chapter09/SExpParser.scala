@@ -1,8 +1,9 @@
 package fpis.chapter09.SExpParser
 
-import scala.language.higherKinds
+import scala.language.{higherKinds, implicitConversions}
 
 import fpis.chapter09.{Parsers, ParseError, Location}
+import fpis.chapter09.SimpleParser.SimpleParsers
 
 sealed trait Atom
 case class AtomInt   (value: Int   ) extends Atom
@@ -26,7 +27,7 @@ case class SExpList[A](elements: List[SExp[A]]) extends SExp[A]
 object SExpParser {
   type SExpression = SExp[Atom]
 
-  def jsonParser[Parser[+_]](p: Parsers[Parser]): Parser[SExpression] = {
+  def sExpParser[Parser[+_]](p: Parsers[Parser]): Parser[SExpression] = {
     import p.{string => _, _}
 
     /*
@@ -40,4 +41,9 @@ object SExpParser {
 
     ???
   }
+}
+
+object SExpParserTest {
+  import SExpParser._
+  val parser = sExpParser(SimpleParsers)
 }

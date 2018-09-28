@@ -51,7 +51,7 @@ import SimpleParserTest._
 /*
  * This can count as Exercise 9.13
  */
-object MyParsers extends Parsers[Parser] {
+object SimpleParsers extends Parsers[Parser] {
   def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
     p(Location(input)) match {
       case Success(a, n)  => Right(a)
@@ -114,8 +114,8 @@ object MyParsers extends Parsers[Parser] {
 }
 
 
-object TestMyParsers {
-  import MyParsers._
+object TestMySimpleParsers {
+  import SimpleParsers._
 
   def abra: Parser[String] = "abra"
 
