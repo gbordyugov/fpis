@@ -40,16 +40,16 @@ object SExpParser {
     def comma:        Parser[String] = ","
 
     def atomInt: Parser[AtomInt] =
-      int.token.map(AtomInt(_))
+      int.map(AtomInt(_)).token
 
     def atomDouble: Parser[AtomDouble] =
       "[1-9][0-9]+\\.[0-9]*".r.map(_.toDouble).map(AtomDouble(_)).token
 
     def atomString: Parser[AtomString] =
-      digit.many1.map(_.mkString).map(AtomString(_))
+      digit.many1.map(_.mkString).map(AtomString(_)).token
 
     def atomSymbol: Parser[AtomSymbol] =
-      digit.many1.map(_.mkString).map(AtomSymbol(_))
+      digit.many1.map(_.mkString).map(AtomSymbol(_)).token
 
     def atom: Parser[Atom] =
       atomInt or atomDouble or atomString or atomSymbol
