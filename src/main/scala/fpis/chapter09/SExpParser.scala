@@ -35,10 +35,6 @@ object SExpParser {
      */
     implicit def tok(s: String) = p.string(s).token
 
-    def openingParen: Parser[String] = "("
-    def closingParen: Parser[String] = ")"
-    def comma:        Parser[String] = ","
-
     def atomInt: Parser[AtomInt] =
       int.map(AtomInt(_)).token
 
@@ -54,9 +50,12 @@ object SExpParser {
     def atom: Parser[Atom] =
       atomInt or atomDouble or atomString or atomSymbol
 
-    def sExpAtom: Parser[SExpAtom[Atom]] = atom.map(SExpAtom(_))
+    def sExpAtom: Parser[SExpAtom[Atom]] =
+      atom.map(SExpAtom(_))
+
     def sExpList: Parser[SExpList[Atom]] =
-      (openingParen *> sep(sExp, comma) <* closingParen).map(SExpList(_))
+      ("(" *> sep(sExp, ",") <* ")").map(SExpList(_))
+
     def sExp: Parser[SExpression] = sExpAtom or sExpList
 
     sExp
