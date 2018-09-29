@@ -39,7 +39,16 @@ object SExpParser {
     def closingParen: Parser[String] = ")"
     def comma:        Parser[String] = ","
 
-    def sExp: Parser[SExpression] = ???
+    def atomInt:    Parser[AtomInt]    = int.token.map(AtomInt(_))
+    def atomDouble: Parser[AtomDouble] = ???
+    def atomString: Parser[AtomString] = ???
+    def atomSymbol: Parser[AtomSymbol] = digit.many1.map(_.mkString).map(AtomSymbol(_))
+    def atom: Parser[Atom] = atomInt or atomDouble or atomString or atomSymbol
+
+    def sExpAtom: Parser[SExpAtom[Atom]] = atom.map(SExpAtom(_))
+    def sExpList: Parser[SExpList[Atom]] = ???
+
+    def sExp: Parser[SExpression] = sExpAtom or sExpList
 
     sExp
   }
