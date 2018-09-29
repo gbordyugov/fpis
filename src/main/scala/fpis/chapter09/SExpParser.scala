@@ -42,9 +42,11 @@ object SExpParser {
     def atomInt: Parser[AtomInt] =
       int.token.map(AtomInt(_))
 
-    def atomDouble: Parser[AtomDouble] = ???
+    def atomDouble: Parser[AtomDouble] =
+      "[1-9][0-9]+\\.[0-9]*".r.map(_.toDouble).map(AtomDouble(_)).token
 
-    def atomString: Parser[AtomString] = ???
+    def atomString: Parser[AtomString] =
+      digit.many1.map(_.mkString).map(AtomString(_))
 
     def atomSymbol: Parser[AtomSymbol] =
       digit.many1.map(_.mkString).map(AtomSymbol(_))
