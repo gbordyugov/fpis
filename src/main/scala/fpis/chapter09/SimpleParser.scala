@@ -133,4 +133,8 @@ object TestMySimpleParsers {
 
   val flatMapSuccTest = run(number.map(_.toInt).flatMap(listOfN(_, a)))("4aaaa")
   val flatMapFailTest = run(number.map(_.toInt).flatMap(listOfN(_, a)))("4aaa")
+
+  def manyA: Parser[List[String]] = "a".many
+
+  val parseManyA = run(manyA)("aaaaa")
 }
