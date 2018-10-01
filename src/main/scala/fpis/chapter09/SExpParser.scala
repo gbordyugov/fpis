@@ -62,8 +62,3 @@ object SExpParser {
     sExp
   }
 }
-
-object SExpParserTest {
-  import SExpParser._
-  val parser = sExpParser(SimpleParsers)
-}
