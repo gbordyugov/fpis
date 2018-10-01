@@ -1,4 +1,4 @@
-package fpis.chapter09.SimpleParser
+package fpis.chapter09.SimpleParsers
 
 import fpis.chapter09.{ParseError, Location, Parsers}
 
@@ -7,7 +7,7 @@ import scala.language.higherKinds
 import scala.language.implicitConversions
 
 
-object SimpleParserTest {
+object SimpleParser {
   trait Result[+A] {
     def mapError(f: ParseError => ParseError): Result[A] =
       this match {
@@ -42,8 +42,6 @@ object SimpleParserTest {
 }
 
 
-import SimpleParserTest._
-
 // case class Location(input: String, offset: Int = 0)
 // case class ParseError(stack: List[(Location, String)])
 
@@ -51,7 +49,9 @@ import SimpleParserTest._
 /*
  * This can count as Exercise 9.13
  */
-object SimpleParsers extends Parsers[Parser] {
+object SimpleParsers extends Parsers[SimpleParser.Parser] {
+import SimpleParser._
+
   def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
     p(Location(input)) match {
       case Success(a, n)  => Right(a)
@@ -111,30 +111,4 @@ object SimpleParsers extends Parsers[Parser] {
       else
         Failure(l.toError(s"cannot parse string $s"))
   }
-}
-
-
-object TestMySimpleParsers {
-  import SimpleParsers._
-
-  def abra: Parser[String] = "abra"
-
-  val succ = run(abra)("abra")
-  val fail = run(abra)("abr")
-
-  def re: Parser[String] = regex("a+".r)
-
-  val succ_re = run(re)("abra")
-  val fail_re = run(re)("nopes")
-
-  def number: Parser[String] = regex("[0-9]+".r)
-  def a: Parser[String] = "a"
-  def nAs: Parser[Int] = number.map(_.toInt)
-
-  val flatMapSuccTest = run(number.map(_.toInt).flatMap(listOfN(_, a)))("4aaaa")
-  val flatMapFailTest = run(number.map(_.toInt).flatMap(listOfN(_, a)))("4aaa")
-
-  def manyA: Parser[List[String]] = "a".many
-
-  val parseManyA = run(manyA)("aaaaa")
 }

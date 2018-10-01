@@ -3,7 +3,7 @@ package fpis.chapter09.SExpParser
 import scala.language.{higherKinds, implicitConversions}
 
 import fpis.chapter09.{Parsers, ParseError, Location}
-import fpis.chapter09.SimpleParser.SimpleParsers
+import fpis.chapter09.SimpleParsers.SimpleParsers
 
 sealed trait Atom
 case class AtomInt   (value: Int   ) extends Atom
