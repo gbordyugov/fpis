@@ -242,7 +242,7 @@ trait Parsers[Parser[+_]] { self =>
     def sep(s: Parser[Any]) = self.sep(p, s)
     def sep1(s: Parser[Any]) = self.sep1(p, s)
 
-    def token(): Parser[A] = self.token(p)
+    def token: Parser[A] = self.token(p)
 
     def *>[B](q: => Parser[B]  ): Parser[B] = self.skipL(p, q)
     def <*   (q: => Parser[Any]): Parser[A] = self.skipR(p, q)
