@@ -233,7 +233,7 @@ trait Parsers[Parser[+_]] { self =>
     def map[B](f: A => B): Parser[B] = self.map(p)(f)
 
     def many: Parser[List[A]] = self.many(p)
-    def many1(): Parser[List[A]] = self.many1(p)
+    def many1: Parser[List[A]] = self.many1(p)
 
     def product[B](p2: Parser[B]) = self.product(p, p2)
     def      **[B](p2: Parser[B]) = self.product(p, p2)
