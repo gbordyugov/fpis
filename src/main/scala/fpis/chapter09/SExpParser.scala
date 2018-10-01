@@ -56,3 +56,9 @@ object SExpParser {
     sExp
   }
 }
+
+object TestingAround {
+  import SExpParser.sExpParser
+
+  val parser = sExpParser(SimpleParsers)
+}

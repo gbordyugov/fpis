@@ -1,5 +1,8 @@
 package fpis.chapter09.SExpParser
 
+import org.scalatest._
+
+import fpis.chapter09.Location
 import fpis.chapter09.SimpleParser.SimpleParsers
 
 
@@ -8,8 +11,10 @@ object AtomTest {
   val s = AtomString("string")
 }
 
-object SExpParserTest {
+class SExpParserTest extends FlatSpec {
+  "bla" should "blo" in {
   import SExpParser._
   val parser = sExpParser(SimpleParsers)
+  println(parser(Location("symbol", 0)).toString())
+  }
 }
-

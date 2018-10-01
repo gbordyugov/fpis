@@ -184,7 +184,7 @@ trait Parsers[Parser[+_]] { self =>
 
   def int: Parser[Int] = "[0-9]+".r.map(_.toInt)
 
-  def letter: Parser[String] = "[a-Z_]".r
+  def letter: Parser[String] = "[a-zA-Z]".r
 
   def colon: Parser[String] = ":"
 
