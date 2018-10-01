@@ -11,12 +11,6 @@ case class AtomDouble(value: Double) extends Atom
 case class AtomString(value: String) extends Atom
 case class AtomSymbol(name:  String) extends Atom
 
-
-object AtomTest {
-  val i = AtomInt(3)
-  val s = AtomString("string")
-}
-
 /*
  parameterized by the atom type
  */
