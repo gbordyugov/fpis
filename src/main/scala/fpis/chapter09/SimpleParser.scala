@@ -52,13 +52,11 @@ object SimpleParser {
 object SimpleParsers extends Parsers[SimpleParser.Parser] {
 import SimpleParser._
 
-  def run[A](p: Parser[A])(input: String): Either[ParseError, A] = {
-    println("running parser")
+  def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
     p(Location(input)) match {
       case Success(a, n)  => Right(a)
       case Failure(error, _) => Left(error)
     }
-  }
 
   def delay[A](p: => Parser[A]): Parser[A] = ???
 
@@ -70,11 +68,10 @@ import SimpleParser._
 
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] =
     l => p(l) match {
-      case Success(a, n)   => { println("Success in flatMap");
-                                f(a)(l.advanceBy(n))
+      case Success(a, n)   => f(a)(l.advanceBy(n))
                                  .addCommit(n != 0)
-                                 .advanceSuccess(n) }
-      case e@Failure(_, _) => { println("Failure in flatMap()"); e }
+                                 .advanceSuccess(n)
+      case e@Failure(_, _) => e
     }
 
   def label[A](msg: String)(p: Parser[A]): Parser[A] =
@@ -83,13 +80,11 @@ import SimpleParser._
   def scope[A](msg: String)(p: Parser[A]): Parser[A] =
     l => p(l).mapError(_.push(l, msg))
 
-  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = {
-    println("running or()")
-    l => p(l) match {
-      case Failure(error, false) => { println("non-commited or"); q(l) }
-      case a                     => { println("something"); a }
+  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] =
+        l => p(l) match {
+      case Failure(error, false) => q(l)
+      case a                     => a
     }
-  }
 
   def regex(r: Regex): Parser[String] = {
     case l@Location(input, offset) =>

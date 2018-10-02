@@ -69,8 +69,7 @@ trait Parsers[Parser[+_]] { self =>
    * Exercise 9.3
    */
   def many[A](p: Parser[A]): Parser[List[A]] = {
-    or({println("a"); map2(p, many(p))(_ :: _)},
-       {println("b"); succeed(List(): List[A])})
+    or(map2(p, many(p))(_ :: _), succeed(List(): List[A]))
   }
 
   /*
@@ -111,13 +110,11 @@ trait Parsers[Parser[+_]] { self =>
   /*
    * Exercise 9.7
    */
-  def product[A, B](a: Parser[A], b: Parser[B]): Parser[(A, B)] =
+  def product[A, B](a: Parser[A], b: => Parser[B]): Parser[(A, B)] =
     flatMap(a)(a => map(b)(b => (a, b)))
 
-  def map2[A, B, C](a: Parser[A], b: Parser[B])(f: (A, B) => C): Parser[C] = {
-    println("map2")
+  def map2[A, B, C](a: Parser[A], b: => Parser[B])(f: (A, B) => C): Parser[C] =
     flatMap(a)(a => map(b)(b => f(a, b)))
-  }
 
   /*
    * Exercise 9.8
