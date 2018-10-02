@@ -68,8 +68,10 @@ trait Parsers[Parser[+_]] { self =>
   /*
    * Exercise 9.3
    */
-  def many[A](p: Parser[A]): Parser[List[A]] =
-    or(map2(p, many(p))(_ :: _), succeed(List(): List[A]))
+  def many[A](p: Parser[A]): Parser[List[A]] = {
+    or({println("a"); map2(p, many(p))(_ :: _)},
+       {println("b"); succeed(List(): List[A])})
+  }
 
   /*
    * one or more repetitions of p
@@ -112,8 +114,10 @@ trait Parsers[Parser[+_]] { self =>
   def product[A, B](a: Parser[A], b: Parser[B]): Parser[(A, B)] =
     flatMap(a)(a => map(b)(b => (a, b)))
 
-  def map2[A, B, C](a: Parser[A], b: Parser[B])(f: (A, B) => C): Parser[C] =
+  def map2[A, B, C](a: Parser[A], b: Parser[B])(f: (A, B) => C): Parser[C] = {
+    println("map2")
     flatMap(a)(a => map(b)(b => f(a, b)))
+  }
 
   /*
    * Exercise 9.8
@@ -232,7 +236,7 @@ trait Parsers[Parser[+_]] { self =>
     def or[B>:A](p2: => Parser[B]): Parser[B] = self.or(p, p2)
     def map[B](f: A => B): Parser[B] = self.map(p)(f)
 
-    def many: Parser[List[A]] = self.many(p)
+    def many:  Parser[List[A]] = self.many (p)
     def many1: Parser[List[A]] = self.many1(p)
 
     def product[B](p2: Parser[B]) = self.product(p, p2)

@@ -7,6 +7,7 @@ class SimpleParsersTest extends FlatSpec {
     import SimpleParsers.{run => parserRun, _}
     import SimpleParser.Parser
 
+    /*
     def abra: Parser[String] = "abra"
 
     val succ = parserRun(abra)("abra")
@@ -23,8 +24,11 @@ class SimpleParsersTest extends FlatSpec {
 
     val flatMapSuccTest = parserRun(number.map(_.toInt).flatMap(listOfN(_, a)))("4aaaa")
     val flatMapFailTest = parserRun(number.map(_.toInt).flatMap(listOfN(_, a)))("4aaa")
+     */
 
-    val parseManyA  = parserRun("a".many )("aaaaa")
+    def manyA = "a".many
+    println("defined manyA")
+    val parseManyA  = parserRun(manyA)("")
     // val parseMany1A = parserRun("a".many1)("aaaaa")
   }
 }

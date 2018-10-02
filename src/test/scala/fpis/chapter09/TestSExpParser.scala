@@ -11,6 +11,7 @@ object AtomTest {
   val s = AtomString("string")
 }
 
+/*
 class SExpParserTest extends FlatSpec {
   "bla" should "blo" in {
     import SExpParser._
@@ -18,3 +19,4 @@ class SExpParserTest extends FlatSpec {
     // println(parser(Location("symbol", 0)).toString())
   }
 }
+*/

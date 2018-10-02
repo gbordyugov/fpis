@@ -36,7 +36,7 @@ object SimpleParser {
 
   case class Success[+A](get: A, charsConsumed: Int) extends Result[A]
 
-  case class Failure(get: ParseError, isCommitted: Boolean = true) extends Result[Nothing]
+  case class Failure(get: ParseError, isCommitted: Boolean) extends Result[Nothing]
 
   type Parser[+A] = Location => Result[A]
 }
@@ -52,11 +52,13 @@ object SimpleParser {
 object SimpleParsers extends Parsers[SimpleParser.Parser] {
 import SimpleParser._
 
-  def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
+  def run[A](p: Parser[A])(input: String): Either[ParseError, A] = {
+    println("running parser")
     p(Location(input)) match {
       case Success(a, n)  => Right(a)
       case Failure(error, _) => Left(error)
     }
+  }
 
   def delay[A](p: => Parser[A]): Parser[A] = ???
 
@@ -68,10 +70,11 @@ import SimpleParser._
 
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B] =
     l => p(l) match {
-      case Success(a, n)  => f(a)(l.advanceBy(n))
-                                .addCommit(n != 0)
-                                .advanceSuccess(n)
-      case e@Failure(_, _) => e
+      case Success(a, n)   => { println("Success in flatMap");
+                                f(a)(l.advanceBy(n))
+                                 .addCommit(n != 0)
+                                 .advanceSuccess(n) }
+      case e@Failure(_, _) => { println("Failure in flatMap()"); e }
     }
 
   def label[A](msg: String)(p: Parser[A]): Parser[A] =
@@ -80,17 +83,20 @@ import SimpleParser._
   def scope[A](msg: String)(p: Parser[A]): Parser[A] =
     l => p(l).mapError(_.push(l, msg))
 
-  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] =
+  def or[A](p: Parser[A], q: => Parser[A]): Parser[A] = {
+    println("running or()")
     l => p(l) match {
-      case Failure(error, _) => q(l)
-      case a                 => a
+      case Failure(error, false) => { println("non-commited or"); q(l) }
+      case a                     => { println("something"); a }
     }
+  }
 
   def regex(r: Regex): Parser[String] = {
     case l@Location(input, offset) =>
       r.findPrefixOf(input.drop(offset)) match {
         case Some(res) => Success(res, res.length)
-        case None      => Failure(ParseError(List((l, s"cannot parse regex $r"))))
+        case None      =>
+          Failure(ParseError(List((l, s"cannot parse regex $r"))), false)
       }
   }
 
@@ -109,6 +115,6 @@ import SimpleParser._
       if (s == input.slice(offset, offset+s.length))
         Success(s, s.length)
       else
-        Failure(l.toError(s"cannot parse string $s"))
+        Failure(l.toError(s"cannot parse string $s"), false)
   }
 }
