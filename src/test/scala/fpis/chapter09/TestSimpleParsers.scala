@@ -16,6 +16,17 @@ class SimpleParsersTest extends FlatSpec {
     assert(runParser(abra)("") === Right(List(): List[String]))
   }
 
+  it should "be able to parse one occurence" in {
+    def abra: Parser[List[String]] = "abra".many
+    assert(runParser(abra)("abra") === Right(List("abra")))
+  }
+
+  it should "be able to parse 100 occurence" in {
+    def abra: Parser[List[String]] = "abra".many
+    val hundredAbras = List.fill(100)("abra")
+    assert(runParser(abra)(hundredAbras.mkString) === Right(hundredAbras))
+  }
+
   "bla" should "blo" in {
     def abra: Parser[String] = "abra"
 
