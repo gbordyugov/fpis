@@ -3,7 +3,7 @@ package fpis.chapter09.SimpleParsers
 import org.scalatest._
 
 class SimpleParsersTest extends FlatSpec {
-  import SimpleParsers.{run => runParser, _}
+  import SimpleParsers.{run => runParser, succeed => parseSucceed, _}
   import SimpleParser.Parser
 
   "char parser" should "be able to parse a single char" in {
@@ -35,6 +35,11 @@ class SimpleParsersTest extends FlatSpec {
     def orParser = "abra" or "cadabra"
     assert(runParser(orParser)("abraabra") === Right("abra"))
     assert(runParser(orParser)("cadabraabra") === Right("cadabra"))
+  }
+
+  "succeed parser" should "always succeed" in {
+    def success = parseSucceed(1)
+    assert(runParser(success)("nothing") === Right(1))
   }
 
   "bla" should "blo" in {
