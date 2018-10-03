@@ -42,6 +42,15 @@ class SimpleParsersTest extends FlatSpec {
     assert(runParser(success)("nothing") === Right(1))
   }
 
+  "flatMap" should "parse a number following by so many repetitions of a pattern" in {
+    val pattern = "abra"
+    val numberOfAs = 100
+    val stringToParse = numberOfAs.toString + List.fill(numberOfAs)(pattern).mkString
+
+    def p = flatMap(int)(listOfN(_, pattern))
+    assert(runParser(p)(stringToParse) === Right(List.fill(numberOfAs)(pattern)))
+  }
+
   "bla" should "blo" in {
     def abra: Parser[String] = "abra"
 
