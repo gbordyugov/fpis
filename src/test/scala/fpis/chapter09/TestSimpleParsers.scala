@@ -31,6 +31,12 @@ class SimpleParsersTest extends FlatSpec {
     assert(runParser(abra)(hundredAbras.mkString) === Right(hundredAbras))
   }
 
+  "or parser" should "be able to parse either of its arguments" in {
+    def orParser = "abra" or "cadabra"
+    assert(runParser(orParser)("abraabra") === Right("abra"))
+    assert(runParser(orParser)("cadabraabra") === Right("cadabra"))
+  }
+
   "bla" should "blo" in {
     def abra: Parser[String] = "abra"
 
