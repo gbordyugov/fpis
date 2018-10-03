@@ -174,24 +174,26 @@ trait Parsers[Parser[+_]] { self =>
    *  some utilities
    */
 
-  def whitespace: Parser[String] = "\\s*".r
+  def whitespace: Parser[String] = raw"\s*".r
 
   def token[A](p: Parser[A]) = p <* whitespace
 
   def between[L, R, A](l: Parser[L], r: Parser[R],
     a: Parser[A]): Parser[A] = l *> a <* r
 
-  def digit: Parser[String] = "[0-9]".r
+  def digit: Parser[String] = raw"\d".r
 
-  def int: Parser[Int] = "[0-9]+".r.map(_.toInt)
+  def int: Parser[Int] = raw"\d+".r.map(_.toInt)
 
-  def letter: Parser[String] = "[a-zA-Z]".r
+  def letter: Parser[String] = raw"[a-zA-Z]".r
+
+  def wordCharacter: Parser[String] = raw"\w".r
 
   def colon: Parser[String] = ":"
 
-  def doubleQuote: Parser[String] = "\""
+  def doubleQuote: Parser[Char] = char('"')
 
-  def singleQuote: Parser[String] = "'"
+  def singleQuote: Parser[Char] = char('\'')
 
   def singleQuoted[A](p: Parser[A]): Parser[A] =
     between(singleQuote, singleQuote, p)
@@ -199,7 +201,7 @@ trait Parsers[Parser[+_]] { self =>
   def doubleQuoted[A](p: Parser[A]): Parser[A] =
     between(doubleQuote, doubleQuote, p)
 
-  def eof: Parser[String] = "\\z".r
+  def eof: Parser[String] = raw"\z".r
 
   def consumeAll[A](p: Parser[A]): Parser[A] = p <* eof
 
