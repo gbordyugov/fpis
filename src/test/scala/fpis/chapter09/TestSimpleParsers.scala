@@ -6,6 +6,10 @@ class SimpleParsersTest extends FlatSpec {
   import SimpleParsers.{run => runParser, _}
   import SimpleParser.Parser
 
+  "char parser" should "be able to parse a single char" in {
+    assert(runParser(char('a'))("abc") == Right('a'))
+  }
+
   "string parser" should "be able to parse simple strings" in {
     def abra: Parser[String] = "abra"
     assert (runParser(abra)("abra") === Right("abra"))
