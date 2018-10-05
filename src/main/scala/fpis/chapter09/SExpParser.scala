@@ -36,7 +36,7 @@ object SExpParser {
       "[1-9][0-9]+\\.[0-9]*".r.map(_.toDouble).map(AtomDouble(_)).token
 
     def atomString: Parser[AtomString] =
-      (char('"') *> "\\.".r <* char('"'))
+      (char('"') *> "[a-zA-Z\\s\\d-_]".r.many <* char('"'))
         .map(_.mkString).map(AtomString(_)).token
 
     def atomSymbol: Parser[AtomSymbol] =
