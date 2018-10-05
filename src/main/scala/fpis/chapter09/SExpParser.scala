@@ -49,16 +49,10 @@ object SExpParser {
       atom.map(SExpAtom(_))
 
     def sExpList: Parser[SExpList[Atom]] =
-      ("(" *> sep(sExp, ",") <* ")").map(SExpList(_))
+      ("(" *> sep(sExp, whitespace) <* ")").map(SExpList(_))
 
-    def sExp: Parser[SExpression] = sExpAtom or sExpList
+    def sExp = sExpAtom or sExpList
 
     sExp
   }
-}
-
-object TestingAround {
-  import SExpParser.sExpParser
-
-  val parser = sExpParser(SimpleParsers)
 }

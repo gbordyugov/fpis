@@ -110,6 +110,6 @@ import SimpleParser._
       if (s == input.slice(offset, offset+s.length))
         Success(s, s.length)
       else
-        Failure(l.toError(s"cannot parse string $s"), false)
+        Failure(l.toError(s"cannot parse string '$s'"), false)
   }
 }

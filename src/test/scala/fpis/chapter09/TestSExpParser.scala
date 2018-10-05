@@ -31,4 +31,19 @@ class SExpParserTest extends FlatSpec {
     val result = runParser(parser)("\"abcd\"")
     println(result)
   }
+
+  it should "be able to parse empty lists" in {
+    val result = runParser(parser)("()")
+    println(result)
+  }
+
+  it should "be able to parse simple lists" in {
+    val result = runParser(parser)("(1 2 3)")
+    println(result)
+  }
+
+  it should "be able to parse nested lists" in {
+    val result = runParser(parser)("(1 (quote 2 (3)))")
+    println(result)
+  }
 }
