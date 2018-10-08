@@ -34,4 +34,9 @@ class JSONParserTest extends FlatSpec {
     val result = runParser(parser)("\"string\"")
     assert(result === Right(JString("string")))
   }
+
+  it should "be able to parse an empty array" in {
+    val result = runParser(parser)("[]")
+    assert(result === Right(JArray(List(): List[JSON])))
+  }
 }

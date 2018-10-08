@@ -43,9 +43,11 @@ object JSONParser {
     def jsonFalse: Parser[JBool] = "false" *> succeed(JBool(false))
     def jsonBool: Parser[JBool] = jsonTrue or jsonFalse
 
-    def jsonAtom: Parser[JSON] = jsonNull or jsonBool or jsonNumber or jsonString
+    def jsonAtom: Parser[JSON] =
+      jsonNull or jsonBool or jsonNumber or jsonString
 
-    def jsonArray: Parser[JArray] = sep(json, ",").map(JArray(_))
+    def jsonArray: Parser[JArray] =
+      ("[" *> sep(json, ",") <* "]").map(JArray(_))
 
     def jsonQuotedString: Parser[String] =
       "\"" *> "[^\"]+".r <* "\""
@@ -54,7 +56,7 @@ object JSONParser {
       map2(jsonQuotedString, (":" *> json))((_, _))
 
     def jsonObject: Parser[JObject] =
-      sep(jsonKeyValue, ",").map(pairs => JObject(pairs.toMap))
+      ("{" *> sep(jsonKeyValue, ",") <* "}").map(pairs => JObject(pairs.toMap))
 
     def json: Parser[JSON] = jsonAtom or jsonArray or jsonObject
 
