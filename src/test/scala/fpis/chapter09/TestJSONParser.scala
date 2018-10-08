@@ -19,4 +19,19 @@ class JSONParserTest extends FlatSpec {
     val result = runParser(parser)("true")
     assert(result === Right(JBool(true)))
   }
+
+  it should "be able parse false" in {
+    val result = runParser(parser)("false")
+    assert(result === Right(JBool(false)))
+  }
+
+  it should "be able parse a double" in {
+    val result = runParser(parser)("5.9")
+    assert(result === Right(JNumber(5.9)))
+  }
+
+  it should "be able to parse a string" in {
+    val result = runParser(parser)("\"string\"")
+    assert(result === Right(JString("string")))
+  }
 }

@@ -33,7 +33,7 @@ object SExpParser {
       int.map(AtomInt(_)).token
 
     def atomDouble: Parser[AtomDouble] =
-      "[1-9][0-9]+\\.[0-9]*".r.map(_.toDouble).map(AtomDouble(_)).token
+      "\\d+(.\\d*)?".r.map(_.toDouble).map(AtomDouble(_)).token
 
     def atomString: Parser[AtomString] =
       (char('"') *> "[^\"]+".r <* char('"'))
