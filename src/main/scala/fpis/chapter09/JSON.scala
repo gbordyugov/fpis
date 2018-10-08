@@ -21,12 +21,19 @@ object JSON {
  */
 object JSONParser {
   def jsonParser[Parser[+_]](p: Parsers[Parser]): Parser[JSON] = {
+    import JSON._
     import p.{string => _, _}
 
     /*
      * this promotes all strings to tokenized string parsers
      */
     implicit def tok(s: String) = p.string(s).token
+
+    def nullParser: Parser[String] = "null"
+    def jNull: Parser[JSON] = nullParser.map{_ => JNull}
+
+    def jNumber: Parser[JNumber] = "\\d*.\\d*".r.map(_.toDouble).map(JNumber(_))
+
     ???
   }
 }
