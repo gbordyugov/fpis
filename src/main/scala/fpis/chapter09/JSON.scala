@@ -32,7 +32,16 @@ object JSONParser {
     def nullParser: Parser[String] = "null"
     def jNull: Parser[JSON] = nullParser.map{_ => JNull}
 
-    def jNumber: Parser[JNumber] = "\\d*.\\d*".r.map(_.toDouble).map(JNumber(_))
+    def jNumber: Parser[JNumber] =
+      "\\d*.\\d*".r.map(_.toDouble).map(JNumber(_))
+
+    def jsonString: Parser[JString] =
+      (char('"') *> "[^\"]+".r <* char('"'))
+        .map(_.mkString).map(JString(_)).token
+
+    def jsonBool: Parser[JBool] = or(
+      ("true" *> succeed(JBool(true))), ("false" *> succeed(JBool(false))))
+
 
     ???
   }
