@@ -1,6 +1,9 @@
-package fpis.chapter09
+package fpis.chapter09.JSONParser
 
-import scala.language.higherKinds
+import scala.language.{higherKinds, implicitConversions}
+
+import fpis.chapter09.{Parsers, ParseError, Location}
+import fpis.chapter09.SimpleParsers.SimpleParsers
 
 trait JSON
 
@@ -18,8 +21,12 @@ object JSON {
  */
 object JSONParser {
   def jsonParser[Parser[+_]](p: Parsers[Parser]): Parser[JSON] = {
-    import p._
+    import p.{string => _, _}
 
+    /*
+     * this promotes all strings to tokenized string parsers
+     */
+    implicit def tok(s: String) = p.string(s).token
     ???
   }
 }
