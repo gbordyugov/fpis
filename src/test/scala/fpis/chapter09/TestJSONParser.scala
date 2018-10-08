@@ -25,6 +25,11 @@ class JSONParserTest extends FlatSpec {
     assert(result === Right(JBool(false)))
   }
 
+  it should "be able parse an int" in {
+    val result = runParser(parser)("5")
+    assert(result === Right(JNumber(5)))
+  }
+
   it should "be able parse a double" in {
     val result = runParser(parser)("5.9")
     assert(result === Right(JNumber(5.9)))
@@ -38,5 +43,16 @@ class JSONParserTest extends FlatSpec {
   it should "be able to parse an empty array" in {
     val result = runParser(parser)("[]")
     assert(result === Right(JArray(List(): List[JSON])))
+  }
+
+  it should "be able to parse an array" in {
+    val result = runParser(parser)("[1.0, 2, 3]")
+    assert(result ===
+      Right(JArray(List(JNumber(1.0), JNumber(2.0), JNumber(3.0)))))
+  }
+
+  it should "be able to parse an empty object" in {
+    val result = runParser(parser)("{}")
+    assert(result === Right(JObject(Map(): Map[String,JSON])))
   }
 }
