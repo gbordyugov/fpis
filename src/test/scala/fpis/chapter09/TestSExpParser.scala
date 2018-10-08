@@ -7,34 +7,36 @@ import fpis.chapter09.SimpleParsers.{SimpleParser, SimpleParsers}
 import fpis.chapter09.SExpParser.SExpParser._
 
 
-object AtomTest {
-  val i = AtomInt(3)
-  val s = AtomString("string")
-}
-
 class SExpParserTest extends FlatSpec {
   import SimpleParsers.{run => runParser, succeed => parseSucceed, _}
   val parser = sExpParser(SimpleParsers)
   import parser._
 
+  type SExpression = SExp[Atom]
+
+  val abcdSymbol = AtomSymbol("abcd")
+  val abcdString = AtomString("abcd")
+  val intAtom    = AtomInt(2345)
+  val emptyList  = SExpList(List(): List[SExpression])
+
   "sExpParser" should "be able to parse simple symbols" in {
     val result = runParser(parser)("abcd")
-    println(result)
+    assert(result === Right(SExpAtom(abcdSymbol)))
   }
 
   it should "be able to parse simple integers" in {
     val result = runParser(parser)("2345")
-    println(result)
+    assert(result === Right(SExpAtom(intAtom)))
   }
 
   it should "be able to parse simple strings" in {
     val result = runParser(parser)("\"abcd\"")
-    println(result)
+    assert(result === Right(SExpAtom(abcdString)))
   }
 
   it should "be able to parse empty lists" in {
     val result = runParser(parser)("()")
-    println(result)
+    assert(result === Right(emptyList))
   }
 
   it should "be able to parse simple lists" in {
