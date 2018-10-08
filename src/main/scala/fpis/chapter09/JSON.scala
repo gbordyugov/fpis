@@ -30,9 +30,9 @@ object JSONParser {
     implicit def tok(s: String) = p.string(s).token
 
     def nullParser: Parser[String] = "null"
-    def jNull: Parser[JSON] = nullParser.map{_ => JNull}
+    def jsonNull: Parser[JSON] = nullParser.map{_ => JNull}
 
-    def jNumber: Parser[JNumber] =
+    def jsonNumber: Parser[JNumber] =
       "\\d*.\\d*".r.map(_.toDouble).map(JNumber(_))
 
     def jsonString: Parser[JString] =
@@ -43,6 +43,8 @@ object JSONParser {
     def jsonFalse: Parser[JBool] = "false" *> succeed(JBool(false))
     def jsonBool: Parser[JBool] = jsonTrue or jsonFalse
 
+    def jsonAtom: Parser[JSON] = jsonNull or jsonNumber or jsonString
+
     def jsonArray: Parser[JArray] = sep(json, ",").map(JArray(_))
 
     def jsonQuotedString: Parser[String] =
@@ -52,9 +54,9 @@ object JSONParser {
       map2(jsonQuotedString, (":" *> json))((_, _))
 
     def jsonObject: Parser[JObject] =
-      sep(jsonKeyValue, ",").map(JObject(_.toMap))
+      sep(jsonKeyValue, ",").map(pairs => JObject(pairs.toMap))
 
-    def json: Parser[JSON] = ???
+    def json: Parser[JSON] = jsonAtom or jsonArray or jsonObject
 
     json
   }
