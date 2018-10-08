@@ -53,15 +53,11 @@ class SExpParserTest extends FlatSpec {
 
   it should "be able to parse nested lists" in {
     val result = runParser(parser)("(1 (quote 2 (3)))")
-    val uno = SExpList(List(SExpAtom(AtomInt(3))))
-    val due = SExpList(List(SExpAtom(quoteSymbol), SExpAtom(two)))
+    val uno: SExpression = SExpList(List(SExpAtom(AtomInt(3))))
+    val due: SExpression = SExpList(List(SExpAtom(quoteSymbol), SExpAtom(AtomInt(2)),
+      uno))
+    val tre: SExpression = SExpList(List(SExpAtom(AtomInt(1)), due))
 
-    /*n
-
-    assert(result === Right(SExpList(List(SExpAtom(AtomInt(1)),
-                                         SExpList(List(SExpAtom(AtomSymbol("quote")),
-                                                       SExpAtom(AtomInt(2)),
-                                                       SExpList(List(SExpAtom(AtomInt(3))))))))))
-     */
+    assert(result === Right(tre))
   }
 }
