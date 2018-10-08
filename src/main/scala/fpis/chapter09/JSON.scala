@@ -43,7 +43,7 @@ object JSONParser {
     def jsonFalse: Parser[JBool] = "false" *> succeed(JBool(false))
     def jsonBool: Parser[JBool] = jsonTrue or jsonFalse
 
-    def jsonAtom: Parser[JSON] = jsonNull or jsonNumber or jsonString
+    def jsonAtom: Parser[JSON] = jsonNull or jsonBool or jsonNumber or jsonString
 
     def jsonArray: Parser[JArray] = sep(json, ",").map(JArray(_))
 
