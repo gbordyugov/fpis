@@ -12,7 +12,7 @@ object JSON {
   case class JNumber(get: Double) extends JSON
   case class JString(get: String) extends JSON
   case class JBool(get: Boolean) extends JSON
-  case class JArray(get: IndexedSeq[JSON]) extends JSON
+  case class JArray(get: List[JSON]) extends JSON
   case class JObject(get: Map[String, JSON]) extends JSON
 }
 
@@ -39,10 +39,23 @@ object JSONParser {
       (char('"') *> "[^\"]+".r <* char('"'))
         .map(_.mkString).map(JString(_)).token
 
-    def jsonBool: Parser[JBool] = or(
-      ("true" *> succeed(JBool(true))), ("false" *> succeed(JBool(false))))
+    def jsonTrue:  Parser[JBool] = "true"  *> succeed(JBool(true))
+    def jsonFalse: Parser[JBool] = "false" *> succeed(JBool(false))
+    def jsonBool: Parser[JBool] = jsonTrue or jsonFalse
 
+    def jsonArray: Parser[JArray] = sep(json, ",").map(JArray(_))
 
-    ???
+    def jsonQuotedString: Parser[String] =
+      "\"" *> "[^\"]+".r <* "\""
+
+    def jsonKeyValue: Parser[(String, JSON)] =
+      map2(jsonQuotedString, (":" *> json))((_, _))
+
+    def jsonObject: Parser[JObject] =
+      sep(jsonKeyValue, ",").map(JObject(_.toMap))
+
+    def json: Parser[JSON] = ???
+
+    json
   }
 }
