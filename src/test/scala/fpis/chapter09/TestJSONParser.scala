@@ -9,8 +9,9 @@ import fpis.chapter09.JSONParser.JSON._
 
 
 /*
- * This too belongs to Exercise 9.9
+ * Exercise 9.15
  */
+
 class JSONParserTest extends FlatSpec {
   import SimpleParsers.{run => runParser, succeed => parseSucceed, _}
 
