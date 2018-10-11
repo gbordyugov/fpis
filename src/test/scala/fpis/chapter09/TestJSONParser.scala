@@ -38,6 +38,11 @@ class JSONParserTest extends FlatSpec {
     assert(result === Right(JNumber(5.9)))
   }
 
+  it should "be able parse a double with a leading dot" in {
+    val result = runParser(parser)(".9")
+    assert(result === Right(JNumber(0.9)))
+  }
+
   it should "be able to parse a string" in {
     val result = runParser(parser)("\"string\"")
     assert(result === Right(JString("string")))
