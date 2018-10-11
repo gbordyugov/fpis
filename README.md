@@ -8,3 +8,6 @@ Open/skipped exercises:
   - Exercise 9.10 and 9.11 are open-ended ones
   - Exercise 9.12 -- I just jumped to the implementation proposed in the book
   - Exercises 9.16 - 9.18
+
+For Chapter 9, I implemented an S-Expression parser before my take on a JSON
+parser.
