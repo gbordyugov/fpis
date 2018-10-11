@@ -29,8 +29,7 @@ object JSONParser {
      */
     implicit def tok(s: String) = p.string(s).token
 
-    def nullParser: Parser[String] = "null"
-    def jsonNull: Parser[JSON] = nullParser.map{_ => JNull}
+    def jsonNull: Parser[JSON] = tok("null").map{_ => JNull}
 
     def jsonNumber: Parser[JNumber] =
       raw"(\d+\.\d+|\.\d+|\d+)".r.token.map(_.toDouble).map(JNumber(_))
