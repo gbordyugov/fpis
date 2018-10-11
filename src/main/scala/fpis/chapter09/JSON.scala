@@ -49,7 +49,7 @@ object JSONParser {
       ("[" *> sep(json, ",") <* "]").map(JArray(_))
 
     def jsonQuotedString: Parser[String] =
-      "\"" *> "[^\"]+".r <* "\""
+      (char('"') *> "[^\"]+".r <* char('"')).token
 
     def jsonKeyValue: Parser[(String, JSON)] =
       map2(jsonQuotedString, (":" *> json))((_, _))
