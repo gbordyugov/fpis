@@ -32,7 +32,7 @@ object JSONParser {
     def jsonNull: Parser[JSON] = tok("null").map{_ => JNull}
 
     def jsonNumber: Parser[JNumber] =
-      raw"(\d+\.\d+|\.\d+|\d+)".r.token.map(_.toDouble).map(JNumber(_))
+      raw"(\d+\.\d*|\.\d+|\d+)".r.token.map(_.toDouble).map(JNumber(_))
 
     def jsonString: Parser[JString] =
       (char('"') *> "[^\"]+".r <* char('"'))
