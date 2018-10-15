@@ -26,6 +26,12 @@ case class ParseError(stack: List[(Location, String)]) {
   def latestLoc: Option[Location] = latest.map (_._1)
 
   def latest: Option[(Location, String)] = stack.lastOption
+
+  /*
+   * Exercise 9.16
+   */
+  val sortedByLocation: List[(Location, List[String])] =
+    stack.groupBy { case (l, s) => l }.mapValues { x => x.map(_ ._2)}.toList
 }
 
 trait Parsers[Parser[+_]] { self =>
