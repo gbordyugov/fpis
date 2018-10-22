@@ -29,7 +29,7 @@ class PropertyTest extends FlatSpec {
         println(s"+ OK, proved property.")
     }
 
-  def testMax(): Unit = {
+  "max of a list" should "be the largest element" in {
     import Gen.listOf1
     val smallInt = Gen.choose(-10, 10)
     val maxProp = forAll(listOf1(smallInt)) { ns =>
@@ -44,13 +44,13 @@ class PropertyTest extends FlatSpec {
    * Exercise 8.14
    */
 
-  def testSorted(): Unit = {
+  "sorted list" should "have all elements in order" in {
     import Gen.listOf1
     val smallInt = Gen.choose(-100, 100)
     val maxProp = forAll(listOf1(smallInt)) { ns =>
       val sorted = ns.sorted
       sorted.isEmpty || sorted.tail.isEmpty ||
-        ! sorted.zip(sorted.tail).exists { case (a, b) => a > b }
+      ! sorted.zip(sorted.tail).exists { case (a, b) => a > b }
     }
     run(maxProp)
   }
@@ -60,7 +60,7 @@ class PropertyTest extends FlatSpec {
    * Testing parallel library
    */
 
-  def testPar(): Unit = {
+  "parallel things" should "work as expected" in {
     val ES: ExecutorService = Executors.newCachedThreadPool
 
     val p1 = forAll(Gen.unit(Par.unit(1)))(i =>
@@ -84,7 +84,7 @@ class PropertyTest extends FlatSpec {
     run(p3)
   }
 
-  def moreTestPar(): Unit = {
+  "more parallel things" should "work as expected" in {
     import Gen.{weighted, unit, choose}
 		val S = weighted(
 			choose(1,4).map(Executors.newFixedThreadPool) -> .75,
