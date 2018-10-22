@@ -142,6 +142,10 @@ object Prop {
         println(s"+ OK, proved property.")
     }
 
+  def justRun(p: Prop, maxSize: Int = 100, testCases: Int = 100,
+    rng: RNG = RNG.SimpleRNG(System.currentTimeMillis)): Result =
+    p.run(maxSize, testCases, rng)
+
   def check(p: => Boolean): Prop = Prop { (_, _, _) =>
     if (p)
       Proved

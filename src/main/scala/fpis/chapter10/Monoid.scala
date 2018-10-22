@@ -66,7 +66,7 @@ object Chapter10 {
 
 
   /*
-   * Exercise 10.4 skipped (haven't read Part 2 yet)
+   * for Exercise 10.4 see TestMonoid.scala
    */
 
 
