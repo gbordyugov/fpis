@@ -1,5 +1,10 @@
-
 package fpis.chapter07class
+/*
+ * the difference is that here, Par is a class instead of 
+ * type Par[A] = ExecutorService => Future[A]
+ * the rest of the solutions uses the canonical representation
+ * of Par[A], i.e. that of Parallel.class
+ */
 
 import annotation.tailrec
 import java.util.concurrent.{ExecutorService, Future, TimeUnit,
