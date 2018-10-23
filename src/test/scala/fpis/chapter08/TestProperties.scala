@@ -16,6 +16,11 @@ import fpis.chapter07.Par.Par
 class PropertyTest extends FlatSpec {
   import Prop.{run => propRun, _}
 
+  def justRunAssert(p: Prop): Unit = justRun(p) match {
+    case Falsified(_, _) => assert(false)
+    case _               => assert(true)
+  }
+
   "max of a list" should "be the largest element" in {
     import Gen.listOf1
     val smallInt = Gen.choose(-10, 10)
@@ -23,7 +28,7 @@ class PropertyTest extends FlatSpec {
       val max = ns.max
       !ns.exists(_ > max)
     }
-    propRun(maxProp)
+    justRunAssert(maxProp)
   }
 
 
@@ -39,7 +44,7 @@ class PropertyTest extends FlatSpec {
       sorted.isEmpty || sorted.tail.isEmpty ||
       ! sorted.zip(sorted.tail).exists { case (a, b) => a > b }
     }
-    propRun(maxProp)
+    justRunAssert(maxProp)
   }
 
 
@@ -66,9 +71,9 @@ class PropertyTest extends FlatSpec {
       )(ES).get
     }
 
-    propRun(p1)
-    propRun(p2)
-    propRun(p3)
+    justRunAssert(p1)
+    justRunAssert(p2)
+    justRunAssert(p3)
   }
 
   "more parallel things" should "work as expected" in {
@@ -90,11 +95,11 @@ class PropertyTest extends FlatSpec {
         Par.unit(2)
         )
     }
-    propRun(p4)
+    justRunAssert(p4)
 
     val pint = Gen.choose(0, 10).map(Par.unit(_))
     val p5 = forAllPar(pint)(n => equal(Par.map(n)(y => y), n))
-    propRun(p5)
+    justRunAssert(p5)
 
     /*
      * Exercise 8.16
@@ -110,6 +115,6 @@ class PropertyTest extends FlatSpec {
      */
     val pint817 = Gen.choose(0, 10).map(Par.unit(_))
     val p6 = forAllPar(pint)(n => equal(Par.fork(n), n))
-    propRun(p6)
+    justRunAssert(p6)
   }
 }
