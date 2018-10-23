@@ -84,7 +84,10 @@ object Chapter10 {
    * Exercise 10.6
    */
 
-  def foldLeft[A, B](a: A)(bs: List[B])(f: (A, B) => B): B = ???
+  def foldLeft[A, B](a: A)(bs: List[B])(f: (A, B) => A): A = {
+    val funcs: List[A => A] = bs.map(b => (a: A) => f(a, b))
+    concatenate(funcs, endoMonoid[A])(a)
+  }
 
   def foldRight[A, B](b: B)(as: List[A])(f: (A, B) => B): B = ???
 }
