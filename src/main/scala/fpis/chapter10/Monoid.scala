@@ -1,5 +1,7 @@
 package fpis.chapter10
 
+import fpis.chapter07.Par._
+
 trait Monoid[A] {
   def op(x: A, y: A): A
   def zero: A
@@ -108,4 +110,11 @@ object Chapter10 {
       val (l, r) = v.splitAt(v.length/2)
       m.op(foldMapV(l, m)(f), foldMapV(r, m)(f))
     }
+
+  /*
+   * Exercise 10.8
+   */
+
+  def par[A](m: Monoid[A]): Monoid[Par[A]] = ???
+  def parFoldMap[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] = ???
 }
