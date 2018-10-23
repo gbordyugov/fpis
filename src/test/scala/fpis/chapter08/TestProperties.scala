@@ -78,7 +78,6 @@ class PropertyTest extends FlatSpec {
       unit(Executors.newCachedThreadPool)           -> .25)
 
     def forAllPar[A](g: Gen[A])(f: A => Par[Boolean]): Prop = {
-      // object ** is defined at the end of the file
       forAll(S ** g) { case s ** a => f(a)(s).get }
     }
 

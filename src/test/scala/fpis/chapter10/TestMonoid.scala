@@ -14,16 +14,24 @@ class TestMonoid extends FlatSpec {
    * Exercise 10.4
    */
 
-  def monoidLaws[A](m: Monoid[A], gen: Gen[A]): Prop =
-    forAll(gen)(a => m.op(a, m.zero) == a &&
-                     m.op(m.zero, a) == a)
+  def monoidLaws[A](m: Monoid[A], gen: Gen[A]): Prop = {
+    val pairs: Gen[(A, A)] = gen.map2(gen)((_, _))
+    val triples: Gen[(A, A, A)] = pairs.map2(gen) {
+      case ((a, b), c) => (a, b, c)
+    }
+
+    forAll(triples) {case (a, b, c) =>
+      m.op(a, m.zero) == a && m.op(m.zero, a) == a &&
+      m.op(m.op(a, b), c) == m.op(a, m.op(b, c))
+    }
+  }
 
   "string monoid" should "satisfy monoid laws" in {
     val strings = stringN(100)
     val monoidProp = monoidLaws(stringMonoid, strings)
     justRun(monoidProp) match {
       case Falsified(_, _) => assert(false)
-      case _              => assert(true)
+      case _               => assert(true)
     }
   }
 }
