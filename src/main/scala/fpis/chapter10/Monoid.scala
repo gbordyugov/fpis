@@ -79,6 +79,10 @@ object Chapter10 {
 
 
   /*
-   * Exercise 10.6 skipped
+   * Exercise 10.6
    */
+
+  def foldLeft[A, B](a: A)(bs: List[B])(f: (A, B) => B): B = ???
+
+  def foldRight[A, B](b: B)(as: List[A])(f: (A, B) => B): B = ???
 }
