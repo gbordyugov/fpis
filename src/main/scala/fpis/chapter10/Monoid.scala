@@ -96,4 +96,10 @@ object Chapter10 {
      */
     concatenate(funcs, endoMonoid[B])(b)
   }
+
+  /*
+   * Exercise 10.7
+   */
+
+  def foldMapV[A,B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): B = ???
 }

@@ -50,14 +50,23 @@ class TestMonoid extends FlatSpec {
    */
 
   "new foldLeft" should "be able to sum a list of ints" in {
-    import Chapter10.{intAddition, foldLeft}
+    import Chapter10.foldLeft
     val ints: List[Int] = (1 to 10).toList
     assert(foldLeft(0)(ints)(_ + _) === ints.foldLeft(0)(_ + _))
   }
 
   "new foldRight" should "be able to sum a list of ints" in {
-    import Chapter10.{intAddition, foldRight}
+    import Chapter10.foldRight
     val ints: List[Int] = (1 to 10).toList
     assert(foldRight(0)(ints)(_ + _) === ints.foldLeft(0)(_ + _))
+  }
+
+  /*
+   * Exercise 10.7
+   */
+  "foldMapV" should "be able to sum a list of ints" in {
+    import Chapter10.{foldMapV, intAddition}
+    val ints: IndexedSeq[Int] = (1 to 10).toIndexedSeq
+    assert(foldMapV(ints, intAddition)(x => x) === ints.foldLeft(0)(_ + _))
   }
 }
