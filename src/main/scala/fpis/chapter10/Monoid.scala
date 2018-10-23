@@ -101,5 +101,11 @@ object Chapter10 {
    * Exercise 10.7
    */
 
-  def foldMapV[A,B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): B = ???
+  def foldMapV[A,B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): B =
+    if (v.length < 2)
+      f(v(0))
+    else {
+      val (l, r) = v.splitAt(v.length/2)
+      m.op(foldMapV(l, m)(f), foldMapV(r, m)(f))
+    }
 }
