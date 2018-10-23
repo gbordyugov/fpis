@@ -69,13 +69,15 @@ object Chapter10 {
    * for Exercise 10.4 see TestMonoid.scala
    */
 
+  def concatenate[A](as: List[A], m: Monoid[A]): A =
+    as.foldLeft(m.zero)(m.op)
 
   /*
    * Exercise 10.5
    */
 
   def foldMap[X, Y] (xs: List[X], m: Monoid[Y])(f: X => Y): Y =
-    xs.map(f).foldLeft(m.zero)(m.op)
+    concatenate(xs.map(f), m)
 
 
   /*
