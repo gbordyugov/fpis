@@ -89,5 +89,8 @@ object Chapter10 {
     concatenate(funcs, endoMonoid[A])(a)
   }
 
-  def foldRight[A, B](b: B)(as: List[A])(f: (A, B) => B): B = ???
+  def foldRight[A, B](b: B)(as: List[A])(f: (A, B) => B): B = {
+    val funcs: List[B => B] = as.map(a => (b: B) => f(a, b))
+    concatenate(funcs, endoMonoid[B])(b)
+  }
 }
