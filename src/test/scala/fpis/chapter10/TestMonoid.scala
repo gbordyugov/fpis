@@ -6,8 +6,6 @@ import fpis.chapter08.Prop.{run => propRun, _}
 import fpis.chapter08.{Gen, Prop}
 import fpis.chapter08.Gen._
 
-import Chapter10._
-
 class TestMonoid extends FlatSpec {
 
   /*
@@ -27,11 +25,24 @@ class TestMonoid extends FlatSpec {
   }
 
   "string monoid" should "satisfy monoid laws" in {
+    import Chapter10.stringMonoid
+
     val strings = stringN(100)
     val monoidProp = monoidLaws(stringMonoid, strings)
     justRun(monoidProp) match {
       case Falsified(_, _) => assert(false)
       case _               => assert(true)
     }
+  }
+
+  /*
+   * Exercise 10.5
+   */
+
+  "foldMap" should "be able to sum up a list of ints" in {
+    import Chapter10.{intAddition, foldMap}
+    val ints: List[Int] = List(1, 2, 3, 4, 5)
+    val intsMonoid = intAddition
+    assert(foldMap(ints, intAddition)(x => x) == ints.foldLeft(0)(_ + _))
   }
 }
