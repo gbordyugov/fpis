@@ -91,6 +91,9 @@ object Chapter10 {
 
   def foldRight[A, B](b: B)(as: List[A])(f: (A, B) => B): B = {
     val funcs: List[B => B] = as.map(a => (b: B) => f(a, b))
+    /*
+     * this should be concatenateRight, but I think it's quite straight-forward
+     */
     concatenate(funcs, endoMonoid[B])(b)
   }
 }
