@@ -115,6 +115,9 @@ object Chapter10 {
    * Exercise 10.8
    */
 
-  def par[A](m: Monoid[A]): Monoid[Par[A]] = ???
+  def par[A](m: Monoid[A]): Monoid[Par[A]] = new Monoid[Par[A]] {
+    def op(a: Par[A], b: Par[A]): Par[A] = map2(a, b)(m.op)
+    def zero: Par[A] = unit(m.zero)
+  }
   def parFoldMap[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] = ???
 }
