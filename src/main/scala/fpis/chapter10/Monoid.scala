@@ -1,6 +1,7 @@
 package fpis.chapter10
 
-import fpis.chapter07.Par._
+import fpis.chapter07.Par
+import Par.Par
 
 trait Monoid[A] {
   def op(x: A, y: A): A
@@ -118,12 +119,14 @@ object Chapter10 {
    */
 
   def par[A](m: Monoid[A]): Monoid[Par[A]] = new Monoid[Par[A]] {
-    def op(a: Par[A], b: Par[A]): Par[A] = map2(a, b)(m.op)
-    def zero: Par[A] = unit(m.zero)
+    def op(a: Par[A], b: Par[A]): Par[A] = Par.map2(a, b)(m.op)
+    def zero: Par[A] = Par.unit(m.zero)
   }
 
-  def parFoldMap[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] =
-    flatMap(parMap(v.toList)(f)) { bs =>
-      foldMapV(bs.toIndexedSeq, par(m))(b => lazyUnit(b))
+  def parFoldMap[A, B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] = {
+    val bs: Par[List[B]] = Par.parMap(as.toList)(f)
+    Par.flatMap(bs) { bs =>
+      foldMapV(bs.toIndexedSeq, par(m))(b => Par.lazyUnit(b))
     }
+  }
 }
