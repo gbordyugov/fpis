@@ -134,9 +134,9 @@ object Par {
    * immediately. After this computation will be passed to run(),
    * it will spawn additional ps.length threads
    */
-  def parMap[A, B](ps: List[A])(f: A=>B): Par[List[B]] = fork {
-    val fbs: List[Par[B]] = ps.map(asyncF(f))
-    sequence(fbs)
+  def parMap[A, B](ps: Seq[A])(f: A=>B): Par[List[B]] = fork {
+    val fbs: Seq[Par[B]] = ps.map(asyncF(f))
+    sequence(fbs.toList)
   }
 
 

@@ -6,9 +6,13 @@ import fpis.chapter08.Prop.{run => propRun, _}
 import fpis.chapter08.{Gen, Prop}
 import fpis.chapter08.Gen._
 
-import fpis.chapter07.Par._
+import fpis.chapter07.Par
 
 class TestMonoid extends FlatSpec {
+  import java.util.concurrent.Executors
+
+  val es = Executors.newFixedThreadPool(2)
+  def runPar[A](p: Par.Par[A]) = Par.run(es)(p).get
 
   /*
    * Exercise 10.4
@@ -78,8 +82,9 @@ class TestMonoid extends FlatSpec {
    */
   "parFoldMap" should "be able to sum a list of ints" in {
     import Chapter10.{parFoldMap, intAddition}
+
     val ints: IndexedSeq[Int] = (1 to 10).toIndexedSeq
-    ???
-    // assert(parFoldMap(ints, intAddition)(x => x) === ints.foldLeft(0)(_ + _))
+    assert(runPar(parFoldMap(ints, intAddition)(x => x))
+      === ints.foldLeft(0)(_ + _))
   }
 }

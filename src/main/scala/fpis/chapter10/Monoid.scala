@@ -123,5 +123,7 @@ object Chapter10 {
   }
 
   def parFoldMap[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] =
-    ???
+    flatMap(parMap(v.toList)(f)) { bs =>
+      foldMapV(bs.toIndexedSeq, par(m))(b => lazyUnit(b))
+    }
 }
