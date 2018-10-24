@@ -104,7 +104,9 @@ object Chapter10 {
    */
 
   def foldMapV[A,B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): B =
-    if (v.length < 2)
+    if (v.length < 1)
+      m.zero
+    else if (v.length < 2)
       f(v(0))
     else {
       val (l, r) = v.splitAt(v.length/2)
