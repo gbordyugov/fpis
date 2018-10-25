@@ -75,4 +75,10 @@ class ParallelTest extends FlatSpec with Matchers {
     val lst: List[Int] = (1 to 500).toList
     assert(run(sumSeq(lst)) === lst.foldLeft(0)(_+_))
   }
+
+  "parMap()" should "map ints to strings correctly" in {
+    val ints: List[Int] = (1 to 500).toList
+    val strs: Par[List[String]] = parMap(ints)(_.toString)
+    assert(run(strs) === ints.map(_.toString))
+  }
 }
