@@ -47,7 +47,7 @@ object Par {
    */
 
   def map2[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C): Par[C] =
-    es => {
+    (es: ExecutorService) => {
       /*
        * it creates two futures by running `a` and `b` and constructs
        * the result future out of those two
