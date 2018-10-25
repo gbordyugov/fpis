@@ -21,6 +21,12 @@ class ParallelTest extends FlatSpec with Matchers {
     assert(run(map2(a, b)(_ + _)) === 3)
   }
 
+  it should "calculate forked Pars correctly" in {
+    val a: Par[Int] = unit(1)
+    val b: Par[Int] = unit(2)
+    assert(run(map2(fork(a), fork(b))(_ + _)) === 3)
+  }
+
   "fork()" should "calculate things correctly" in {
     assert(run(fork(unit(1))) === 1)
   }
@@ -34,18 +40,27 @@ class ParallelTest extends FlatSpec with Matchers {
     assert(run(addThree(5)) === 8)
   }
 
-  val things = (1 to 500).map(Par.lazyUnit(_)).toList
-  val thing = Par.sequence(things)
-
-  val anotherThing = Par.map2(Par.lazyUnit(1), Par.lazyUnit(1))(_ + _)
+  "sequence()" should "do right things" in {
+    val lst: List[Int] = (1 to 500).toList
+    val things = lst.map(lazyUnit(_)).toList
+    val thing = Par.sequence(things)
+    assert(run(thing) === lst)
+  }
 
   val p1 = Par.unit(1)
   val p2 = Par.fork(p1)
   val p3 = Par.fork(p2)
   val p4 = Par.fork(p3)
+  /*
+   * trying to run(p4) would produce a deadlock if the number of
+   * threads in the ExecutorService is not large enough
+   */
 
-  val lst = Par.unit(List(3, 4, 1, 2))
-  val sortedLst = Par.map(lst)(_.sorted)
+  "map()" should "be able to sort a list" in {
+    val lst = Par.lazyUnit(List(3, 4, 5, 1, 2))
+    val sortedLst = Par.map(lst)(_.sorted)
+    assert(run(sortedLst) === List(1, 2, 3, 4, 5))
+  }
 
   def sumSeq(s: Seq[Int]): Par.Par[Int] = {
     val length = s.length
