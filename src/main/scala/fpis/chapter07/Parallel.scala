@@ -159,9 +159,8 @@ object Par {
   def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] =
     fork {
       val indicators: Par[List[Boolean]] = parMap(as)(f)
-      map2(indicators, unit(as)) { (i, a) => {
+      map2(indicators, unit(as)) { (i, a) =>
         i.zip(a).filter(_._1).map(_._2)
-      }
       }
     }
 
