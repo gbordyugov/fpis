@@ -62,13 +62,17 @@ class ParallelTest extends FlatSpec with Matchers {
     assert(run(sortedLst) === List(1, 2, 3, 4, 5))
   }
 
-  def sumSeq(s: Seq[Int]): Par.Par[Int] = {
-    val length = s.length
-    if (length <= 100)
-      Par.lazyUnit(s.foldRight(0)(_ + _))
-    else {
-      val (l, r) = s.splitAt(length/2)
-      Par.map2(sumSeq(l), sumSeq(r))(_ + _)
+  "parallel summation" should "work as expected" in {
+    def sumSeq(s: Seq[Int]): Par[Int] = {
+      val length = s.length
+      if (length <= 100)
+        Par.lazyUnit(s.foldRight(0)(_ + _))
+      else {
+        val (l, r) = s.splitAt(length/2)
+        Par.map2(sumSeq(l), sumSeq(r))(_ + _)
+      }
     }
+    val lst: List[Int] = (1 to 500).toList
+    assert(run(sumSeq(lst)) === lst.foldLeft(0)(_+_))
   }
 }
