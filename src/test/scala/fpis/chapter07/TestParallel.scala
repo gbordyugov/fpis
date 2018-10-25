@@ -5,11 +5,17 @@ import java.util.concurrent.{ExecutorService, Future, TimeUnit,
 
 import org.scalatest._
 
-class ParallelTest extends FlatSpec {
+class ParallelTest extends FlatSpec with Matchers {
   val es = Executors.newFixedThreadPool(2)
   def run[A](p: Par.Par[A]) = Par.run(es)(p).get
 
-  val p = Par.lazyUnit(1)
+  "unit()" should "evaluate correctly" in {
+    assert(run(Par.unit(1)) === 1)
+  }
+
+  "lazyUnit()" should "evaluate correctly" in {
+    assert(run(Par.lazyUnit(1)) === 1)
+  }
 
   val things = (1 to 500).map(Par.lazyUnit(_)).toList
   val thing = Par.sequence(things)
