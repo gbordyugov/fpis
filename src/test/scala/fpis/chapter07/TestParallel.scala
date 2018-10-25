@@ -6,15 +6,32 @@ import java.util.concurrent.{ExecutorService, Future, TimeUnit,
 import org.scalatest._
 
 class ParallelTest extends FlatSpec with Matchers {
+  import Par.{run => parRun, _}
+
   val es = Executors.newFixedThreadPool(2)
-  def run[A](p: Par.Par[A]) = Par.run(es)(p).get
+  def run[A](p: Par[A]) = parRun(es)(p).get
 
   "unit()" should "evaluate correctly" in {
-    assert(run(Par.unit(1)) === 1)
+    assert(run(unit(1)) === 1)
+  }
+
+  "map2()" should "calculate things correctly" in {
+    val a: Par[Int] = unit(1)
+    val b: Par[Int] = unit(2)
+    assert(run(map2(a, b)(_ + _)) === 3)
+  }
+
+  "fork()" should "calculate things correctly" in {
+    assert(run(fork(unit(1))) === 1)
   }
 
   "lazyUnit()" should "evaluate correctly" in {
-    assert(run(Par.lazyUnit(1)) === 1)
+    assert(run(lazyUnit(1)) === 1)
+  }
+
+  "asyncF()" should "compute things correctly" in {
+    val addThree: Int => Par[Int] = asyncF(_ + 3)
+    assert(run(addThree(5)) === 8)
   }
 
   val things = (1 to 500).map(Par.lazyUnit(_)).toList

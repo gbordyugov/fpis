@@ -59,6 +59,10 @@ object Par {
 
   /*
    * for Exercise 7.3, cheated from the companion book
+   *
+   * this future has a state `cache` which is an Option
+   * it is initially None, but once the result has been computed,
+   * it becomes Some(_)
    */
   private case class Map2Future[A, B, C](fa: Future[A],
     fb: Future[B])(f: (A, B) => C) extends Future[C] {
@@ -76,10 +80,6 @@ object Par {
     private def compute(timeMs: Long): C = cache match {
       case Some(c) => c
       case None    =>
-        /*
-         * that's really naive, it can happen that one leg takes
-         * longer to evaluate than the other one
-         */
         val startMs = System.currentTimeMillis()
         val a = fa.get(timeMs, TimeUnit.MILLISECONDS)
         val usedMs = System.currentTimeMillis() - startMs
@@ -99,13 +99,18 @@ object Par {
   }
 
 
-  def fork[A](a: Par[A]): Par[A] = es =>
+  /*
+   * fork() submits a new Callable to the ExecutorService
+   * this new Callable calls the Par to be forked with es
+   * and blockingly _waits_ until it's completed
+   * thus blocking the caller's thread
+   */
+  def fork[A](a: Par[A]): Par[A] = (es: ExecutorService) =>
     es.submit(new Callable[A] {
-      /*
-       * this will block the caller's thread
-       */
       def call = {
-        // println("forking")
+        /*
+         * this will block the caller's thread
+         */
         a(es).get
       }
     })
