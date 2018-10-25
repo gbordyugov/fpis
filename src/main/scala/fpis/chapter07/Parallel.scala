@@ -30,7 +30,10 @@ object Par {
   def lazyUnit[A](a: => A): Par[A] =
     fork(unit(a))
 
-
+  /*
+   * This future doesn't really do anything useful --
+   * it's just a state wrapped in Future
+   */
   private case class UnitFuture[A](get: A) extends Future[A] {
     def isDone = true
     def get(timeout: Long, units: TimeUnit) = get
@@ -45,6 +48,10 @@ object Par {
 
   def map2[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C): Par[C] =
     es => {
+      /*
+       * it creates two futures by running `a` and `b` and constructs
+       * the result future out of those two
+       */
       val fa = a(es)
       val fb = b(es)
       Map2Future(fa, fb)(f)
