@@ -9,46 +9,42 @@ class ParallelTest extends FlatSpec with Matchers {
   import Par.{run => parRun, _}
 
   val es = Executors.newFixedThreadPool(2)
-  def run[A](p: Par[A]) = {
-    val r: Result[A] = parRun(es)(p).get
-    println(s"fork depth ${r.forkDepth}")
-    r.value
-  }
+  def run[A](p: Par[A]) = parRun(es)(p).get
 
   "unit()" should "evaluate correctly" in {
-    assert(run(unit(1)) === 1)
+    assert(run(unit(1)) === Result(1, 0))
   }
 
   "map2()" should "calculate things correctly" in {
     val a: Par[Int] = unit(1)
     val b: Par[Int] = unit(2)
-    assert(run(map2(a, b)(_ + _)) === 3)
+    assert(run(map2(a, b)(_ + _)) === Result(3, 0))
   }
 
   it should "calculate forked Pars correctly" in {
     val a: Par[Int] = unit(1)
     val b: Par[Int] = unit(2)
-    assert(run(map2(fork(a), fork(b))(_ + _)) === 3)
+    assert(run(map2(fork(a), fork(b))(_ + _)) === Result(3, 1))
   }
 
   "fork()" should "calculate things correctly" in {
-    assert(run(fork(unit(1))) === 1)
+    assert(run(fork(unit(1))) === Result(1, 1))
   }
 
   "lazyUnit()" should "evaluate correctly" in {
-    assert(run(lazyUnit(1)) === 1)
+    assert(run(lazyUnit(1)) === Result(1, 1))
   }
 
   "asyncF()" should "compute things correctly" in {
     val addThree: Int => Par[Int] = asyncF(_ + 3)
-    assert(run(addThree(5)) === 8)
+    assert(run(addThree(5)) === Result(8, 1))
   }
 
   "sequence()" should "do right things" in {
     val lst: List[Int] = (1 to 500).toList
     val things = lst.map(lazyUnit(_)).toList
     val thing = Par.sequence(things)
-    assert(run(thing) === lst)
+    assert(run(thing) === Result(lst, 1))
   }
 
   val p1 = Par.unit(1)
@@ -63,7 +59,7 @@ class ParallelTest extends FlatSpec with Matchers {
   "map()" should "be able to sort a list" in {
     val lst = Par.lazyUnit(List(3, 4, 5, 1, 2))
     val sortedLst = Par.map(lst)(_.sorted)
-    assert(run(sortedLst) === List(1, 2, 3, 4, 5))
+    assert(run(sortedLst) === Result(List(1, 2, 3, 4, 5), 1))
   }
 
   "parallel summation" should "work as expected" in {
@@ -77,12 +73,12 @@ class ParallelTest extends FlatSpec with Matchers {
       }
     }
     val lst: List[Int] = (1 to 500).toList
-    assert(run(sumSeq(lst)) === lst.foldLeft(0)(_+_))
+    assert(run(sumSeq(lst)) === Result(lst.foldLeft(0)(_+_), 1))
   }
 
   "parMap()" should "map ints to strings correctly" in {
     val ints: List[Int] = (1 to 500).toList
     val strs: Par[List[String]] = parMap(ints)(_.toString)
-    assert(run(strs) === ints.map(_.toString))
+    assert(run(strs) === Result(ints.map(_.toString), 2))
   }
 }
