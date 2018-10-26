@@ -8,7 +8,7 @@ import org.scalatest._
 class ParallelTest extends FlatSpec with Matchers {
   import Par.{run => parRun, _}
 
-  val es = Executors.newFixedThreadPool(2)
+  val es = Executors.newFixedThreadPool(4)
   def run[A](p: Par[A]) = parRun(es)(p).get
 
   "unit()" should "evaluate correctly" in {
@@ -47,10 +47,13 @@ class ParallelTest extends FlatSpec with Matchers {
     assert(run(thing) === Result(lst, 1))
   }
 
-  val p1 = Par.unit(1)
-  val p2 = Par.fork(p1)
-  val p3 = Par.fork(p2)
-  val p4 = Par.fork(p3)
+  "four forks" should "produce a fork depth of three" in {
+    val p1 = Par.unit(1)
+    val p2 = Par.fork(p1)
+    val p3 = Par.fork(p2)
+    val p4 = Par.fork(p3)
+    assert(run(p4).forkDepth === 3)
+  }
   /*
    * trying to run(p4) would produce a deadlock if the number of
    * threads in the ExecutorService is not large enough
