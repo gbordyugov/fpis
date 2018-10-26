@@ -1,7 +1,6 @@
 package fpis.chapter07
 
-import java.util.concurrent.{ExecutorService, Future, TimeUnit,
-Callable, Executors}
+import java.util.concurrent.{ExecutorService, Future, TimeUnit, Callable}
 
 case class Result[+A](value: A, forkDepth: Int = 0) {
   def incDepth: Result[A] = copy(forkDepth=forkDepth+1)
