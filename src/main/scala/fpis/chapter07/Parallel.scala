@@ -2,6 +2,10 @@ package fpis.chapter07
 
 import java.util.concurrent.{ExecutorService, Future, TimeUnit, Callable}
 
+/*
+ * The purpose of this is to extend the result with the maximum fork depth
+ * which has been achieved during a parallel computation
+ */
 case class Result[+A](value: A, forkDepth: Int = 0) {
   def incDepth: Result[A] = copy(forkDepth=forkDepth+1)
 }
@@ -49,7 +53,13 @@ object Par {
     def cancel(evenIfRunning: Boolean): Boolean = false
   }
 
-  private case class MapFuture[A,B](future: Future[A])(f: A=>B) extends Future[B] {
+  /*
+   * This represents a mapped future, consisting of:
+   *  - the old future
+   *  - the mapping function
+   */
+  private case class MapFuture[A,B](future: Future[A])(f: A=>B)
+      extends Future[B] {
     def isDone = future.isDone
     def get = f(future.get)
     def get(timeout: Long, units: TimeUnit) = f(future.get(timeout, units))
@@ -60,8 +70,10 @@ object Par {
 
   /*
    * Exercise 7.3
+   *
+   * note that this map2 happens only with respect to the value within
+   * Result[A] - `f` doesn't touch both fork depths
    */
-
   def map2[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C): Par[C] =
     (es: ExecutorService) => {
       /*
@@ -70,6 +82,11 @@ object Par {
        */
       val fa = a(es)
       val fb = b(es)
+
+      /*
+       * here, the trick is to apply `f` only to the value of the result
+       * and take the maximum of both fork depths
+       */
       Map2Future(fa, fb) { case (Result(v1, d1), Result(v2, d2)) =>
         Result(f(v1, v2), d1.max(d2))
       }
