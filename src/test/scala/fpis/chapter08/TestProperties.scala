@@ -61,14 +61,14 @@ class PropertyTest extends FlatSpec {
     val p2 = check {
       val p1 = Par.map(Par.unit(1))(_ + 1)
       val p2 = Par.unit(2)
-      p1(ES).get == p2(ES).get
+      p1(ES).get.value == p2(ES).get.value
     }
 
     val p3 = check {
       equal(
         Par.map(Par.unit(1))(_ + 1),
         Par.unit(2)
-      )(ES).get
+      )(ES).get.value
     }
 
     justRunAssert(p1)
@@ -83,7 +83,7 @@ class PropertyTest extends FlatSpec {
       unit(Executors.newCachedThreadPool)           -> .25)
 
     def forAllPar[A](g: Gen[A])(f: A => Par[Boolean]): Prop = {
-      forAll(S ** g) { case s ** a => f(a)(s).get }
+      forAll(S ** g) { case s ** a => f(a)(s).get.value }
     }
 
     def checkPar(p: Par[Boolean]): Prop =

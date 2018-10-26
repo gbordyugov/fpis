@@ -12,6 +12,7 @@ object Result {
     Result(value=value, forkDepth=res1.forkDepth.max(res2.forkDepth))
 }
 
+
 object Par {
   /*
    * Exercise 7.1

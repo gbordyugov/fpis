@@ -9,7 +9,11 @@ class ParallelTest extends FlatSpec with Matchers {
   import Par.{run => parRun, _}
 
   val es = Executors.newFixedThreadPool(2)
-  def run[A](p: Par[A]) = parRun(es)(p).get
+  def run[A](p: Par[A]) = {
+    val r: Result[A] = parRun(es)(p).get
+    println(s"fork depth ${r.forkDepth}")
+    r.value
+  }
 
   "unit()" should "evaluate correctly" in {
     assert(run(unit(1)) === 1)

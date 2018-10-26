@@ -6,13 +6,17 @@ import fpis.chapter08.Prop.{run => propRun, _}
 import fpis.chapter08.{Gen, Prop}
 import fpis.chapter08.Gen._
 
-import fpis.chapter07.Par
+import fpis.chapter07.{Par, Result}
 
 class TestMonoid extends FlatSpec {
   import java.util.concurrent.Executors
 
   val es = Executors.newFixedThreadPool(2)
-  def runPar[A](p: Par.Par[A]) = Par.run(es)(p).get
+  def runPar[A](p: Par.Par[A]) = {
+    val r: Result[A] = Par.run(es)(p).get
+    println(s"fork depth ${r.forkDepth}")
+    r.value
+  }
 
   /*
    * Exercise 10.4
