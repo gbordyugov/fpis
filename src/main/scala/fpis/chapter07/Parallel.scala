@@ -3,7 +3,7 @@ package fpis.chapter07
 import java.util.concurrent.{ExecutorService, Future, TimeUnit,
 Callable, Executors}
 
-case class Result[A](value: A, forkDepth: Int = 0) {
+case class Result[+A](value: A, forkDepth: Int = 0) {
   def incDepth: Result[A] = copy(forkDepth=forkDepth+1)
 }
 
@@ -28,13 +28,12 @@ object Par {
   /*
    * Par[A] is parameterised by an ExecutorService
    */
-  type Par[A] = ExecutorService => Future[A]
+  type Par[A] = ExecutorService => Future[Result[A]]
 
-  def run[A](s: ExecutorService)(a: Par[A]): Future[A] = a(s)
-
+  def run[A](s: ExecutorService)(a: Par[A]): Future[Result[A]] = a(s)
 
   def unit[A](a: A): Par[A] =
-    (es: ExecutorService) => UnitFuture(a)
+    (es: ExecutorService) => UnitFuture(Result(value=a, forkDepth=0))
 
   def lazyUnit[A](a: => A): Par[A] =
     fork(unit(a))
@@ -50,6 +49,14 @@ object Par {
     def cancel(evenIfRunning: Boolean): Boolean = false
   }
 
+  private case class MapFuture[A,B](future: Future[A])(f: A=>B) extends Future[B] {
+    def isDone = future.isDone
+    def get = f(future.get)
+    def get(timeout: Long, units: TimeUnit) = f(future.get(timeout, units))
+    def isCancelled = future.isCancelled
+    def cancel(evenIfRunning: Boolean): Boolean = future.cancel(evenIfRunning)
+  }
+
 
   /*
    * Exercise 7.3
@@ -63,7 +70,9 @@ object Par {
        */
       val fa = a(es)
       val fb = b(es)
-      Map2Future(fa, fb)(f)
+      Map2Future(fa, fb) { case (Result(v1, d1), Result(v2, d2)) =>
+        Result(f(v1, v2), d1.max(d2))
+      }
     }
 
   /*
@@ -104,7 +113,7 @@ object Par {
   (f: (A, B) => C): Par[C] = (es: ExecutorService) => {
     val af = a(es)
     val bf = b(es)
-    UnitFuture(f(af.get, bf.get))
+    UnitFuture(Result(f(af.get.value, bf.get.value), af.get, bf.get))
   }
 
 
@@ -114,8 +123,8 @@ object Par {
    * and blockingly _waits_ until it's completed
    * thus blocking the caller's thread
    */
-  def fork[A](a: Par[A]): Par[A] = (es: ExecutorService) =>
-    es.submit(new Callable[A] {
+  def fork[A](a: Par[A]): Par[A] = (es: ExecutorService) => {
+    val f: Future[Result[A]] = es.submit(new Callable[Result[A]] {
       def call = {
         /*
          * this will block the caller's thread
@@ -123,6 +132,8 @@ object Par {
         a(es).get
       }
     })
+    MapFuture(f)(_.incDepth)
+  }
 
   /*
    * Exercise 7.4
@@ -223,7 +234,7 @@ object Par {
 
   def choiceN[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
     es => {
-      val k = run(es)(n).get
+      val k = run(es)(n).get.value
       choices(k)(es)
     }
 
@@ -237,7 +248,7 @@ object Par {
 
   def choiceMap[K, V](key: Par[K])(chs: Map[K, Par[V]]): Par[V] =
     es => {
-      val k = run(es)(key).get
+      val k = run(es)(key).get.value
       chs(k)(es)
     }
 
@@ -248,7 +259,7 @@ object Par {
 
   def chooser[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] =
     es => {
-      val a = run(es)(pa).get
+      val a = run(es)(pa).get.value
       choices(a)(es)
     }
 
@@ -262,7 +273,7 @@ object Par {
    * my favourite one!
    */
   def flatMap[A, B](pa: Par[A])(f: A => Par[B]): Par[B] = es => {
-    val a = run(es)(pa).get
+    val a = run(es)(pa).get.value
     f(a)(es)
   }
 
