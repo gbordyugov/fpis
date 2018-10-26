@@ -3,6 +3,15 @@ package fpis.chapter07
 import java.util.concurrent.{ExecutorService, Future, TimeUnit,
 Callable, Executors}
 
+case class Result[A](value: A, forkDepth: Int = 0) {
+  def incDepth: Result[A] = copy(forkDepth=forkDepth+1)
+}
+
+object Result {
+  def apply[A](value: A, res1: Result[Any], res2: Result[Any]): Result[A] =
+    Result(value=value, forkDepth=res1.forkDepth.max(res2.forkDepth))
+}
+
 object Par {
   /*
    * Exercise 7.1
