@@ -13,19 +13,12 @@ sealed trait Trace {
 case object UnitTrace extends Trace
 case class Map2Trace(t1: Trace, t2: Trace) extends Trace
 case class ForkTrace(t: Trace) extends Trace
+
 /*
  * The purpose of this is to extend the result with the maximum fork depth
  * which has been achieved during a parallel computation
  */
-case class Result[+A](value: A, forkDepth: Int = 0) {
-  def incDepth: Result[A] = copy(forkDepth=forkDepth+1)
-}
-
-object Result {
-  def apply[A](value: A, res1: Result[Any], res2: Result[Any]): Result[A] =
-    Result(value=value, forkDepth=res1.forkDepth.max(res2.forkDepth))
-}
-
+case class Result[+A](value: A, trace: Trace)
 
 object Par {
   /*
@@ -48,7 +41,7 @@ object Par {
   def run[A](s: ExecutorService)(a: Par[A]): Future[Result[A]] = a(s)
 
   def unit[A](a: A): Par[A] =
-    (es: ExecutorService) => UnitFuture(Result(value=a, forkDepth=0))
+    (es: ExecutorService) => UnitFuture(Result(value=a, UnitTrace))
 
   def lazyUnit[A](a: => A): Par[A] =
     fork(unit(a))
@@ -98,8 +91,8 @@ object Par {
        * here, the trick is to apply `f` only to the value of the result
        * and take the maximum of both fork depths
        */
-      Map2Future(fa, fb) { case (Result(v1, d1), Result(v2, d2)) =>
-        Result(f(v1, v2), d1.max(d2))
+      Map2Future(fa, fb) { case (Result(v1, t1), Result(v2, t2)) =>
+        Result(f(v1, v2), Map2Trace(t1, t2))
       }
     }
 
@@ -141,7 +134,9 @@ object Par {
   (f: (A, B) => C): Par[C] = (es: ExecutorService) => {
     val af = a(es)
     val bf = b(es)
-    UnitFuture(Result(f(af.get.value, bf.get.value), af.get, bf.get))
+    Map2Future(af, bf) { case (Result(v1, t1), Result(v2, t2)) =>
+      Result(f(v1, v2), Map2Trace(t1, t2))
+    }
   }
 
 
@@ -160,7 +155,7 @@ object Par {
         a(es).get
       }
     })
-    MapFuture(f)(_.incDepth)
+    MapFuture(f) { case Result(v, t) => Result(v, ForkTrace(t)) }
   }
 
   /*
