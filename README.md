@@ -9,7 +9,7 @@ Open/skipped exercises:
   - Exercise 9.12 -- I just jumped to the implementation proposed in the book
   - Exercises 9.17 - 9.18
 
-For Chapter 7, I implemented an additional tracing of the max fork depth,
+For Chapter 7, I implemented an additional tracing of the fork depth,
 which is passed along with the result of Par
 
 For Chapter 9, I implemented an S-Expression parser before my take on a JSON
