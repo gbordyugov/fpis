@@ -56,7 +56,7 @@ class PropertyTest extends FlatSpec {
     val ES: ExecutorService = Executors.newCachedThreadPool
 
     val p1 = forAll(Gen.unit(Par.unit(1)))(i =>
-        Par.map(i)(_ + 1)(ES).get == Par.unit(2)(ES).get)
+        Par.map(i)(_ + 1)(ES).get.value == Par.unit(2)(ES).get.value)
 
     val p2 = check {
       val p1 = Par.map(Par.unit(1))(_ + 1)

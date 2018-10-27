@@ -14,7 +14,7 @@ class TestMonoid extends FlatSpec {
   val es = Executors.newFixedThreadPool(2)
   def runPar[A](p: Par.Par[A]) = {
     val r: Result[A] = Par.run(es)(p).get
-    println(s"fork depth ${r.forkDepth}")
+    println(s"fork depth ${r.trace.depth}")
     r.value
   }
 
