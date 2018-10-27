@@ -2,6 +2,17 @@ package fpis.chapter07
 
 import java.util.concurrent.{ExecutorService, Future, TimeUnit, Callable}
 
+sealed trait Trace {
+  def depth: Int = this match {
+    case UnitTrace         => 0
+    case Map2Trace(t1, t2) => t1.depth.max(t2.depth)
+    case ForkTrace(t)      => t.depth + 1
+  }
+}
+
+case object UnitTrace extends Trace
+case class Map2Trace(t1: Trace, t2: Trace) extends Trace
+case class ForkTrace(t: Trace) extends Trace
 /*
  * The purpose of this is to extend the result with the maximum fork depth
  * which has been achieved during a parallel computation
