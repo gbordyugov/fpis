@@ -238,4 +238,12 @@ object Chapter10 {
     def foldMap[A,B](as: Stream[A])(f: A => B)(mb: Monoid[B]): B =
       as.map(f).foldLeft(mb.zero)(mb.op)
   }
+
+
+  /*
+   * Exercise 10.13
+   */
+  sealed trait Tree[+A]
+  case class Leaf[A](value: A) extends Tree[A]
+  case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
 }
