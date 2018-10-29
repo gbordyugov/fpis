@@ -134,6 +134,10 @@ class TestMonoid extends FlatSpec with Matchers {
     import Chapter10.countWords
 
     countWords("") should be (0)
+    countWords(" ") should be (0)
+    countWords("  ") should be (0)
+    countWords("   ") should be (0)
+    countWords("    ") should be (0)
     countWords("bla") should be (1)
     countWords("bla bla") should be (2)
     countWords("bla bla bla") should be (3)
