@@ -2,6 +2,7 @@ package fpis.chapter10
 
 import scala.language.higherKinds
 
+import fpis.chapter05.Stream
 import fpis.chapter07.Par
 import Par.Par
 
@@ -208,8 +209,10 @@ object Chapter10 {
   val listFoldable = new Foldable[List] {
     def foldRight[A,B](as: List[A])(z: B)(f: (A, B) => B): B =
       as.foldRight(z)(f)
+
     def foldLeft[A,B](as: List[A])(z: B)(f: (B,A) => B): B =
       as.foldLeft(z)(f)
+
     def foldMap[A,B](as: List[A])(f: A => B)(mb: Monoid[B]): B =
       as.map(f).foldLeft(mb.zero)(mb.op)
   }
@@ -217,9 +220,22 @@ object Chapter10 {
   val indexedSeqFoldable = new Foldable[IndexedSeq] {
     def foldRight[A,B](as: IndexedSeq[A])(z: B)(f: (A,B) => B): B =
       as.foldRight(z)(f)
+
     def foldLeft[A,B](as: IndexedSeq[A])(z: B)(f: (B,A) => B): B =
       as.foldLeft(z)(f)
+
     def foldMap[A,B](as: IndexedSeq[A])(f: A => B)(mb: Monoid[B]): B =
       foldMapV(as, mb)(f)
+  }
+
+  val streamFoldable = new Foldable[Stream] {
+    def foldRight[A,B](as: Stream[A])(z: B)(f: (A,B) => B): B =
+      as.foldRight(z)( (a, b) => f(a, b))
+
+    def foldLeft[A,B](as: Stream[A])(z: B)(f: (B,A) => B): B =
+      as.foldLeft(z)(f)
+
+    def foldMap[A,B](as: Stream[A])(f: A => B)(mb: Monoid[B]): B =
+      as.map(f).foldLeft(mb.zero)(mb.op)
   }
 }
