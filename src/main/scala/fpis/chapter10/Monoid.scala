@@ -164,6 +164,7 @@ object Chapter10 {
       case (Stub(a), Stub(b)) => Stub(a+b)
       case (Part(l, w, r), Stub(a)) => Part(l, w, r+a)
       case (Stub(a), Part(l, w, r)) => Part(a+l, w, r)
+      case (Part(l1, w1, ""), Part("", w2, r2)) => Part(l1, w1 + w2, r2)
       case (Part(l1, w1, r1), Part(l2, w2, r2)) => Part(l1, w1 + w2 + 1, r2)
     }
   }
@@ -180,6 +181,7 @@ object Chapter10 {
     }
 
     folded match {
+      case Stub("") => 0
       case Stub(_) => 1
       case Part("", n, "") => n
       case Part(_,  n, "") => n + 1

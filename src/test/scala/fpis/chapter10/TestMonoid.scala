@@ -107,6 +107,8 @@ class TestMonoid extends FlatSpec with Matchers {
     isOrdered(IndexedSeq(3, 1, 2)) should be (false)
     isOrdered(IndexedSeq(3, 3, 2)) should be (false)
   }
+
+
   /*
    * Exercise 10.10
    */
