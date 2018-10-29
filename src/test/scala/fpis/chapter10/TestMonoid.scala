@@ -125,4 +125,18 @@ class TestMonoid extends FlatSpec with Matchers {
     op(Stub("c"), Part("a", 1, "b")) should be (Part("ca", 1, "b"))
     op(Part("a", 1, "b"), Part("x", 2, "y")) should be (Part("a", 4, "y"))
   }
+
+  /*
+   * Exercise 10.11
+   */
+
+  "countWords()" should "count words correctly" in {
+    import Chapter10.countWords
+
+    countWords("") should be (0)
+    countWords("bla") should be (1)
+    countWords("bla bla") should be (2)
+    countWords("bla bla bla") should be (3)
+    countWords("bla bla bla bla") should be (4)
+  }
 }

@@ -167,4 +167,9 @@ object Chapter10 {
       case (Part(l1, w1, r1), Part(l2, w2, r2)) => Part(l1, w1 + w2 + 1, r2)
     }
   }
+
+  /*
+   * Exercise 10.11
+   */
+  def countWords(s: String): Int = ???
 }
