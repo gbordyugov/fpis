@@ -94,6 +94,20 @@ class TestMonoid extends FlatSpec with Matchers {
 
 
   /*
+   * Exercise 10.9
+   */
+  "isOrdered()" should "recognize ordered lists" in {
+    import Chapter10.{booleanAnd, isOrdered}
+
+    isOrdered(IndexedSeq())  should be (true)
+    isOrdered(IndexedSeq(1)) should be (true)
+    isOrdered(IndexedSeq(1, 2, 3)) should be (true)
+    isOrdered(IndexedSeq(1, 1, 1)) should be (true)
+    isOrdered(IndexedSeq(3, 2, 1)) should be (false)
+    isOrdered(IndexedSeq(3, 1, 2)) should be (false)
+    isOrdered(IndexedSeq(3, 3, 2)) should be (false)
+  }
+  /*
    * Exercise 10.10
    */
 

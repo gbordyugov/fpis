@@ -131,6 +131,22 @@ object Chapter10 {
   }
 
   /*
+   * Exercise 10.9
+   */
+
+  def isOrdered(as: IndexedSeq[Int]): Boolean =
+    if (as.length <= 1)
+      true
+    else {
+      def pairs: IndexedSeq[(Int, Int)] = as.zip(as.tail).map {
+        case (a: Int, b: Int) => (a, b)
+      }
+      foldMap(pairs.toList, booleanAnd) {
+        case (a, b) => a <= b
+      }
+    }
+
+  /*
    * infrastructure for parallel word counting
    */
 
