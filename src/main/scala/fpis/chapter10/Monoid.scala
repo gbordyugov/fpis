@@ -129,4 +129,12 @@ object Chapter10 {
       foldMapV(bs.toIndexedSeq, par(m))(b => Par.lazyUnit(b))
     }
   }
+
+  /*
+   * infrastructure for parallel word counting
+   */
+
+  sealed trait WC
+  case class Stub(chars: String) extends WC
+  case class Part(lStub: String, words: Int, rStub: String) extends WC
 }
