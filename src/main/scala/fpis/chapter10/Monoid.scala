@@ -246,4 +246,10 @@ object Chapter10 {
   sealed trait Tree[+A]
   case class Leaf[A](value: A) extends Tree[A]
   case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+
+  val treeFoldable = new Foldable[Tree] {
+    def foldRight[A,B](as: Tree[A])(z: B)(f: (A,B) => B): B = ???
+    def foldLeft[A,B](as: Tree[A])(z: B)(f: (B,A) => B): B = ???
+    def foldMap[A,B](as: Tree[A])(f: A => B)(mb: Monoid[B]): B = ???
+  }
 }
