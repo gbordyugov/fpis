@@ -1,5 +1,7 @@
 package fpis.chapter10
 
+import scala.language.higherKinds
+
 import fpis.chapter07.Par
 import Par.Par
 
@@ -188,5 +190,14 @@ object Chapter10 {
       case Part("", n, _ ) => n + 1
       case Part(_,  n, _ ) => n + 2
     }
+  }
+
+
+  trait Foldable[F[_]] {
+    def foldRight[A,B](as: F[A])(z: B)(f: (A,B) => B): B
+    def foldLeft[A,B](as: F[A])(z: B)(f: (B,A) => B): B
+    def foldMap[A,B](as: F[A])(f: A => B)(mb: Monoid[B]): B
+    def concatenate[A](as: F[A])(m: Monoid[A]): A =
+      foldLeft(as)(m.zero)(m.op)
   }
 }
