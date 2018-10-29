@@ -213,4 +213,13 @@ object Chapter10 {
     def foldMap[A,B](as: List[A])(f: A => B)(mb: Monoid[B]): B =
       as.map(f).foldLeft(mb.zero)(mb.op)
   }
+
+  val indexedSeqFoldable = new Foldable[IndexedSeq] {
+    def foldRight[A,B](as: IndexedSeq[A])(z: B)(f: (A,B) => B): B =
+      as.foldRight(z)(f)
+    def foldLeft[A,B](as: IndexedSeq[A])(z: B)(f: (B,A) => B): B =
+      as.foldLeft(z)(f)
+    def foldMap[A,B](as: IndexedSeq[A])(f: A => B)(mb: Monoid[B]): B =
+      foldMapV(as, mb)(f)
+  }
 }
