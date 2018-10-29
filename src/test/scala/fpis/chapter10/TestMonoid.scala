@@ -144,5 +144,6 @@ class TestMonoid extends FlatSpec with Matchers {
     countWords("bla bla") should be (2)
     countWords("bla bla bla") should be (3)
     countWords("bla bla bla bla") should be (4)
+    countWords("bla   bla     bla   bla") should be (4)
   }
 }
