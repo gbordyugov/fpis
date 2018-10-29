@@ -137,4 +137,18 @@ object Chapter10 {
   sealed trait WC
   case class Stub(chars: String) extends WC
   case class Part(lStub: String, words: Int, rStub: String) extends WC
+
+  /*
+   * Exercise 10.10
+   */
+
+  val wcMonoid: Monoid[WC] = new Monoid[WC] {
+    def zero: WC = Stub("")
+    def op(x: WC, y: WC): WC = (x, y) match {
+      case (Stub(a), Stub(b)) => Stub(a+b)
+      case (Part(l, w, r), Stub(a)) => Part(l, w, r+a)
+      case (Stub(a), Part(l, w, r)) => Part(a+l, w, r)
+      case (Part(l1, w1, r1), Part(l2, w2, r2)) => Part(l1, w1 + w2 + 1, r2)
+    }
+  }
 }

@@ -8,7 +8,7 @@ import fpis.chapter08.Gen._
 
 import fpis.chapter07.{Par, Result}
 
-class TestMonoid extends FlatSpec {
+class TestMonoid extends FlatSpec with Matchers {
   import java.util.concurrent.Executors
 
   val es = Executors.newFixedThreadPool(2)
@@ -90,5 +90,25 @@ class TestMonoid extends FlatSpec {
     val ints: IndexedSeq[Int] = (1 to 10).toIndexedSeq
     assert(runPar(parFoldMap(ints, intAddition)(x => x))
       === ints.foldLeft(0)(_ + _))
+  }
+
+
+  /*
+   * Exercise 10.10
+   */
+
+  "word counting monoid" should "behave sensible" in {
+    import Chapter10.{WC, Part, Stub, wcMonoid}
+    import wcMonoid._
+
+    zero should be (Stub(""))
+
+    op(Stub("a"), zero) should be (Stub("a")) 
+    op(zero, Stub("a")) should be (Stub("a"))
+
+    op(Stub("a"), Stub("b")) should be (Stub("ab"))
+    op(Part("a", 1, "b"), Stub("c")) should be (Part("a", 1, "bc"))
+    op(Stub("c"), Part("a", 1, "b")) should be (Part("ca", 1, "b"))
+    op(Part("a", 1, "b"), Part("x", 2, "y")) should be (Part("a", 4, "y"))
   }
 }
