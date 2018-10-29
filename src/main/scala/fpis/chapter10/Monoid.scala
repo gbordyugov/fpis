@@ -171,5 +171,20 @@ object Chapter10 {
   /*
    * Exercise 10.11
    */
-  def countWords(s: String): Int = ???
+  def countWords(s: String): Int = {
+    val chars: List[String] = s.toList.map(_.toString)
+
+    val folded: WC = foldMap(chars, wcMonoid) {
+      case " " => Part("", 0, "")
+      case s   => Stub(s)
+    }
+
+    folded match {
+      case Stub(_) => 1
+      case Part(" ", n, " ") => n
+      case Part(_,   n, " ") => n + 1
+      case Part(" ", n, _  ) => n + 1
+      case Part(_,   n, _  ) => n + 2
+    }
+  }
 }
