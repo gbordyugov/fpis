@@ -200,4 +200,17 @@ object Chapter10 {
     def concatenate[A](as: F[A])(m: Monoid[A]): A =
       foldLeft(as)(m.zero)(m.op)
   }
+
+
+  /*
+   * Exercise 10.12
+   */
+  val listFoldable = new Foldable[List] {
+    def foldRight[A,B](as: List[A])(z: B)(f: (A, B) => B): B =
+      as.foldRight(z)(f)
+    def foldLeft[A,B](as: List[A])(z: B)(f: (B,A) => B): B =
+      as.foldLeft(z)(f)
+    def foldMap[A,B](as: List[A])(f: A => B)(mb: Monoid[B]): B =
+      as.map(f).foldLeft(mb.zero)(mb.op)
+  }
 }
