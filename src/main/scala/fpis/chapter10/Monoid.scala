@@ -303,4 +303,12 @@ object Chapter10 {
     def op(ab: (A, B), xy: (A, B)): (A, B) =
       (a.op(ab._1, xy._1), b.op(ab._2, xy._2))
   }
+
+  /*
+   * Exercise 10.17
+   */
+  def functionMonoid[A,B](b: Monoid[B]): Monoid[A=>B] = new Monoid[A=>B] {
+    def zero: A=>B = (a: A) => b.zero
+    def op(f: A=>B, g: A=>B): A=>B = (a: A) => b.op(f(a), g(a))
+  }
 }
