@@ -263,14 +263,14 @@ object Chapter10 {
   case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
 
   val treeFoldable = new Foldable[Tree] {
-    def foldRight[A,B](as: Tree[A])(z: B)(f: (A,B) => B): B = as match {
-      case Leaf(a) => f(a, z)
-      case Branch(l, r) => ???
+    def foldRight[A,B](as: Tree[A])(b: B)(f: (A,B) => B): B = as match {
+      case Leaf(a) => f(a, b)
+      case Branch(l, r) => foldRight(l)(foldRight(r)(b)(f))(f)
     }
 
-    def foldLeft[A,B](as: Tree[A])(z: B)(f: (B,A) => B): B = as match {
-      case Leaf(a) => f(z, a)
-      case Branch(l, r) => ???
+    def foldLeft[A,B](as: Tree[A])(b: B)(f: (B,A) => B): B = as match {
+      case Leaf(a) => f(b, a)
+      case Branch(l, r) => foldLeft(r)(foldLeft(l)(b)(f))(f)
     }
 
     def foldMap[A,B](as: Tree[A])(f: A => B)(mb: Monoid[B]): B =
