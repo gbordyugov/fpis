@@ -146,4 +146,15 @@ class TestMonoid extends FlatSpec with Matchers {
     countWords("bla bla bla bla") should be (4)
     countWords("bla   bla     bla   bla") should be (4)
   }
+
+  /*
+   * Exercise 10.18
+   */
+  "bag()" should "build bags correclty" in {
+    import Chapter10.bag
+
+    bag(IndexedSeq(): IndexedSeq[Int]) should be (Map(): Map[Int, Int])
+    bag(IndexedSeq(1)) should be (Map((1 -> 1)))
+    bag(IndexedSeq(1, 1, 2)) should be (Map((1 -> 2), (2 -> 1)))
+  }
 }

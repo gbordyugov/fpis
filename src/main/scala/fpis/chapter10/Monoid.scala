@@ -311,4 +311,20 @@ object Chapter10 {
     def zero: A=>B = (a: A) => b.zero
     def op(f: A=>B, g: A=>B): A=>B = (a: A) => b.op(f(a), g(a))
   }
+
+  /*
+   * Exercise 10.18
+   */
+  def mapMergeMonoid[K,V](v: Monoid[V]): Monoid[Map[K,V]] =
+    new Monoid[Map[K,V]] {
+      def zero = Map[K,V]()
+      def op(a: Map[K,V], b: Map[K,V]) =
+        (a.keySet ++ b.keySet).foldLeft(zero) { (acc, k) =>
+          acc.updated(k,
+            v.op(a.getOrElse(k, v.zero), b.getOrElse(k, v.zero)))
+        }
+    }
+
+  def bag[A](as: IndexedSeq[A]): Map[A, Int] =
+    foldMap(as.toList, mapMergeMonoid[A,Int](intAddition))((a:A)=>Map((a -> 1)))
 }
