@@ -295,4 +295,12 @@ object Chapter10 {
       foldRight(oa.map(f))(mb.zero)(mb.op)
   }
 
+  /*
+   * Exercise 10.16
+   */
+  def productMonoid[A,B](a: Monoid[A], b: Monoid[B]) = new Monoid[(A,B)] {
+    def zero: (A, B) = (a.zero, b.zero)
+    def op(ab: (A, B), xy: (A, B)): (A, B) =
+      (a.op(ab._1, xy._1), b.op(ab._2, xy._2))
+  }
 }
