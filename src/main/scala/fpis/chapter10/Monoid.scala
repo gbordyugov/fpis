@@ -243,13 +243,26 @@ object Chapter10 {
   /*
    * Exercise 10.13
    */
-  sealed trait Tree[+A]
+  sealed trait Tree[+A] {
+    def map[B](f: A=>B): Tree[B] = this match {
+      case Leaf(a) => Leaf(f(a))
+      case Branch(l, r) => Branch(l.map(f), l.map(f))
+    }
+  }
+
   case class Leaf[A](value: A) extends Tree[A]
   case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
 
   val treeFoldable = new Foldable[Tree] {
-    def foldRight[A,B](as: Tree[A])(z: B)(f: (A,B) => B): B = ???
-    def foldLeft[A,B](as: Tree[A])(z: B)(f: (B,A) => B): B = ???
-    def foldMap[A,B](as: Tree[A])(f: A => B)(mb: Monoid[B]): B = ???
+    def foldRight[A,B](as: Tree[A])(z: B)(f: (A,B) => B): B = as match {
+      case Leaf(a) => f(a, z)
+      case Branch(l, r) => ???
+    }
+    def foldLeft[A,B](as: Tree[A])(z: B)(f: (B,A) => B): B = as match {
+      case Leaf(a) => f(z, a)
+      case Branch(l, r) => ???
+    }
+    def foldMap[A,B](as: Tree[A])(f: A => B)(mb: Monoid[B]): B =
+      foldRight(as.map(f))(mb.zero)(mb.op)
   }
 }
