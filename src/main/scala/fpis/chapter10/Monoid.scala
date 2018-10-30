@@ -196,10 +196,19 @@ object Chapter10 {
 
   trait Foldable[F[_]] {
     def foldRight[A,B](as: F[A])(z: B)(f: (A,B) => B): B
+
     def foldLeft[A,B](as: F[A])(z: B)(f: (B,A) => B): B
+
     def foldMap[A,B](as: F[A])(f: A => B)(mb: Monoid[B]): B
+
     def concatenate[A](as: F[A])(m: Monoid[A]): A =
       foldLeft(as)(m.zero)(m.op)
+
+    /*
+     * Exercise 10.15
+     */
+    def toList[A](fa: F[A]): List[A] =
+      foldRight(fa)(List(): List[A])(_ :: _)
   }
 
 
@@ -285,4 +294,5 @@ object Chapter10 {
     def foldMap[A,B](oa: Option[A])(f: A => B)(mb: Monoid[B]): B =
       foldRight(oa.map(f))(mb.zero)(mb.op)
   }
+
 }
