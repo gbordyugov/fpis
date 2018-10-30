@@ -265,4 +265,22 @@ object Chapter10 {
     def foldMap[A,B](as: Tree[A])(f: A => B)(mb: Monoid[B]): B =
       foldRight(as.map(f))(mb.zero)(mb.op)
   }
+
+  /*
+   * Exercise 10.14
+   */
+  val optionFoldable = new Foldable[Option] {
+    def foldRight[A,B](oa: Option[A])(b: B)(f: (A, B) => B): B = oa match {
+      case None => b
+      case Some(a) => f(a, b)
+    }
+
+    def foldLeft[A,B](oa: Option[A])(b: B)(f: (B, A) => B): B = oa match {
+      case None => b
+      case Some(a) => f(b, a)
+    }
+
+    def foldMap[A,B](oa: Option[A])(f: A => B)(mb: Monoid[B]): B =
+      foldRight(oa.map(f))(mb.zero)(mb.op)
+  }
 }
