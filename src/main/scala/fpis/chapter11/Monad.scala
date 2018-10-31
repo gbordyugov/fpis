@@ -1,5 +1,6 @@
 package fpis.chapter11
 
+import fpis.chapter07.Par.Par
 import fpis.chapter08.Gen
 
 import scala.language.higherKinds
@@ -31,8 +32,19 @@ trait Monad[F[_]] extends Functor[F] {
 object Monad {
   val genMonad = new Monad[Gen] {
     import fpis.chapter08.Gen._
+
     def unit[A](a: A) = Gen.unit(a)
     def flatMap[A,B](fa: Gen[A])(f: A => Gen[B]): Gen[B] =
       fa.flatMap(f)
+  }
+
+  /*
+   * Exercse 11.1
+   */
+  val parMonad = new Monad[Par] {
+    import fpis.chapter07.Par.{unit => pUnit, flatMap => pFlatMap}
+
+    def unit[A](a: A) = pUnit(a)
+    def flatMap[A,B](pa: Par[A])(f: A => Par[B]) = pFlatMap(pa)(f)
   }
 }
