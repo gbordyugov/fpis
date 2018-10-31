@@ -1,6 +1,7 @@
 package fpis.chapter11
 
 import fpis.chapter05.Stream
+import fpis.chapter06.State
 import fpis.chapter07.Par.Par
 import fpis.chapter08.Gen
 import fpis.chapter09.Parsers
@@ -69,5 +70,19 @@ object Monad {
   def listMonad = new Monad[List] {
     def unit[A](a: A) = List(a)
     def flatMap[A,B](as: List[A])(f: A => List[B]) = as.flatMap(f)
+  }
+
+  /*
+   * Exercise 11.2
+   */
+
+  type IntState[A] = State[Int, A]
+
+  val intStateMonad = new Monad[IntState] {
+    import fpis.chapter06.State.{unit => sUnit}
+    type StateType = Int
+    def unit[A](a: A) = sUnit[StateType,A](a)
+    def flatMap[A,B](sa: IntState[A])(f: A => IntState[B]): IntState[B] =
+      sa.flatMap(f)
   }
 }
