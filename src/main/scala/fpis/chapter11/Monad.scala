@@ -56,18 +56,18 @@ object Monad {
     def flatMap[A,B](pa: P[A])(f: A => P[B]) = p.flatMap(pa)(f)
   }
 
-  def optionMonad = new Monad[Option] {
+  val optionMonad = new Monad[Option] {
     def unit[A](a: A) = Some(a)
     def flatMap[A,B](ma: Option[A])(f: A => Option[B]) = ma.flatMap(f)
   }
 
-  def streamMonad = new Monad[Stream] {
+  val streamMonad = new Monad[Stream] {
     import fpis.chapter05.Stream._
     def unit[A](a: A) = Stream(a)
     def flatMap[A,B](sa: Stream[A])(f: A => Stream[B]) = sa.flatMap(f)
   }
 
-  def listMonad = new Monad[List] {
+  val listMonad = new Monad[List] {
     def unit[A](a: A) = List(a)
     def flatMap[A,B](as: List[A])(f: A => List[B]) = as.flatMap(f)
   }
