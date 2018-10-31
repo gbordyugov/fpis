@@ -2,6 +2,7 @@ package fpis.chapter11
 
 import fpis.chapter07.Par.Par
 import fpis.chapter08.Gen
+import fpis.chapter09.Parsers
 
 import scala.language.higherKinds
 
@@ -46,5 +47,10 @@ object Monad {
 
     def unit[A](a: A) = pUnit(a)
     def flatMap[A,B](pa: Par[A])(f: A => Par[B]) = pFlatMap(pa)(f)
+  }
+
+  def parserMonad[P[+_]](p: Parsers[P]) = new Monad[P] {
+    def unit[A](a: A) = p.succeed(a)
+    def flatMap[A,B](pa: P[A])(f: A => P[B]) = p.flatMap(pa)(f)
   }
 }
