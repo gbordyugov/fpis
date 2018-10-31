@@ -1,5 +1,7 @@
 package fpis.chapter11
 
+import fpis.chapter08.Gen
+
 import scala.language.higherKinds
 
 trait Functor[F[_]] {
@@ -24,4 +26,13 @@ trait Monad[F[_]] extends Functor[F] {
 
   def map2[A,B,C](fa: F[A], fb: F[B])(f: (A,B)=>C): F[C] =
     flatMap(fa) { a => map(fb) { b => f(a, b) } }
+}
+
+object Monad {
+  val genMonad = new Monad[Gen] {
+    import fpis.chapter08.Gen._
+    def unit[A](a: A) = Gen.unit(a)
+    def flatMap[A,B](fa: Gen[A])(f: A => Gen[B]): Gen[B] =
+      fa.flatMap(f)
+  }
 }
