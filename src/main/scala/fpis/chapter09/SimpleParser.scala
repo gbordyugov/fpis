@@ -50,7 +50,7 @@ object SimpleParser {
  * This can count as Exercise 9.13
  */
 object SimpleParsers extends Parsers[SimpleParser.Parser] {
-import SimpleParser._
+  import SimpleParser._
 
   def run[A](p: Parser[A])(input: String): Either[ParseError, A] =
     p(Location(input)) match {
