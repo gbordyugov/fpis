@@ -47,6 +47,18 @@ trait Monad[F[_]] extends Functor[F] {
     val lst: List[F[A]] = (1 to n).toList.map(i => ma)
     sequence(lst)
   }
+
+  /*
+   * Exercise 11.5
+   *
+   * for M = List, the above function becomes
+   * def replicateM[A](n: Int, as: List[A]): List[List[A]]
+   * which returns a list containing n copies of as
+   *
+   * for M = Option, the above function becomes
+   * def replicateM[A](n: Int, oa: Option[A]): Option[List[A]]
+   * so when oa is None, None is returned, otherwise Some(List[A])
+   */
 }
 
 object Monad {
