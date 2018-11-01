@@ -59,6 +59,9 @@ trait Monad[F[_]] extends Functor[F] {
    * def replicateM[A](n: Int, oa: Option[A]): Option[List[A]]
    * so when oa is None, None is returned, otherwise Some(List[A])
    */
+
+  def product[A,B](ma: F[A], mb: F[B]): F[(A, B)] =
+    map2(ma, mb)((_, _))
 }
 
 object Monad {
