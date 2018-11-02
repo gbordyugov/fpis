@@ -322,6 +322,8 @@ object Gen {
   def double: Gen[Double] =
     positiveInt.map(_ / Int.MaxValue)
 
+  val uniform = double
+
   def weighted[A](p1: (Gen[A], Double), p2: (Gen[A], Double)): Gen[A] = {
     val (g1, w1) = p1
     val (g2, w2) = p2
