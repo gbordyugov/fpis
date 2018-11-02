@@ -89,6 +89,12 @@ trait Monad[F[_]] extends Functor[F] {
     as.foldRight(unit(Nil: List[A])) { (a: A, rest: F[List[A]]) =>
       flatMap(f(a))(if (_) map(rest)(r => a::r) else rest)
     }
+
+  /*
+   * Exercise 11.7
+   */
+  def compose[A,B,C](f: A => F[B], g: B => F[C]): A => F[C] =
+    a => flatMap(f(a))(g)
 }
 
 object Monad {
