@@ -65,6 +65,7 @@ trait Monad[F[_]] extends Functor[F] {
 
   /*
    * Exercise 11.6
+   * first ugly version
    */
   def filterM[A](ms: List[A])(f: A => F[Boolean]): F[List[A]] = ms match {
     case Nil     => unit(Nil)
@@ -79,6 +80,13 @@ trait Monad[F[_]] extends Functor[F] {
       }
     }
   }
+
+  /*
+   * Exercise 11.6
+   * trying to come up with a nicer solution
+   */
+  def filterM_[A](as: List[A])(f: A => F[Boolean]): F[List[A]] =
+    as.foldRight(unit(Nil: List[A])) { (a, rest) => ??? }
 }
 
 object Monad {
