@@ -138,6 +138,11 @@ trait Monad[F[_]] extends Functor[F] {
    * second: flatMap(unit(y))(f) = f(y)
    * simple substitution shows that it's satisfied for all y
    */
+
+  /*
+   * Exercise 11.12
+   */
+  def join[A](mma: F[F[A]]): F[A] = flatMap(mma)(x => x)
 }
 
 object Monad {
