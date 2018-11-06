@@ -253,3 +253,12 @@ object Misc {
     quantity <- Gen.choose(1, 100)
   } yield Order(item, quantity)
 }
+
+case class Id[A](value: A) {
+  /*
+   * Exercise 11.17
+   */
+  def map[B](f: A => B): Id[B] = Id(f(value))
+
+  def flatMap[B](f: A => Id[B]): Id[B] = f(value)
+}
