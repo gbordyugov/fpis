@@ -149,6 +149,13 @@ trait Monad[F[_]] extends Functor[F] {
    */
   def flatMapViaJoin[A,B](ma: F[A])(f: A => F[B]): F[B] =
     join(map(ma)(f))
+
+  /*
+   * Exercise 11.14
+   *
+   * join(unit(x)) = x
+   * join(map(x)(unit(_)) = x
+   */
 }
 
 object Monad {
