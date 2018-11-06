@@ -123,6 +123,21 @@ trait Monad[F[_]] extends Functor[F] {
    *
    * follows from Exercise 11.9
    */
+
+  /*
+   * Exercise 11.11
+   *
+   * I'm going to prove for Option
+   * flatMap(x)(unit) == x
+   * flatMap(unit(y))(f) = f(y)
+   *
+   * first: flatMap(x)(unit) = x
+   * if x = None, the equation is satisfied
+   * if x = Some(y) dito
+   *
+   * second: flatMap(unit(y))(f) = f(y)
+   * simple substitution shows that it's satisfied for all y
+   */
 }
 
 object Monad {
