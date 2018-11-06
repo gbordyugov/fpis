@@ -304,4 +304,8 @@ object IntMonadState {
    *
    * sequence fuses a sequence of transformers into one big transformer
    */
+
+  /*
+   * Exercise 11.19 skipped
+   */
 }
