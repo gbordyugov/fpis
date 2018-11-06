@@ -1,7 +1,6 @@
 package fpis.chapter11
 
 import fpis.chapter05.Stream
-import fpis.chapter06.State
 import fpis.chapter07.Par.Par
 import fpis.chapter08.Gen
 import fpis.chapter09.Parsers
@@ -220,15 +219,19 @@ object Monad {
    * Exercise 11.2
    */
 
-  type IntState[A] = State[Int, A]
+  object Exercise1102 {
+    import fpis.chapter06.{State=>ThatState}
+    type IntState[A] = ThatState[Int, A]
 
-  val intStateMonad = new Monad[IntState] {
-    import fpis.chapter06.State.{unit => sUnit}
-    type StateType = Int
-    def unit[A](a: A) = sUnit[StateType,A](a)
-    def flatMap[A,B](sa: IntState[A])(f: A => IntState[B]): IntState[B] =
-      sa.flatMap(f)
+    val intStateMonad = new Monad[IntState] {
+      import fpis.chapter06.State.{unit => sUnit}
+      type StateType = Int
+      def unit[A](a: A) = sUnit[StateType,A](a)
+      def flatMap[A,B](sa: IntState[A])(f: A => IntState[B]): IntState[B] =
+        sa.flatMap(f)
+    }
   }
+
 }
 
 object Misc {
@@ -268,4 +271,18 @@ object Id {
     def unit[A](a: A): Id[A] = Id(a)
     def flatMap[A,B](ma: Id[A])(f: A => Id[B]): Id[B] = ma.flatMap(f)
   }
+}
+
+case class State[S,A](run: S => (A, S)) {
+  def map[B](f: A => B): State[S,B] =
+    State(s => {
+      val (a, s1) = run(s)
+      (f(a), s1)
+    })
+
+  def flatMap[B](f: A => State[S,B]): State[S,B] =
+    State(s => {
+      val (a, s1) = run(s)
+      f(a).run(s1)
+    })
 }
