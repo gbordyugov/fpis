@@ -310,11 +310,20 @@ object IntMonadState {
    */
 }
 
-case class Reader[R,A](run: R => A)
+/*
+ * Exercise 11.20
+ */
+case class Reader[R,A](run: R => A) {
+  def flatMap[B](f: A => Reader[R,B]): Reader[R,B] =
+    Reader(r => f(run(r)).run(r))
+}
 
 object Reader {
   def readerMonad[R] = new Monad[({type f[x] = Reader[R,x]})#f] {
-    def unit[A](a: A): Reader[R,A] = ???
-    def flatMap[A,B](r: Reader[R,A])(f: A => Reader[R,B]): Reader[R,B] = ???
+    def unit[A](a: A): Reader[R,A] =
+      Reader(r => a)
+
+    def flatMap[A,B](r: Reader[R,A])(f: A => Reader[R,B]): Reader[R,B] =
+      r.flatMap(f)
   }
 }
