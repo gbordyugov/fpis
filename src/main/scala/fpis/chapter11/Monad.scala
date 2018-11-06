@@ -262,3 +262,10 @@ case class Id[A](value: A) {
 
   def flatMap[B](f: A => Id[B]): Id[B] = f(value)
 }
+
+object Id {
+  val idMonad = new Monad[Id] {
+    def unit[A](a: A): Id[A] = Id(a)
+    def flatMap[A,B](ma: Id[A])(f: A => Id[B]): Id[B] = ma.flatMap(f)
+  }
+}
