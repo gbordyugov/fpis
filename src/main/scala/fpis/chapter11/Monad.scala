@@ -109,7 +109,7 @@ trait Monad[F[_]] extends Functor[F] {
    *
    * compose(compose(f, g), h) == compose(f, compose(g, h)) =>
    * a => flatMap(compose(f, g)(a))(h) == c => flatMap(f(c))(compose(g,h)) =>
-   * a => flatMap(flatMap(f(a)(g))(h) == c => flatMap(f(c))(b => flatMap(g(b))(h)) =>
+   * a => flatMap(flatMap(f(a))(g))(h) == c => flatMap(f(c))(b => flatMap(g(b))(h)) =>
    * ...
    */
 }
