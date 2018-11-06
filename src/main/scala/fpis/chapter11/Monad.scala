@@ -286,3 +286,11 @@ case class State[S,A](run: S => (A, S)) {
       f(a).run(s1)
     })
 }
+
+object IntMonadState {
+  def stateMonad[S] = new Monad[({type f[x] = State[S,x]})#f] {
+    def unit[A](a: A): State[S,A] = State(s => (a, s))
+    def flatMap[A,B](st: State[S,A])(f: A => State[S,B]): State[S,B] =
+      st.flatMap(f)
+  }
+}
