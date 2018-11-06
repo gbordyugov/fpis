@@ -117,6 +117,12 @@ trait Monad[F[_]] extends Functor[F] {
    * flatMap(flatMap(x)(g))(h) == flatMap(x)(b => flatMap(g(b))(h))
    * q.e.d.
    */
+
+  /*
+   * Exercise 11.10
+   *
+   * follows from Exercise 11.9
+   */
 }
 
 object Monad {
