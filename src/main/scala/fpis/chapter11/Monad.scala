@@ -156,6 +156,15 @@ trait Monad[F[_]] extends Functor[F] {
    * join(unit(x)) = x
    * join(map(x)(unit(_)) = x
    */
+
+  /*
+   * Exercise 11.15
+   *
+   * for Parser, we can block together the sequential parsing
+   * operations as we wish
+   * for Par, it guarantees that the dependent computations are not
+   * scrambled up by how we group the previous computations
+   */
 }
 
 object Monad {
