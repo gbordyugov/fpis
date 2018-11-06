@@ -165,6 +165,15 @@ trait Monad[F[_]] extends Functor[F] {
    * for Par, it guarantees that the dependent computations are not
    * scrambled up by how we group the previous computations
    */
+
+  /*
+   * Exercise 11.16
+   *
+   * for Gen, the identity laws state that what you put in Gen, comes
+   * out of it
+   * for List, the identity laws state that creating a list with only
+   * one element will result in a list that contains this very element
+   */
 }
 
 object Monad {
