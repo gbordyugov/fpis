@@ -143,6 +143,12 @@ trait Monad[F[_]] extends Functor[F] {
    * Exercise 11.12
    */
   def join[A](mma: F[F[A]]): F[A] = flatMap(mma)(x => x)
+
+  /*
+   * Exercise 11.13
+   */
+  def flatMapViaJoin[A,B](ma: F[A])(f: A => F[B]): F[B] =
+    ???
 }
 
 object Monad {
