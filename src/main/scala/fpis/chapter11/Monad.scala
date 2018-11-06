@@ -110,7 +110,12 @@ trait Monad[F[_]] extends Functor[F] {
    * compose(compose(f, g), h) == compose(f, compose(g, h)) =>
    * a => flatMap(compose(f, g)(a))(h) == c => flatMap(f(c))(compose(g,h)) =>
    * a => flatMap(flatMap(f(a))(g))(h) == c => flatMap(f(c))(b => flatMap(g(b))(h)) =>
-   * ...
+   * according to logic of Exercise 11.8, choose
+   * f: Unit => F[A] = _ => x, then
+   * a => flatMap(flatMap(x)(g))(h) == c => flatMap(x)(b => flatMap(g(b))(h))
+   * wee see that neither a nor c does not appear in the rhs above, so we conclude
+   * flatMap(flatMap(x)(g))(h) == flatMap(x)(b => flatMap(g(b))(h))
+   * q.e.d.
    */
 }
 
