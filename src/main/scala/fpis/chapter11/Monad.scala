@@ -309,3 +309,12 @@ object IntMonadState {
    * Exercise 11.19 skipped
    */
 }
+
+case class Reader[R,A](run: R => A)
+
+object Reader {
+  def readerMonad[R] = new Monad[({type f[x] = Reader[R,x]})#f] {
+    def unit[A](a: A): Reader[R,A] = ???
+    def flatMap[A,B](r: Reader[R,A])(f: A => Reader[R,B]): Reader[R,B] = ???
+  }
+}
