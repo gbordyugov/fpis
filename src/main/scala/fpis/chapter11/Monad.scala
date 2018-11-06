@@ -293,4 +293,15 @@ object IntMonadState {
     def flatMap[A,B](st: State[S,A])(f: A => State[S,B]): State[S,B] =
       st.flatMap(f)
   }
+
+  /*
+   * Exercise 11.18
+   *
+   * replicateM makes a new state transformer that does exactly what
+   * N copies of a given transformer does
+   *
+   * map2 takes two state transformers and fuses them into one
+   *
+   * sequence fuses a sequence of transformers into one big transformer
+   */
 }
