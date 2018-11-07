@@ -28,4 +28,19 @@ trait Applicative[F[_]] extends Functor[F] {
 
   def product[A,B](fa: F[A], fb: F[B]): F[(A,B)] =
     map2(fa, fb)((_, _))
+
+  /*
+   * Exercise 12.2
+   */
+  def applyViaMap2AndUnit[A,B](fab: F[A => B])(fa: F[A]): F[B] =
+    map2(fab, fa)((f, a) => f(a))
+
+  def mapViaApplyAndUnit[A,B](fa: F[A])(f: A => B): F[B] =
+    applyViaMap2AndUnit(unit(f))(fa)
+
+  def map2ViaApplyAndUnit[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] = {
+    val fab: A => B => C = a => b => f(a, b)
+    val apply = applyViaMap2AndUnit
+    ???
+  }
 }
