@@ -41,9 +41,8 @@ trait Applicative[F[_]] extends Functor[F] {
     apply(unit(f))(fa)
 
   def map2ViaApplyAndUnit[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] = {
-    val g: F[A => B => C] = unit(a => b => f(a, b))
-    val first: F[B => C] = apply(g)(fa)
-    apply(first)(fb)
+    val g = unit(f.curried)
+    apply(apply(g)(fa))(fb)
   }
 
   /*
