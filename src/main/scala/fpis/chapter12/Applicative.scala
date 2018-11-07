@@ -45,4 +45,18 @@ trait Applicative[F[_]] extends Functor[F] {
     val first: F[B => C] = apply(g)(fa)
     apply(first)(fb)
   }
+
+  /*
+   * Exercise 12.3
+   */
+  def map3[A,B,C,D](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => D): F[D] = {
+    val g = unit(f.curried)
+    apply(apply(apply(g)(fa))(fb))(fc)
+  }
+
+  def map4[A,B,C,D,E](fa: F[A], fb: F[B], fc: F[C], fd: F[D])
+    (f: (A, B, C, D) => E): F[E] = {
+    val g = unit(f.curried)
+    apply(apply(apply(apply(g)(fa))(fb))(fc))(fd)
+  }
 }
