@@ -31,16 +31,18 @@ trait Applicative[F[_]] extends Functor[F] {
 
   /*
    * Exercise 12.2
+   *
+   * apply can be a primitve though
    */
-  def applyViaMap2AndUnit[A,B](fab: F[A => B])(fa: F[A]): F[B] =
+  def apply[A,B](fab: F[A => B])(fa: F[A]): F[B] =
     map2(fab, fa)((f, a) => f(a))
 
   def mapViaApplyAndUnit[A,B](fa: F[A])(f: A => B): F[B] =
-    applyViaMap2AndUnit(unit(f))(fa)
+    apply(unit(f))(fa)
 
   def map2ViaApplyAndUnit[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] = {
     val g: F[A => B => C] = unit(a => b => f(a, b))
-    val first: F[B => C] = applyViaMap2AndUnit(g)(fa)
-    applyViaMap2AndUnit(first)(fb)
+    val first: F[B => C] = apply(g)(fa)
+    apply(first)(fb)
   }
 }
