@@ -81,7 +81,7 @@ object ApplicativeStream {
 /*
  * Exercise 12.5
  */
-object Exercise125 {
+object EitherMonad {
   import fpis.chapter11.Monad
 
   def eitherMonad[E] = new Monad[({type f[x] = Either[E,x]})#f] {
@@ -100,3 +100,22 @@ case class Failure[E](head: E,
   tail: Vector[E] = Vector()) extends Validation[E, Nothing]
 
 case class Success[A](a: A) extends Validation[Nothing, A]
+
+/*
+ * Exercise 12.6
+ */
+object ValidationApplicative {
+  def validationApplicative[E] =
+    new Applicative[({type f[x] = Validation[E,x]})#f] {
+      def unit[A](a: => A): Validation[E,A] = Success[A](a)
+      def map2[A,B,C](ma: Validation[E,A],
+        mb: Validation[E,B])(f: (A, B) => C): Validation[E,C] =
+        (ma, mb) match {
+          case (Success(a), Success(b)) => Success(f(a, b))
+          case (Failure(h1, t1), Failure(h2, t2)) =>
+            Failure(h1, t1 ++ Vector(h2) ++ t2)
+          case (_, f@Failure(_, _)) => f
+          case (f@Failure(_, _), _) => f
+        }
+    }
+}
