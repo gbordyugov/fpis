@@ -59,3 +59,15 @@ trait Applicative[F[_]] extends Functor[F] {
     apply(apply(apply(apply(g)(fa))(fb))(fc))(fd)
   }
 }
+
+object ApplicativeStream {
+  import fpis.chapter05.Stream
+
+  val streamApplicative = new Applicative[Stream] {
+    def unit[A](a: => A): Stream[A] =
+      Stream.constant(a)
+
+    def map2[A,B,C](a: Stream[A], b: Stream[B])(f: (A, B) => C): Stream[C] =
+      a.zip(b).map(f.tupled)
+  }
+}
