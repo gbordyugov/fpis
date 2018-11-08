@@ -119,3 +119,7 @@ object ValidationApplicative {
         }
     }
 }
+
+/*
+ * Exercise 12.7 skipped
+ */
