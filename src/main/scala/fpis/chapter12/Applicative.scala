@@ -70,4 +70,10 @@ object ApplicativeStream {
     def map2[A,B,C](a: Stream[A], b: Stream[B])(f: (A, B) => C): Stream[C] =
       a.zip(b).map(f.tupled)
   }
+
+  /*
+   * Exercise 12.4
+   *
+   * Applicative.sequence() for Stream performs a transposition
+   */
 }
