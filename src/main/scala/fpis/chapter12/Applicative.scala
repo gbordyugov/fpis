@@ -77,3 +77,15 @@ object ApplicativeStream {
    * Applicative.sequence() for Stream performs a transposition
    */
 }
+
+/*
+ * Exercise 12.5
+ */
+object Exercise125 {
+  import fpis.chapter11.Monad
+
+  def eitherMonad[E] = new Monad[({type f[x] = Either[E,x]})#f] {
+    def unit[A](a: A): Either[E,A] = ???
+    def flatMap[A,B](ma: Either[E,A])(f: A => Either[E,B]): Either[E,B] = ???
+  }
+}
