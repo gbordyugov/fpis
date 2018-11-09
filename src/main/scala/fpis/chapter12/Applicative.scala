@@ -104,6 +104,19 @@ trait Applicative[F[_]] extends Functor[F] { self =>
    * it's not possible, but monad transformers help when the inner type
    * is know
    */
+
+  /*
+   * Exercise 12.12
+   */
+  def sequenceMap[K,V](ofa: Map[K,F[V]]): F[Map[K,V]] = {
+    val lst: List[(K, F[V])] = ofa.toList
+    val zero: F[Map[K,V]] = unit(Map[K,V]())
+
+    lst.foldLeft(zero) { case (acc: F[Map[K,V]], (k: K, fv: F[V])) =>
+      map2(acc, fv) { (acc: Map[K,V], v: V) =>
+        acc + (k -> v)}
+    }
+  }
 }
 
 object ApplicativeStream {
