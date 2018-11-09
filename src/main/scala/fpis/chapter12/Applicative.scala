@@ -58,6 +58,17 @@ trait Applicative[F[_]] extends Functor[F] {
     val g = unit(f.curried)
     apply(apply(apply(apply(g)(fa))(fb))(fc))(fd)
   }
+
+  /*
+   * Exercise 12.8
+   */
+  def product[G[_]]: Applicative[({type f[x] = (F[x], G[x])})#f] =
+    new Applicative[({type f[x] = (F[x], G[x])})#f] {
+      type T[A] = (F[A], G[A])
+      def unit[A](a: => A): T[A] = ???
+
+      def map2[A, B, C](ma: T[A], mb: T[B])(f: (A, B) => C): T[C] = ???
+    }
 }
 
 object ApplicativeStream {
