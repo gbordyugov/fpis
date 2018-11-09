@@ -97,6 +97,13 @@ trait Applicative[F[_]] extends Functor[F] { self =>
   /*
    * Exercise 12.10 skipped
    */
+
+  /*
+   * Exercise 12.11
+   *
+   * it's not possible, but monad transformers help when the inner type
+   * is know
+   */
 }
 
 object ApplicativeStream {
