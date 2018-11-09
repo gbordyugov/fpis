@@ -4,7 +4,7 @@ import scala.language.higherKinds
 
 import fpis.chapter11.Functor
 
-trait Applicative[F[_]] extends Functor[F] {
+trait Applicative[F[_]] extends Functor[F] { f =>
   def map2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C]
   def unit[A](a: => A): F[A]
 
@@ -62,10 +62,11 @@ trait Applicative[F[_]] extends Functor[F] {
   /*
    * Exercise 12.8
    */
-  def product[G[_]]: Applicative[({type f[x] = (F[x], G[x])})#f] =
+  def product[G[_]](g: Applicative[G]):
+      Applicative[({type f[x] = (F[x], G[x])})#f] =
     new Applicative[({type f[x] = (F[x], G[x])})#f] {
       type T[A] = (F[A], G[A])
-      def unit[A](a: => A): T[A] = ???
+      def unit[A](a: => A): (F[A], G[A]) = (f.unit(a), g.unit(a))
 
       def map2[A, B, C](ma: T[A], mb: T[B])(f: (A, B) => C): T[C] = ???
     }
