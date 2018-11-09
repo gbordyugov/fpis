@@ -66,12 +66,30 @@ trait Applicative[F[_]] extends Functor[F] { self =>
       Applicative[({type f[x] = (F[x], G[x])})#f] =
     new Applicative[({type f[x] = (F[x], G[x])})#f] {
       val F = self
+
       type Pair[A] = (F[A], G[A])
+
       def unit[A](a: => A): Pair[A] = (F.unit(a), G.unit(a))
 
       def map2[A, B, C](ma: Pair[A], mb: Pair[B])
         (f: (A, B) => C): Pair[C] =
         (F.map2(ma._1, mb._1)(f), G.map2(ma._2, mb._2)(f))
+    }
+
+  /*
+   * Exercise 12.9
+   */
+  def compose[G[_]](G: Applicative[G]):
+      Applicative[({type f[x] = F[G[x]]})#f] =
+    new Applicative[({type f[x] = F[G[x]]})#f] {
+      val F = self
+
+      type Composition[A] = F[G[A]]
+
+      def unit[A](a: => A): Composition[A] = ???
+
+      def map2[A, B, C](ma: Composition[A], mb: Composition[B])
+        (f: (A,B) => C): Composition[C] = ???
     }
 }
 
