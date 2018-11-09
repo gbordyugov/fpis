@@ -4,7 +4,7 @@ import scala.language.higherKinds
 
 import fpis.chapter11.Functor
 
-trait Applicative[F[_]] extends Functor[F] { f =>
+trait Applicative[F[_]] extends Functor[F] { self =>
   def map2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C]
   def unit[A](a: => A): F[A]
 
@@ -62,13 +62,16 @@ trait Applicative[F[_]] extends Functor[F] { f =>
   /*
    * Exercise 12.8
    */
-  def product[G[_]](g: Applicative[G]):
+  def product[G[_]](G: Applicative[G]):
       Applicative[({type f[x] = (F[x], G[x])})#f] =
     new Applicative[({type f[x] = (F[x], G[x])})#f] {
-      type T[A] = (F[A], G[A])
-      def unit[A](a: => A): (F[A], G[A]) = (f.unit(a), g.unit(a))
+      val F = self
+      type Pair[A] = (F[A], G[A])
+      def unit[A](a: => A): Pair[A] = (F.unit(a), G.unit(a))
 
-      def map2[A, B, C](ma: T[A], mb: T[B])(f: (A, B) => C): T[C] = ???
+      def map2[A, B, C](ma: Pair[A], mb: Pair[B])
+        (f: (A, B) => C): Pair[C] =
+        (F.map2(ma._1, mb._1)(f), G.map2(ma._2, mb._2)(f))
     }
 }
 
@@ -76,6 +79,7 @@ object ApplicativeStream {
   import fpis.chapter05.Stream
 
   val streamApplicative = new Applicative[Stream] {
+
     def unit[A](a: => A): Stream[A] =
       Stream.constant(a)
 
