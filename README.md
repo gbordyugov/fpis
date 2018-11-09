@@ -10,6 +10,7 @@ Open/skipped exercises:
   - Exercises 9.17 - 9.18
   - Exercise 11.19
   - Exercise 12.7
+  - Exercise 12.9
 
 For Chapter 7, I implemented an additional tracing of the fork depth,
 which is passed along with the result of Par

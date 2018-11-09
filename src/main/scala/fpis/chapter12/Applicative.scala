@@ -93,6 +93,10 @@ trait Applicative[F[_]] extends Functor[F] { self =>
         (f: (A, B) => C): Composition[C] =
         F.map2(fga, fgb)((ga, gb) => G.map2(ga, gb)(f))
     }
+
+  /*
+   * Exercise 12.10 skipped
+   */
 }
 
 object ApplicativeStream {
