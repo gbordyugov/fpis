@@ -86,10 +86,12 @@ trait Applicative[F[_]] extends Functor[F] { self =>
 
       type Composition[A] = F[G[A]]
 
-      def unit[A](a: => A): Composition[A] = ???
+      def unit[A](a: => A): Composition[A] = F.unit(G.unit(a))
 
-      def map2[A, B, C](ma: Composition[A], mb: Composition[B])
-        (f: (A,B) => C): Composition[C] = ???
+      // worth a blog post how I was figuring it out
+      def map2[A, B, C](fga: Composition[A], fgb: Composition[B])
+        (f: (A, B) => C): Composition[C] =
+        F.map2(fga, fgb)((ga, gb) => G.map2(ga, gb)(f))
     }
 }
 
