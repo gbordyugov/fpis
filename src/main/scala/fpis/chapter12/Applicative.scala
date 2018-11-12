@@ -203,9 +203,12 @@ object TraversableInstances {
     def map[A,B](oa: Option[A])(f: A => B): Option[B] = oa.map(f)
 
     override def sequence[G[_]: Applicative, A](oa: Option[G[A]]):
-        G[Option[A]] = oa match {
-      case None     => implicitly[Applicative[G]].unit(None)
-      case Some(ga) => implicitly[Applicative[G]].map(ga)(Some(_))
+        G[Option[A]] = {
+      val app = implicitly[Applicative[G]]
+      oa match {
+        case None     => app.unit(None)
+        case Some(ga) => app.map(ga)(Some(_))
+      }
     }
   }
 
