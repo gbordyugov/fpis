@@ -192,3 +192,17 @@ trait Traversable[F[_]] extends Functor[F] {
   def sequence[G[_]:Applicative, A](fga: F[G[A]]): G[F[A]] =
     traverse(fga)(ga => ga)
 }
+
+case class Tree[+A](head: A, tail: List[Tree[A]])
+
+object TraversableInstances {
+  /*
+   * Exercise 12.13
+   */
+  def traversableTree = new Traversable[Tree] {
+    def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = ???
+
+    override def sequence[G[_]: Applicative, A](tree: Tree[G[A]]):
+        G[Tree[A]] = ???
+  }
+}
