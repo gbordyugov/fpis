@@ -202,33 +202,28 @@ object TraversableInstances {
   val traversableOption = new Traversable[Option] {
     def map[A,B](oa: Option[A])(f: A => B): Option[B] = oa.map(f)
 
-    override def sequence[G[_]: Applicative, A](oa: Option[G[A]]):
-        G[Option[A]] = {
-      val app = implicitly[Applicative[G]]
-      oa match {
-        case None     => app.unit(None)
-        case Some(ga) => app.map(ga)(Some(_))
-      }
+    override def sequence[G[_], A](oa: Option[G[A]])
+      (implicit app: Applicative[G]): G[Option[A]] = oa match {
+      case None     => app.unit(None)
+      case Some(ga) => app.map(ga)(Some(_))
     }
   }
 
   val traversableList = new Traversable[List] {
     def map[A,B](as: List[A])(f: A => B): List[B] = as.map(f)
 
-    override def sequence[G[_]: Applicative, A](as: List[G[A]]):
-        G[List[A]] = {
-      val app = implicitly[Applicative[G]]
+    override def sequence[G[_], A](as: List[G[A]])
+      (implicit app: Applicative[G]): G[List[A]] =
       as.foldRight(app.unit(List(): List[A])) {(ga, gla) =>
         app.map2(ga, gla)((_ :: _))
       }
-    }
   }
 
   val traversableTree = new Traversable[Tree] {
     def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = ???
 
-    override def sequence[G[_]: Applicative, A](tree: Tree[G[A]]):
-        G[Tree[A]] = tree match {
+    override def sequence[G[_], A](tree: Tree[G[A]])
+      (implicit app: Applicative[G]): G[Tree[A]] = tree match {
       case Tree(h, Nil) => ???
       case Tree(h, t)   => ???
     }
