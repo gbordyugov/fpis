@@ -209,7 +209,17 @@ object TraversableInstances {
     }
   }
 
-  val traversableList = ???
+  val traversableList = new Traversable[List] {
+    def map[A,B](as: List[A])(f: A => B): List[B] = as.map(f)
+
+    override def sequence[G[_]: Applicative, A](as: List[G[A]]):
+        G[List[A]] = {
+      val app = implicitly[Applicative[G]]
+      as.foldRight(app.unit(List(): List[A])) {(ga, gla) =>
+        app.map2(ga, gla)((_ :: _))
+      }
+    }
+  }
 
   val traversableTree = new Traversable[Tree] {
     def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = ???
