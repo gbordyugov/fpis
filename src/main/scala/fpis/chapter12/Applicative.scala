@@ -112,7 +112,7 @@ trait Applicative[F[_]] extends Functor[F] { self =>
     val lst: List[(K, F[V])] = ofa.toList
     val zero: F[Map[K,V]] = unit(Map[K,V]())
 
-    lst.foldLeft(zero) { case (acc: F[Map[K,V]], (k: K, fv: F[V])) =>
+    lst.foldLeft(zero) { case (acc, (k, fv)) =>
       map2(acc, fv) { (acc: Map[K,V], v: V) =>
         acc + (k -> v)}
     }
