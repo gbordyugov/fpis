@@ -199,10 +199,25 @@ object TraversableInstances {
   /*
    * Exercise 12.13
    */
-  def traversableTree = new Traversable[Tree] {
+  val traversableOption = new Traversable[Option] {
+    def map[A,B](oa: Option[A])(f: A => B): Option[B] = oa.map(f)
+
+    override def sequence[G[_]: Applicative, A](oa: Option[G[A]]):
+        G[Option[A]] = oa match {
+      case None     => implicitly[Applicative[G]].unit(None)
+      case Some(ga) => implicitly[Applicative[G]].map(ga)(Some(_))
+    }
+  }
+
+  val traversableList = ???
+
+  val traversableTree = new Traversable[Tree] {
     def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = ???
 
     override def sequence[G[_]: Applicative, A](tree: Tree[G[A]]):
-        G[Tree[A]] = ???
+        G[Tree[A]] = tree match {
+      case Tree(h, Nil) => ???
+      case Tree(h, t)   => ???
+    }
   }
 }
