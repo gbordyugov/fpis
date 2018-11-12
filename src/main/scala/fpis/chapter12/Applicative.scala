@@ -227,8 +227,13 @@ object TraversableInstances {
 
     override def sequence[G[_], A](tree: Tree[G[A]])
       (implicit app: Applicative[G]): G[Tree[A]] = tree match {
-      case Tree(h, Nil) => ???
-      case Tree(h, t)   => ???
+      case Tree(h: G[A], t: List[Tree[G[A]]]) =>
+        app.map2(h, {
+          val y: List[G[Tree[A]]] = ???
+          val x: G[List[Tree[A]]] = ???
+          x
+        }
+        )(Tree(_, _))
     }
   }
 }
