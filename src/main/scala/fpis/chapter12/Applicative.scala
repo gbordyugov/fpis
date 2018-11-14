@@ -191,6 +191,19 @@ trait Traverse[F[_]] extends Functor[F] {
 
   def sequence[G[_]:Applicative, A](fga: F[G[A]]): G[F[A]] =
     traverse(fga)(ga => ga)
+
+  /*
+   * Exercise 12.14
+   */
+  def map[A,B](fa: F[A])(f: A => B): F[B] = {
+    type Id[A] = A
+    implicit val idApplicative = new Applicative[Id] {
+      def unit[A](a: => A): Id[A] = a
+      def map2[A,B,C](a: Id[A], b: Id[B])(f: (A, B) => C): Id[C] =
+        f(a, b)
+    }
+    traverse[Id,A,B](fa)(f)
+  }
 }
 
 
@@ -199,8 +212,6 @@ object TraverseInstances {
    * Exercise 12.13
    */
   val traversableOption = new Traverse[Option] {
-    def map[A,B](oa: Option[A])(f: A => B): Option[B] = oa.map(f)
-
     override def sequence[G[_], A](oa: Option[G[A]])
       (implicit app: Applicative[G]): G[Option[A]] = oa match {
       case None     => app.unit(None)
@@ -209,8 +220,6 @@ object TraverseInstances {
   }
 
   val traversableList = new Traverse[List] {
-    def map[A,B](as: List[A])(f: A => B): List[B] = as.map(f)
-
     override def sequence[G[_], A](as: List[G[A]])
       (implicit app: Applicative[G]): G[List[A]] =
       as.foldRight(app.unit(List(): List[A])) {(ga, gla) =>
@@ -221,10 +230,6 @@ object TraverseInstances {
   case class Tree[+A](head: A, tail: List[Tree[A]])
 
   val traversableTree = new Traverse[Tree] {
-    def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = tree match {
-      case Tree(h, t) => Tree(f(h), t.map(map(_)(f)))
-    }
-
     override def sequence[G[_], A](tree: Tree[G[A]])
       (implicit app: Applicative[G]): G[Tree[A]] = tree match {
       case Tree(h, ltg) =>
