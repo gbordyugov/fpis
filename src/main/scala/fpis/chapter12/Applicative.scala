@@ -194,6 +194,8 @@ trait Traverse[F[_]] extends Functor[F] {
 
   /*
    * Exercise 12.14
+   *
+   * this proves that every Traversable is a Functor
    */
   def map[A,B](fa: F[A])(f: A => B): F[B] = {
     type Id[A] = A
