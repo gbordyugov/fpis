@@ -2,7 +2,9 @@ package fpis.chapter12
 
 import scala.language.higherKinds
 
+import fpis.chapter11.State
 import fpis.chapter11.Functor
+import fpis.chapter11.IntMonadState.stateMonad
 
 trait Applicative[F[_]] extends Functor[F] { self =>
   def map2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C]
@@ -205,6 +207,10 @@ trait Traverse[F[_]] extends Functor[F] {
         f(a, b)
     }
     traverse[Id,A,B](fa)(f)
+  }
+
+  def traverseS[S,A,B](fa: F[A])(f: A => State[S,B]): State[S,F[B]] = {
+    traverse[({type f[x] = State[S,x]})#f,A,B](fa)(f)(stateMonad)
   }
 }
 
