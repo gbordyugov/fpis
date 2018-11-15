@@ -267,11 +267,17 @@ object MonoidToApplicative {
    */
   type Const[M,B] = M
 
+  /*
+   * what this does: for every Monoid[M], it creates an instance
+   * of Applicative. The peculiar thing about this Applicative is that
+   * its map2() doesn't use the passed f: (A,B) => B but rather combines
+   * the values using Monoid[M].op()
+   *
+   * this trick, however, doesn't implythat every Monoid is
+   * an Applicative, but rather that we construct an Applicative for
+   * every Monoid
+   */
   implicit def monoidApplicative[M](M: Monoid[M]) =
-    /*
-     * Here, every type F[_] is mapped to M[_] using the Const trick
-     * above
-     */
     new Applicative[({type f[x] = Const[M,x]})#f] {
       def unit[A](a: => A): M = M.zero
 
