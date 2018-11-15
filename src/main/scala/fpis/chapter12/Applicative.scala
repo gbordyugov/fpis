@@ -240,3 +240,23 @@ object TraverseInstances {
     }
   }
 }
+
+
+/*
+ * Turning a Monoid into an Applicative
+ */
+
+object MonoidToApplicative {
+  import fpis.chapter10.Monoid
+  import scala.language.implicitConversions
+
+  type Const[M,B] = M
+
+  implicit def monoidApplicative[M](M: Monoid[M]) =
+    new Applicative[({type f[x] = Const[M,x]})#f] {
+      def unit[A](a: => A): M = M.zero
+
+      def map2[A,B,C](m1: M, m2: M)(f: (A,B) => C): M =
+        M.op(m1, m2)
+    }
+}
