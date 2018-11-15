@@ -250,6 +250,21 @@ object MonoidToApplicative {
   import fpis.chapter10.Monoid
   import scala.language.implicitConversions
 
+  /*
+   * we had from traversable:
+   */
+  def traverse[F[_], G[_]: Applicative, A, B](fa: F[A])
+    (f: A => G[B]): G[F[B]] = ???
+
+  /*
+   * if G[X] = Y for all X, this reminds of
+   */
+  trait MMonoid[_]
+  def foldMap[F[_], A, Y](fa: F[A])(f: A => Y)(mb: MMonoid[Y]): Y = ???
+
+  /*
+   * thus we try to trick with
+   */
   type Const[M,B] = M
 
   implicit def monoidApplicative[M](M: Monoid[M]) =
