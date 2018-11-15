@@ -253,6 +253,10 @@ object MonoidToApplicative {
   type Const[M,B] = M
 
   implicit def monoidApplicative[M](M: Monoid[M]) =
+    /*
+     * Here, every type F[_] is mapped to M[_] using the Const trick
+     * above
+     */
     new Applicative[({type f[x] = Const[M,x]})#f] {
       def unit[A](a: => A): M = M.zero
 
