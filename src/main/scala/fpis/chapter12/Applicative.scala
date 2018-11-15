@@ -284,4 +284,10 @@ object MonoidToApplicative {
       def map2[A,B,C](m1: M, m2: M)(f: (A,B) => C): M =
         M.op(m1, m2)
     }
+
+  /*
+   * Exercise 12.15 I cheated here and googled it up
+   * if some types occure in the contravariant position, that would
+   * fail to be a Functor
+   */
 }
