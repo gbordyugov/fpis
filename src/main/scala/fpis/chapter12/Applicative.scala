@@ -188,6 +188,8 @@ object ValidationApplicative {
 
 
 trait Traverse[F[_]] extends Functor[F] {
+  import fpis.chapter06.State.{get, set}
+
   def traverse[G[_]: Applicative, A, B](fa: F[A])
     (f: A => G[B]): G[F[B]] = sequence(map(fa)(f))
 
@@ -209,18 +211,23 @@ trait Traverse[F[_]] extends Functor[F] {
     traverse[Id,A,B](fa)(f)
   }
 
+  // case class State[S, +A](run: S => (A, S))
+
   def traverseS[S,A,B](fa: F[A])(f: A => State[S,B]): State[S,F[B]] = {
     traverse[({type f[x] = State[S,x]})#f,A,B](fa)(f)(stateMonad)
   }
 
-  def zipWithIndex[A](ta: F[A]): F[(A, Int)] = {
-    import fpis.chapter06.State.{get, set}
-
+  def zipWithIndex[A](ta: F[A]): F[(A, Int)] =
     traverseS(ta)((a: A) => ( for {
       i <- get[Int]
       _ <- set(i + 1)
     } yield (a, i))).run(0)._1
-  }
+
+  def toList[A](fa: F[A]): List[A] =
+    traverseS(fa)((a: A) => ( for {
+      as <- get[List[A]]
+      _  <- set(a :: as)
+    } yield ())).run(Nil)._2.reverse
 }
 
 
