@@ -1,6 +1,7 @@
 package fpis.chapter11
 
 import fpis.chapter05.Stream
+import fpis.chapter06.State
 import fpis.chapter07.Par.Par
 import fpis.chapter08.Gen
 import fpis.chapter09.Parsers
@@ -271,20 +272,6 @@ object Id {
     def unit[A](a: A): Id[A] = Id(a)
     def flatMap[A,B](ma: Id[A])(f: A => Id[B]): Id[B] = ma.flatMap(f)
   }
-}
-
-case class State[S,A](run: S => (A, S)) {
-  def map[B](f: A => B): State[S,B] =
-    State(s => {
-      val (a, s1) = run(s)
-      (f(a), s1)
-    })
-
-  def flatMap[B](f: A => State[S,B]): State[S,B] =
-    State(s => {
-      val (a, s1) = run(s)
-      f(a).run(s1)
-    })
 }
 
 object IntMonadState {
