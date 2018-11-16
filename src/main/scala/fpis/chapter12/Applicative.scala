@@ -212,6 +212,15 @@ trait Traverse[F[_]] extends Functor[F] {
   def traverseS[S,A,B](fa: F[A])(f: A => State[S,B]): State[S,F[B]] = {
     traverse[({type f[x] = State[S,x]})#f,A,B](fa)(f)(stateMonad)
   }
+
+  def zipWithIndex[A](ta: F[A]): F[(A, Int)] = {
+    import fpis.chapter06.State.{get, set}
+
+    traverseS(ta)((a: A) => ( for {
+      i <- get[Int]
+      _ <- set(i + 1)
+    } yield (a, i))).run(0)._1
+  }
 }
 
 
