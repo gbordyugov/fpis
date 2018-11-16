@@ -217,17 +217,31 @@ trait Traverse[F[_]] extends Functor[F] {
     traverse[({type f[x] = State[S,x]})#f,A,B](fa)(f)(stateMonad)
   }
 
-  def zipWithIndex[A](ta: F[A]): F[(A, Int)] =
+  def zipWithIndexOld[A](ta: F[A]): F[(A, Int)] =
     traverseS(ta)((a: A) => ( for {
       i <- get[Int]
       _ <- set(i + 1)
     } yield (a, i))).run(0)._1
 
-  def toList[A](fa: F[A]): List[A] =
+  def toListOld[A](fa: F[A]): List[A] =
     traverseS(fa)((a: A) => ( for {
       as <- get[List[A]]
       _  <- set(a :: as)
     } yield ())).run(Nil)._2.reverse
+
+  def mapAccum[S,A,B](fa: F[A], s: S)(f: (A, S) => (B, S)): (F[B], S) =
+    traverseS(fa)((a: A) => ( for {
+      s1 <- get[S]
+      (b, s2) = f(a, s1)
+      _ <- set(s2)
+    } yield b)).run(s)
+
+  def toList[A](fa: F[A]): List[A] =
+    mapAccum(fa, List[A]())((a, s) => ((), a :: s))._2.reverse
+
+  def ziwWithIndex[A](fa: F[A]): F[(A, Int)] =
+    mapAccum(fa, 0)((a, s) => ((a, s), s + 1))._1
+
 }
 
 
