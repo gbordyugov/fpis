@@ -2,7 +2,7 @@ package fpis.chapter12
 
 import scala.language.higherKinds
 
-import fpis.chapter11.State
+import fpis.chapter06.State
 import fpis.chapter11.Functor
 import fpis.chapter11.IntMonadState.stateMonad
 
@@ -147,7 +147,7 @@ object EitherMonad {
   import fpis.chapter11.Monad
 
   def eitherMonad[E] = new Monad[({type f[x] = Either[E,x]})#f] {
-    def unit[A](a: A): Either[E,A] = Right[E,A](a)
+    def unit[A](a: => A): Either[E,A] = Right[E,A](a)
     def flatMap[A,B](ma: Either[E,A])(f: A => Either[E,B]): Either[E,B] =
       ma match {
         case Left(e) => Left(e)
