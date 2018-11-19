@@ -264,11 +264,6 @@ trait Traverse[F[_]] extends Functor[F] {
 
   /*
    * Exercise 12.18
-   def traverse[G[_]: Applicative, A, B](fa: F[A])
-   (f: A => G[B]): G[F[B]] = sequence(map(fa)(f))
-
-   def sequence[G[_]:Applicative, A](fga: F[G[A]]): G[F[A]] =
-   traverse(fga)(ga => ga)
    */
   def fuse[G[_],H[_],A,B](fa: F[A])(f: A => G[B], g: A => H[B])
     (G: Applicative[G], H: Applicative[H]): (G[F[B]], H[F[B]]) = {
@@ -282,9 +277,9 @@ trait Traverse[F[_]] extends Functor[F] {
           (F.map2(fa._1, fb._1)(f), G.map2(fa._2, fb._2)(f))
       }
 
-    val pa = prodApplicative(G,H)
+    implicit val pa = prodApplicative(G,H)
 
-    ???
+    traverse[({type t[x] = (G[x], H[x])})#t, A, B](fa)(a => (f(a), g(a)))
   }
 }
 
