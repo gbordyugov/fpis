@@ -4,6 +4,7 @@ import scala.language.higherKinds
 
 import fpis.chapter06.State
 import fpis.chapter11.Functor
+import fpis.chapter11.Monad
 import fpis.chapter11.IntMonadState.stateMonad
 
 trait Applicative[F[_]] extends Functor[F] { self =>
@@ -291,6 +292,19 @@ trait Traverse[F[_]] extends Functor[F] { self =>
       override def traverse[App[_]: Applicative, A, B](fga: F[G[A]])
         (f: A => App[B]): App[F[G[B]]] =
         self.traverse(fga)(ga => G.traverse(ga)(f))
+    }
+}
+
+/*
+ * Exercise 12.20
+ */
+object Exercise1220 {
+  def composeM[F[_], G[_]](F: Monad[F], G: Monad[G], T: Traverse[G]):
+      Monad[({type t[x] = F[G[x]]})#t] =
+    new Monad[({type t[x] = F[G[x]]})#t] {
+      def unit[A](a: => A): F[G[A]] = F.unit(G.unit(a))
+
+      def flatMap[A,B](fa: F[G[A]])(f: A => F[G[B]]): F[G[B]] = ???
     }
 }
 
