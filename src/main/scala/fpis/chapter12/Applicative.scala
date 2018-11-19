@@ -245,7 +245,10 @@ trait Traverse[F[_]] extends Functor[F] {
   /*
    * Exercise 12.16
    */
-  def reverse[A](fa: F[A]): F[A] = ???
+  def reverse[A](fa: F[A]): F[A] = {
+    val l = toList(fa).reverse
+    mapAccum(fa, l)((_, as) => (as.head, as.tail))._1
+  }
 }
 
 
