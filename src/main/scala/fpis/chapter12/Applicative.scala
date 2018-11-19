@@ -249,6 +249,12 @@ trait Traverse[F[_]] extends Functor[F] {
     val l = toList(fa).reverse
     mapAccum(fa, l)((_, as) => (as.head, as.tail))._1
   }
+
+  /*
+   * Exercise 12.17
+   */
+  def foldLeft[A,B](fa: F[A], b: B)(f: (B, A) => B): B =
+    mapAccum(fa, b)((a, b) => (a, f(b, a)))._2
 }
 
 
