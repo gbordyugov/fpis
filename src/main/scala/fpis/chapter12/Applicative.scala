@@ -261,6 +261,31 @@ trait Traverse[F[_]] extends Functor[F] {
       case (a, Nil) => sys.error("zip: Incompatible shapes.")
       case (a, b :: bs) => ((a, b), bs)
     })._1
+
+  /*
+   * Exercise 12.18
+   def traverse[G[_]: Applicative, A, B](fa: F[A])
+   (f: A => G[B]): G[F[B]] = sequence(map(fa)(f))
+
+   def sequence[G[_]:Applicative, A](fga: F[G[A]]): G[F[A]] =
+   traverse(fga)(ga => ga)
+   */
+  def fuse[G[_],H[_],A,B](fa: F[A])(f: A => G[B], g: A => H[B])
+    (G: Applicative[G], H: Applicative[H]): (G[F[B]], H[F[B]]) = {
+
+    def prodApplicative[F[_],G[_]](F: Applicative[F], G: Applicative[G]) =
+      new Applicative[({type t[x] = (F[x],G[x])})#t] {
+        def unit[A](a: => A): (F[A], G[A]) = (F.unit(a), G.unit(a))
+
+        def map2[A,B,C](fa: (F[A], G[A]), fb: (F[B], G[B]))
+          (f: (A, B) => C): (F[C], G[C]) =
+          (F.map2(fa._1, fb._1)(f), G.map2(fa._2, fb._2)(f))
+      }
+
+    val pa = prodApplicative(G,H)
+
+    ???
+  }
 }
 
 
