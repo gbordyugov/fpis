@@ -304,7 +304,8 @@ object Exercise1220 {
     new Monad[({type t[x] = F[G[x]]})#t] {
       def unit[A](a: => A): F[G[A]] = F.unit(G.unit(a))
 
-      def flatMap[A,B](fa: F[G[A]])(f: A => F[G[B]]): F[G[B]] = ???
+      def flatMap[A,B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] =
+        F.flatMap(fga)(ga => ???)
     }
 }
 
