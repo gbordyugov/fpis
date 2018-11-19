@@ -187,7 +187,7 @@ object ValidationApplicative {
  */
 
 
-trait Traverse[F[_]] extends Functor[F] {
+trait Traverse[F[_]] extends Functor[F] { self =>
   import fpis.chapter06.State.{get, set}
 
   def traverse[G[_]: Applicative, A, B](fa: F[A])
@@ -281,6 +281,19 @@ trait Traverse[F[_]] extends Functor[F] {
 
     traverse[({type t[x] = (G[x], H[x])})#t, A, B](fa)(a => (f(a), g(a)))
   }
+
+  /*
+   * Exercise 12.19
+   def traverse[G[_]: Applicative, A, B](fa: F[A])
+   (f: A => G[B]): G[F[B]] = sequence(map(fa)(f))
+   */
+  def compose[G[_]](implicit G: Traverse[G]):
+      Traverse[({type t[x] = F[G[x]]})#t] =
+    new Traverse[({type t[x] = F[G[x]]})#t] {
+      override def traverse[App[_]: Applicative, A, B](fga: F[G[A]])
+        (f: A => App[B]): App[F[G[B]]] =
+        self.traverse(fga)(ga => G.traverse(ga,f))
+    }
 }
 
 
