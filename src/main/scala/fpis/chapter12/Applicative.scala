@@ -242,6 +242,10 @@ trait Traverse[F[_]] extends Functor[F] {
   def ziwWithIndex[A](fa: F[A]): F[(A, Int)] =
     mapAccum(fa, 0)((a, s) => ((a, s), s + 1))._1
 
+  /*
+   * Exercise 12.16
+   */
+  def reverse[A](fa: F[A]): F[A] = ???
 }
 
 
