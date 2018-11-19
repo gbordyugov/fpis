@@ -255,6 +255,12 @@ trait Traverse[F[_]] extends Functor[F] {
    */
   def foldLeft[A,B](fa: F[A], b: B)(f: (B, A) => B): B =
     mapAccum(fa, b)((a, b) => (a, f(b, a)))._2
+
+  def zip[A,B](fa: F[A], fb: F[B]): F[(A,B)] =
+    (mapAccum(fa, toList(fb)) {
+      case (a, Nil) => sys.error("zip: Incompatible shapes.")
+      case (a, b :: bs) => ((a, b), bs)
+    })._1
 }
 
 
