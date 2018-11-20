@@ -1,5 +1,7 @@
 package fpis.chapter13
 
+import fpis.chapter11.Monad
+
 sealed trait IO[A] { self =>
   def run: A
 
@@ -12,14 +14,14 @@ sealed trait IO[A] { self =>
   }
 }
 
-object IO {
+object IO extends Monad[IO] {
   def unit[A](a: => A): IO[A] = new IO[A] {
     def run = a
   }
 
-  def empty: IO[Unit] = new IO[Unit] {
-    def run = ()
-  }
+  def flatMap[A,B](fa: IO[A])(f: A => IO[B]) = fa.flatMap(f)
+
+  def apply[A](a: => A): IO[A] = unit(a)
 }
 
 object SimpleGame {
