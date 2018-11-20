@@ -36,7 +36,9 @@ trait Monad[F[_]] extends Functor[F] with Applicative[F] {
    * Exercise 11.3
    */
   override def sequence[A](lma: List[F[A]]): F[List[A]] =
-    lma.foldRight(unit(List(): List[A])) { (e, lst) => map2(e, lst)(_ :: _) }
+    lma.foldRight(unit(List(): List[A])) { (e, lst) =>
+      map2(e, lst)(_ :: _)
+    }
 
   override def traverse[A,B](la: List[A])(f: A => F[B]): F[List[B]] =
     sequence(la.map(f))

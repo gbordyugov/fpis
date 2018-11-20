@@ -299,13 +299,19 @@ trait Traverse[F[_]] extends Functor[F] { self =>
  * Exercise 12.20
  */
 object Exercise1220 {
-  def composeM[F[_], G[_]](F: Monad[F], G: Monad[G], T: Traverse[G]):
+  def composeM[F[_], G[_]]
+    (implicit F: Monad[F], G: Monad[G], T: Traverse[G]):
       Monad[({type t[x] = F[G[x]]})#t] =
     new Monad[({type t[x] = F[G[x]]})#t] {
       def unit[A](a: => A): F[G[A]] = F.unit(G.unit(a))
 
       def flatMap[A,B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] =
-        F.flatMap(fga)(ga => ???)
+        F.flatMap(fga) { ga => 
+          val gfgb: G[F[G[B]]] = G.map(ga)(f)
+          val fggb: F[G[G[B]]] = T.sequence(gfgb)
+          val fgb:  F[G[B]]    = F.map(fggb)(G.join(_))
+          fgb
+        }
     }
 }
 
