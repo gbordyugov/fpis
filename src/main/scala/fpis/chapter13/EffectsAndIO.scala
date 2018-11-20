@@ -24,7 +24,19 @@ object IO extends Monad[IO] {
   def apply[A](a: => A): IO[A] = unit(a)
 }
 
+object IOPrimitives {
+  def ReadLine: IO[String] = IO {
+    readLine
+  }
+
+  def PrintLine(msg: String): IO[Unit] = IO {
+    println(msg)
+  }
+}
+
 object SimpleGame {
+  import IOPrimitives._
+
   case class Player(name: String, score: Int)
 
   def winner(p1: Player, p2: Player): Option[Player] =
@@ -39,11 +51,19 @@ object SimpleGame {
     case Player(name, _) => s"$name is the winner!"
   } getOrElse "It's a draw."
 
-  def PrintLine(msg: String): IO[Unit] =
-    new IO[Unit] {
-      def run = println(msg)
-    }
-
   def contest(p1: Player, p2: Player): IO[Unit] =
     PrintLine(winnerMsg(winner(p1, p2)))
+}
+
+object Converter {
+  import IOPrimitives._
+
+  def fToC(f: Double): Double =
+    (f - 32.0) * 5.0 / 9.0
+
+  def converter: IO[Unit] = for {
+    _ <- PrintLine("Enter a temperature in F: ")
+    d <- ReadLine.map(_.toDouble)
+    _ <- PrintLine(fToC(d).toString)
+  } yield()
 }
