@@ -1,7 +1,16 @@
 package fpis.chapter13
 
-trait IO {
+trait IO { self =>
   def run: Unit
+  def ++(io: IO) = new IO {
+    def run = { self.run; io.run }
+  }
+}
+
+object IO {
+  def empty: IO = new IO {
+    def run = ()
+  }
 }
 
 object SimpleGame {
