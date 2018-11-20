@@ -1,14 +1,23 @@
 package fpis.chapter13
 
-trait IO { self =>
-  def run: Unit
-  def ++(io: IO) = new IO {
-    def run = { self.run; io.run }
+sealed trait IO[A] { self =>
+  def run: A
+
+  def map[B](f: A => B): IO[B] = new IO[B] {
+      def run = f(self.run)
+    }
+
+  def flatMap[B](f: A => IO[B]): IO[B] = new IO[B] {
+    def run = f(self.run).run
   }
 }
 
 object IO {
-  def empty: IO = new IO {
+  def unit[A](a: => A): IO[A] = new IO[A] {
+    def run = a
+  }
+
+  def empty: IO[Unit] = new IO[Unit] {
     def run = ()
   }
 }
@@ -28,11 +37,11 @@ object SimpleGame {
     case Player(name, _) => s"$name is the winner!"
   } getOrElse "It's a draw."
 
-  def PrintLine(msg: String): IO =
-    new IO {
+  def PrintLine(msg: String): IO[Unit] =
+    new IO[Unit] {
       def run = println(msg)
     }
 
-  def contest(p1: Player, p2: Player): IO =
+  def contest(p1: Player, p2: Player): IO[Unit] =
     PrintLine(winnerMsg(winner(p1, p2)))
 }
