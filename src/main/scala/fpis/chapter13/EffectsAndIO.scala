@@ -22,9 +22,10 @@ object IO extends Monad[IO] {
   def flatMap[A,B](fa: IO[A])(f: A => IO[B]) = fa.flatMap(f)
 
   def apply[A](a: => A): IO[A] = unit(a)
-}
 
-object IOPrimitives {
+  /*
+   * some primitives
+   */
   def ReadLine: IO[String] = IO {
     readLine
   }
@@ -35,7 +36,7 @@ object IOPrimitives {
 }
 
 object SimpleGame {
-  import IOPrimitives._
+  import IO._
 
   case class Player(name: String, score: Int)
 
@@ -56,7 +57,7 @@ object SimpleGame {
 }
 
 object Converter {
-  import IOPrimitives._
+  import IO._
 
   def fToC(f: Double): Double =
     (f - 32.0) * 5.0 / 9.0
