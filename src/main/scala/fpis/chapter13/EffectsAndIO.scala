@@ -1,7 +1,5 @@
 package fpis.chapter13
 
-import fpis.chapter11.Monad
-
 sealed trait IO[A] { self =>
   def run: A
 
