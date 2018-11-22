@@ -87,6 +87,11 @@ object IO1 {
 
   }
 
+  /*
+   * the main difference between Return and Suspend is that the latter
+   * is lazy in its argument
+   * Suspend is similar to Par.lazyUnit()
+   */
   case class Return[A](a: A) extends IO[A]
   case class Suspend[A](resume: () => A) extends IO[A]
   case class FlatMap[A,B](sub: IO[A], k: A => IO[B]) extends IO[B]
