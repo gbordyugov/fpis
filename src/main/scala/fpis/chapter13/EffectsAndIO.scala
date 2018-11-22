@@ -100,6 +100,10 @@ object IO1 {
   def run[A](io: IO[A]): A = io match {
     case Return(a) => a
     case Suspend(r) => r()
+    /*
+     * for FlatMap, run(f(run(x)) would work too, but is not
+     * tail-recursive
+     */
     case FlatMap(x, f) => x match {
       case Return(a) => run(f(a))
       case Suspend(r) => run(f(r()))
