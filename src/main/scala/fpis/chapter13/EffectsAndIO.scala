@@ -82,7 +82,9 @@ object IO1 {
       FlatMap(this, f)
 
     def map[B](f: A => B): IO[B] =
-      flatMap(f andThen (Return(_)))
+      // flatMap(f andThen (Return(_)))
+      flatMap(x => Return(f(x)))
+
   }
 
   case class Return[A](a: A) extends IO[A]
