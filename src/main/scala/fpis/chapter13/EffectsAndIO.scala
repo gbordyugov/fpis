@@ -88,26 +88,45 @@ object IO1 {
   }
 
   /*
-   * the main difference between Return and Suspend is that the latter
+   * The main difference between Return and Suspend is that the latter
    * is lazy in its argument
    * Suspend is similar to Par.lazyUnit()
    */
   case class Return[A](a: A) extends IO[A]
   case class Suspend[A](resume: () => A) extends IO[A]
+
+  /*
+   * This constructor holds the state of a flatMap operation, without
+   * actually executing it
+   */
   case class FlatMap[A,B](sub: IO[A], k: A => IO[B]) extends IO[B]
+
+  object IO extends Monad[IO] {
+    def unit[A](a: => A): IO[A] = Return(a)
+
+    def flatMap[A,B](a: IO[A])(f: A => IO[B]): IO[B] =
+      a.flatMap(f)
+
+    def apply[A](a: => A): IO[A] = Suspend(() => a)
+  }
 
   @annotation.tailrec
   def run[A](io: IO[A]): A = io match {
     case Return(a) => a
     case Suspend(r) => r()
     /*
-     * for FlatMap, run(f(run(x)) would work too, but is not
+     * For FlatMap, run(f(run(x)) would work too, but is not
      * tail-recursive
      */
     case FlatMap(x, f) => x match {
       case Return(a) => run(f(a))
       case Suspend(r) => run(f(r()))
-      case FlatMap(y, g) => run(y flatMap (a => g(a).flatMap(f)))
+      /*
+       * Here is where the chaining of flatmaps happens. Please see
+       * the bottom of p. 238 for the explanation of how to
+       * re-associate the stack fo flatMaps
+       */
+      case FlatMap(y, g) => run(y.flatMap(a => g(a).flatMap(f)))
     }
   }
 }
