@@ -12,6 +12,10 @@ object IO0 {
     }
 
     def flatMap[B](f: A => IO[B]): IO[B] = new IO[B] {
+      /*
+       * here is a potential stack overflow risk, since it runs self
+       * before calling `f` on its result
+       */
       def run = f(self.run).run
     }
   }
