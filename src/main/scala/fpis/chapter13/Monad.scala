@@ -47,6 +47,9 @@ trait Monad[F[_]] extends Functor[F] {
     if (b) as(fa)(true) else unit(false)
 
   def forever[A,B](a: F[A]): F[B] = {
+    /*
+     * note that `t` is declared lazy to avoid it being too eager :~)
+     */
     lazy val t: F[B] = a flatMap (_ => t)
     t
   }
