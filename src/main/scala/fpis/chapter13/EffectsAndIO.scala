@@ -138,10 +138,10 @@ object IO1 {
        * re-associate the stack fo flatMaps
        *
        * what is happening here is
-       * FlatMap(FlatMap(y, g), f) =
-       * (by the flatMap association law)
-       * y.flatMap(g).flatMap(f) =
-       * y.flatMap(a => g(a).flatMap(f))
+       *    FlatMap(FlatMap(y, g), f) =
+       * (* by the flatMap association law *)
+       *  = y.flatMap(g).flatMap(f) =
+       *  = y.flatMap(a => g(a).flatMap(f))
        */
       case FlatMap(y, g) => run(y.flatMap(a => g(a).flatMap(f)))
     }
