@@ -80,12 +80,18 @@ object IO0 {
   }
 }
 
+
 object IO1 {
-  sealed trait IO[A] {
-    def flatMap[B](f: A => IO[B]): IO[B] =
+
+  /*
+   * it used to be called IO[A], later in the book it is renamed
+   * to TailRec[A]
+   */
+  sealed trait TailRec[A] {
+    def flatMap[B](f: A => TailRec[B]): TailRec[B] =
       FlatMap(this, f)
 
-    def map[B](f: A => B): IO[B] =
+    def map[B](f: A => B): TailRec[B] =
       // flatMap(f andThen (Return(_)))
       flatMap(x => Return(f(x)))
 
@@ -96,26 +102,26 @@ object IO1 {
    * is lazy in its argument
    * Suspend is similar to Par.lazyUnit()
    */
-  case class Return[A](a: A) extends IO[A]
-  case class Suspend[A](resume: () => A) extends IO[A]
+  case class Return[A](a: A) extends TailRec[A]
+  case class Suspend[A](resume: () => A) extends TailRec[A]
 
   /*
    * This constructor holds the state of a flatMap operation, without
    * actually executing it
    */
-  case class FlatMap[A,B](sub: IO[A], k: A => IO[B]) extends IO[B]
+  case class FlatMap[A,B](sub: TailRec[A], k: A => TailRec[B]) extends TailRec[B]
 
-  object IO extends Monad[IO] {
-    def unit[A](a: => A): IO[A] = Return(a)
+  object TailRec extends Monad[TailRec] {
+    def unit[A](a: => A): TailRec[A] = Return(a)
 
-    def flatMap[A,B](a: IO[A])(f: A => IO[B]): IO[B] =
+    def flatMap[A,B](a: TailRec[A])(f: A => TailRec[B]): TailRec[B] =
       a.flatMap(f)
 
-    def apply[A](a: => A): IO[A] = Suspend(() => a)
+    def apply[A](a: => A): TailRec[A] = Suspend(() => a)
   }
 
   @annotation.tailrec
-  def run[A](io: IO[A]): A = io match {
+  def run[A](io: TailRec[A]): A = io match {
     case Return(a) => a
     case Suspend(r) => r()
     /*
