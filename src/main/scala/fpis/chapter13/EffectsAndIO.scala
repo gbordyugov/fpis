@@ -136,6 +136,12 @@ object IO1 {
        * Here is where the chaining of flatmaps happens. Please see
        * the bottom of p. 238 for the explanation of how to
        * re-associate the stack fo flatMaps
+       *
+       * what is happening here is
+       * FlatMap(FlatMap(y, g), f) =
+       * (by the flatMap association law)
+       * y.flatMap(g).flatMap(f) =
+       * y.flatMap(a => g(a).flatMap(f))
        */
       case FlatMap(y, g) => run(y.flatMap(a => g(a).flatMap(f)))
     }
