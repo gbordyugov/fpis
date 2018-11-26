@@ -143,6 +143,12 @@ object Async {
       flatMap(f andThen (Return(_)))
   }
 
+  object Async extends Monad[Async] {
+    def unit[A](a: => A): Async[A] = Return(a)
+    def flatMap[A,B](a: Async[A])(f: A => Async[B]): Async[B] =
+      a.flatMap(f)
+  }
+
   case class Return[A](a: A) extends Async[A]
   case class Suspend[A](resume: Par[A]) extends Async[A]
   case class FlatMap[A,B](sub: Async[A],
