@@ -1,5 +1,8 @@
 package fpis.chapter13
 
+import fpis.chapter07.Par.Par
+
+
 /*
  * first attempt at IO
  */
@@ -129,4 +132,19 @@ object IO1 {
       case FlatMap(y, g) => run(y.flatMap(a => g(a).flatMap(f)))
     }
   }
+}
+
+object Async {
+  sealed trait Async[A] {
+    def flatMap[B](f: A => Async[B]): Async[B] =
+      FlatMap(this, f)
+    def map[B](f: A => B): Async[B] =
+      flatMap(f andThen (Return(_)))
+  }
+
+  case class Return[A](a: A) extends Async[A]
+  case class Suspend[A](resume: Par[A]) extends Async[A]
+  case class FlatMap[A,B](sub: Async[A],
+    k: A => Async[B]) extends Async[B]
+
 }
