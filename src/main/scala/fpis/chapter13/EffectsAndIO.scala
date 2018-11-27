@@ -150,7 +150,18 @@ object IO1 {
   def badRun[A](t: TailRec[A]): A = t match {
     case Return(x)  => x
     case Suspend(f) => f()
-    case FlatMap(x, f) => run(f(run(x)))
+    case FlatMap(x, f) => badRun(f(badRun(x)))
+  }
+
+  @annotation.tailrec
+  def goodRun[A](t: TailRec[A]): A = t match {
+    case Return(x)  => x
+    case Suspend(f) => f()
+    case FlatMap(x, f) => x match {
+      case Return(y) => goodRun(f(y))
+      case Suspend(s) => goodRun(f(s()))
+      case FlatMap(y, g) => goodRun(y.flatMap(a => g(a).flatMap(f)))
+    }
   }
 }
 
