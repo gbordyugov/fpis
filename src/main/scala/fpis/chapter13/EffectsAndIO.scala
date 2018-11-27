@@ -146,6 +146,12 @@ object IO1 {
       case FlatMap(y, g) => run(y.flatMap(a => g(a).flatMap(f)))
     }
   }
+
+  def badRun[A](t: TailRec[A]): A = t match {
+    case Return(x)  => x
+    case Suspend(f) => f()
+    case FlatMap(x, f) => run(f(run(x)))
+  }
 }
 
 object Async {
