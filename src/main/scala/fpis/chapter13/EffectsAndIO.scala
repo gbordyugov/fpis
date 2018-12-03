@@ -224,7 +224,9 @@ object Free {
 
   def freeMonad[F[_]]: Monad[({type t[x] = Free[F,x]})#t] =
     new Monad[({type t[x] = Free[F,x]})#t] {
-      def unit[A](a: => A): Free[F,A] = ???
-      def flatMap[A,B](fa: Free[F,A])(f: A=>Free[F,B]): Free[F,B] = ???
+      def unit[A](a: => A): Free[F,A] = Return[F,A](a)
+      def flatMap[A,B](fa: Free[F,A])
+        (f: A=>Free[F,B]): Free[F,B] =
+        fa.flatMap(f)
     }
 }
