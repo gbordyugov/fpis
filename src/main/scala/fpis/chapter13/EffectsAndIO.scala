@@ -252,15 +252,15 @@ object Free {
   @annotation.tailrec
   def step[F[_],A](a: Free[F,A])(implicit F: Monad[F]): Free[F,A] =
     a match {
-      case FlatMap(FlatMap(x, f), g) => step(???)
-      case FlatMap(Return(x), f)     => step(???)
+      case FlatMap(FlatMap(x, f), g) => step(x.flatMap(a => f(a).flatMap(g)))
+      case FlatMap(Return(x), f)     => step(f(x))
       case _                         => a
     }
 
   def run[F[_],A](a: Free[F,A])(implicit F: Monad[F]): F[A] =
     a match {
-      case Return(a) => F.unit(a)
-      case Suspend(fa) => fa
+      case Return(a)     => F.unit(a)
+      case Suspend(fa)   => fa
       case FlatMap(x, f) => x match {
         case Suspend(r) => F.flatMap(r)(a => run(f(a)))
         case _ => ???
