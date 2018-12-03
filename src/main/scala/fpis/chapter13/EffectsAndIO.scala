@@ -1,5 +1,7 @@
 package fpis.chapter13
 
+import scala.language.higherKinds
+
 import fpis.chapter07.Par
 import fpis.chapter07.Par.Par
 
@@ -201,4 +203,12 @@ object Async {
         sys.error("Impossible; `step` elimintates these cases")
     }
   }
+}
+
+object Free {
+  sealed trait Free[F[_],A]
+  case class Return[F[_],A](a: A) extends Free[F,A]
+  case class Susped[F[_],A](s: F[A]) extends Free[F,A]
+  case class FlatMap[F[_],A,B](s: Free[F,A],
+    f: A => Free[F,B]) extends Free[F,B]
 }
