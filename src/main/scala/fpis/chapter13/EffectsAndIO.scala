@@ -216,8 +216,15 @@ object Free {
     def map[B](f: A=>B): Free[F,B] =
       flatMap(x => Return(f(x)))
   }
+
   case class Return[F[_],A](a: A) extends Free[F,A]
   case class Susped[F[_],A](s: F[A]) extends Free[F,A]
   case class FlatMap[F[_],A,B](s: Free[F,A],
     f: A => Free[F,B]) extends Free[F,B]
+
+  def freeMonad[F[_]]: Monad[({type t[x] = Free[F,x]})#t] =
+    new Monad[({type t[x] = Free[F,x]})#t] {
+      def unit[A](a: => A): Free[F,A] = ???
+      def flatMap[A,B](fa: Free[F,A])(f: A=>Free[F,B]): Free[F,B] = ???
+    }
 }
