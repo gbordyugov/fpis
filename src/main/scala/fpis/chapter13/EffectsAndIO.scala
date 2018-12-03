@@ -206,7 +206,14 @@ object Async {
 }
 
 object Free {
-  sealed trait Free[F[_],A]
+  /*
+   * Exercise 13.1
+   */
+  sealed trait Free[F[_],A] {
+    def flatMap[A,B](fa: Free[F,A])(f: A=>Free[F,B]): Free[F,B] =
+      ???
+    def map[A,B](fa: Free[F,A])(f: A=>B): Free[F,B] = ???
+  }
   case class Return[F[_],A](a: A) extends Free[F,A]
   case class Susped[F[_],A](s: F[A]) extends Free[F,A]
   case class FlatMap[F[_],A,B](s: Free[F,A],
