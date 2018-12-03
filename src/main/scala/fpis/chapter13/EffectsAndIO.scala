@@ -214,7 +214,7 @@ object Free {
       FlatMap(this, f)
 
     def map[B](f: A=>B): Free[F,B] =
-      flatMap(???)
+      flatMap(x => Return(f(x)))
   }
   case class Return[F[_],A](a: A) extends Free[F,A]
   case class Susped[F[_],A](s: F[A]) extends Free[F,A]
