@@ -242,7 +242,7 @@ object Free {
     case FlatMap(x, f) => x match {
       case Return(a) => runTrampoline(f(a))
       case Suspend(s) => runTrampoline(f(s()))
-      case _ => ???
+      case FlatMap(y, g) => runTrampoline(y.flatMap(a => g(a).flatMap(f)))
     }
   }
 }
