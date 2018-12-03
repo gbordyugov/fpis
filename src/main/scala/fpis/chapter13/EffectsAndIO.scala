@@ -229,4 +229,20 @@ object Free {
         (f: A=>Free[F,B]): Free[F,B] =
         fa.flatMap(f)
     }
+
+  /*
+   * Exercise 13.2
+   */
+  type TailRec[A] = Free[Function0,A]
+
+  @annotation.tailrec
+  def runTrampoline[A](a: Free[Function0,A]): A = a match {
+    case Return(a) => a
+    case Suspend(s) => s()
+    case FlatMap(x, f) => x match {
+      case Return(a) => runTrampoline(f(a))
+      case Suspend(s) => runTrampoline(f(s()))
+      case _ => ???
+    }
+  }
 }
