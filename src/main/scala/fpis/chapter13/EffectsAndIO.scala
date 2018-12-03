@@ -245,4 +245,25 @@ object Free {
       case FlatMap(y, g) => runTrampoline(y.flatMap(a => g(a).flatMap(f)))
     }
   }
+
+  /*
+   * Exercise 13.3
+   */
+  @annotation.tailrec
+  def step[F[_],A](a: Free[F,A])(implicit F: Monad[F]): Free[F,A] =
+    a match {
+      case FlatMap(FlatMap(x, f), g) => step(???)
+      case FlatMap(Return(x), f)     => step(???)
+      case _                         => a
+    }
+
+  def run[F[_],A](a: Free[F,A])(implicit F: Monad[F]): F[A] =
+    a match {
+      case Return(a) => F.unit(a)
+      case Suspend(fa) => fa
+      case FlatMap(x, f) => x match {
+        case Suspend(r) => F.flatMap(r)(a => run(f(a)))
+        case _ => ???
+      }
+    }
 }
