@@ -272,6 +272,10 @@ object Free {
     def toThunk: () => A
   }
 
+  /*
+   * Note that here we're mixing int the interpreter code which
+   * actually should be performed in the interpreter
+   */
   case object ReadLine extends Console[Option[String]] {
     def toPar = Par.lazyUnit(run)
     def toThunk = () => run
