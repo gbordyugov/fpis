@@ -289,4 +289,14 @@ object Free {
     def toPar = Par.lazyUnit(println(line))
     def toThunk = () => println(line)
   }
+
+  object Console {
+    type ConsoleIO[A] = Free[Console,A]
+
+    def readLn: ConsoleIO[Option[String]] =
+      Suspend(ReadLine)
+
+    def printLn(line: String): ConsoleIO[Unit] =
+      Suspend(PrintLine(line))
+  }
 }

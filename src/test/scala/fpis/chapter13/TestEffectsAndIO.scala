@@ -43,3 +43,12 @@ class TestIO1 extends FlatSpec with Matchers {
   val y = trivialize(trivialize(x))
   assert(1 === myGoodRun(y))
 }
+
+class TestFree extends FlatSpec with Matchers {
+  import Free._, Free.Console._
+
+  val f1: Free[Console, Option[String]] = for {
+    _ <- printLn("I can only interact with the console.")
+    ln <- readLn
+  } yield ln
+}
