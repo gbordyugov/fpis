@@ -299,4 +299,19 @@ object Free {
     def printLn(line: String): ConsoleIO[Unit] =
       Suspend(PrintLine(line))
   }
+
+  trait Translate[F[_],G[_]] {
+    def apply[A](f: F[A]): G[A]
+  }
+
+  type ~>[F[_],G[_]] = Translate[F,G]
+
+
+  val consoleToFunction0 = new (Console ~> Function0) {
+    def apply[A](a: Console[A]) = a.toThunk
+  }
+
+  val consoleToPar = new (Console ~> Par) {
+    def apply[A](a: Console[A]) = a.toPar
+  }
 }
