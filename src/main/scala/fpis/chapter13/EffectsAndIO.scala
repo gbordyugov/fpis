@@ -267,28 +267,9 @@ object Free {
       }
     }
 
-  sealed trait Console[A] {
-    def toPar: Par[A]
-    def toThunk: () => A
-  }
-
-  /*
-   * Note that here we're mixing int the interpreter code which
-   * actually should be performed in the interpreter
-   */
-  case object ReadLine extends Console[Option[String]] {
-    def toPar = Par.lazyUnit(run)
-    def toThunk = () => run
-
-    def run: Option[String] =
-      try Some(readLine())
-      catch { case e: Exception => None }
-  }
-
-  case class PrintLine(line: String) extends Console[Unit] {
-    def toPar = Par.lazyUnit(println(line))
-    def toThunk = () => println(line)
-  }
+  sealed trait Console[A]
+  case object ReadLine extends Console[Option[String]]
+  case class PrintLine(line: String) extends Console[Unit]
 
   object Console {
     type ConsoleIO[A] = Free[Console,A]
@@ -306,13 +287,27 @@ object Free {
 
   type ~>[F[_],G[_]] = Translate[F,G]
 
-
   val consoleToFunction0 = new (Console ~> Function0) {
-    def apply[A](a: Console[A]) = a.toThunk
+    def apply[A](a: Console[A]) = a match {
+      case ReadLine => { () =>
+        val x: Option[String] = try Some(readLine())
+          catch { case e: Exception => Option.empty[String] }
+        x
+      }
+      case PrintLine(line) => () => println(line)
+    }
   }
 
   val consoleToPar = new (Console ~> Par) {
-    def apply[A](a: Console[A]) = a.toPar
+    def apply[A](a: Console[A]) = a match {
+      case ReadLine => {
+        val x: Option[String] =
+          try Some(readLine())
+          catch { case e: Exception => Option.empty[String] }
+        Par.lazyUnit(x)
+      }
+      case PrintLine(line) => Par.lazyUnit(println(line))
+    }
   }
 
   def runFree[F[_],G[_],A](free: Free[F,A])(t: F~>G)
