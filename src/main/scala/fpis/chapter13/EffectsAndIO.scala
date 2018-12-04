@@ -250,7 +250,7 @@ object Free {
    * Exercise 13.3
    */
   @annotation.tailrec
-  def step[F[_],A](a: Free[F,A])(implicit F: Monad[F]): Free[F,A] =
+  def step[F[_],A](a: Free[F,A]): Free[F,A] =
     a match {
       case FlatMap(FlatMap(x, f), g) => step(x.flatMap(a => f(a).flatMap(g)))
       case FlatMap(Return(x), f)     => step(f(x))
