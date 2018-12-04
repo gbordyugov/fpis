@@ -314,4 +314,12 @@ object Free {
   val consoleToPar = new (Console ~> Par) {
     def apply[A](a: Console[A]) = a.toPar
   }
+
+  def runFree[F[_],G[_],A](free: Free[F,A])(t: F~>G)
+    (implicit G: Monad[G]): G[A] = step(free) match {
+    case Return(a) => G.unit(a)
+    case Suspend(r) => t(r)
+    case FlatMap(Suspend(r),f) => G.flatMap(t(r))(a => runFree(f(a))(t))
+    case _ => sys.error("Impossible; `step` eliminates these cases")
+  }
 }
