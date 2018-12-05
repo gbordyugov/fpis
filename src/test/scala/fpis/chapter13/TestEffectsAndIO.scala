@@ -51,4 +51,7 @@ class TestFree extends FlatSpec with Matchers {
     _ <- printLn("I can only interact with the console.")
     ln <- readLn
   } yield ln
+
+  val par = runFree(f1)(consoleToPar)
+  val func0 = runFree(f1)(consoleToFunction0)
 }
