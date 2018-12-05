@@ -336,4 +336,10 @@ object Free {
 
   def runConsolePar[A](a: Free[Console,A]): Par[A] =
     runFree[Console,Par,A](a)(consoleToPar)
+
+  /*
+   * Exercise 13.4
+   */
+  def translate[F[_],G[_],A](f: Free[F,A])
+    (fg: F~>G): Free[G,A] = ???
 }
