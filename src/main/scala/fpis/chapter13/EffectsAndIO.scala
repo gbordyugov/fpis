@@ -318,12 +318,6 @@ object Free {
     case _ => sys.error("Impossible; `step` eliminates these cases")
   }
 
-  def runConsoleFunction0[A](a: Free[Console,A]): () => A =
-    runFree[Console,Function0,A](a)(consoleToFunction0)
-
-  def runConsolePar[A](a: Free[Console,A]): Par =
-    runFree[Console,Par,A](a)(consoleToPar)
-
   implicit val function0Monad = new Monad[Function0] {
     def unit[A](a: => A) = () => a
     def flatMap[A,B](a: Function0[A])
@@ -336,4 +330,10 @@ object Free {
     def flatMap[A,B](a: Par[A])(f: A => Par[B]): Par[B] =
       Par.fork { Par.flatMap(a)(f) }
   }
+
+  def runConsoleFunction0[A](a: Free[Console,A]): () => A =
+    runFree[Console,Function0,A](a)(consoleToFunction0)
+
+  def runConsolePar[A](a: Free[Console,A]): Par[A] =
+    runFree[Console,Par,A](a)(consoleToPar)
 }
