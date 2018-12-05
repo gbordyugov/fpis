@@ -317,4 +317,17 @@ object Free {
     case FlatMap(Suspend(r),f) => G.flatMap(t(r))(a => runFree(f(a))(t))
     case _ => sys.error("Impossible; `step` eliminates these cases")
   }
+
+  implicit val function0Monad = new Monad[Function0] {
+    def unit[A](a: => A) = () => a
+    def flatMap[A,B](a: Function0[A])
+      (f: A => Function0[B]): Function0[B] =
+      () => f(a())()
+  }
+
+  implicit val parMonad = new Monad[Par] {
+    def unit[A](a: => A) = Par.unit(a)
+    def flatMap[A,B](a: Par[A])(f: A => Par[B]): Par[B] =
+      Par.fork { Par.flatMap(a)(f) }
+  }
 }
