@@ -341,5 +341,8 @@ object Free {
    * Exercise 13.4
    */
   def translate[F[_],G[_],A](f: Free[F,A])
-    (fg: F~>G): Free[G,A] = ???
+    (fg: F~>G): Free[G,A] = {
+    type FreeG[A] = Free[G,A]
+    ???
+  }
 }
