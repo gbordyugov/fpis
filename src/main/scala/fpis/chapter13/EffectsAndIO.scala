@@ -341,10 +341,14 @@ object Free {
    * Exercise 13.4
    */
   def translate[F[_],G[_],A](f: Free[F,A])(fg: F~>G): Free[G,A] = {
-    type FreeG[A] = Free[G,A]
-    val t = new (F ~> FreeG) {
-      def apply[A](a: F[A]): Free[G,A] = Suspend(fg(a))
+    type T[A] = Free[G,A]
+    val t = new (F ~> T) {
+      def apply[A](a: F[A]): T[A] = Suspend(fg(a))
     }
     runFree(f)(t)(freeMonad[G])
+  }
+
+  def runConsole[A](a: Free[Console,A]): A = {
+    ???
   }
 }
