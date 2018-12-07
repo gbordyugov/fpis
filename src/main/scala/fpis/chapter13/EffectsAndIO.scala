@@ -349,6 +349,10 @@ object Free {
   }
 
   def runConsole[A](a: Free[Console,A]): A = {
+    /*
+     * we're probably going to need
+     * def runTrampoline[A](a: Free[Function0,A]): A
+     */
     ???
   }
 }
