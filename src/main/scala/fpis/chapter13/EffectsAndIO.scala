@@ -349,10 +349,16 @@ object Free {
   }
 
   def runConsole[A](a: Free[Console,A]): A = {
-    /*
-     * we're probably going to need
-     * def runTrampoline[A](a: Free[Function0,A]): A
-     */
-    ???
+    val translator = new (Console ~> Function0) {
+      def apply[A](a: Console[A]) = a match {
+        case ReadLine => { () =>
+          val x: Option[String] = try Some(readLine())
+          catch { case e: Exception => Option.empty[String] }
+          x
+        }
+        case PrintLine(line) => () => println(line)
+      }
+    }
+    runTrampoline(translate(a)(translator))
   }
 }
