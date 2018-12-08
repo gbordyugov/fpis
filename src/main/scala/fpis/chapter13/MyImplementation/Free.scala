@@ -27,7 +27,7 @@ object Free {
     case FlatMap(x, f) => x match {
       case Return(a)     => run(f(a))
       case Suspend(fa)   => M.flatMap(fa)(x => run(f(x)))
-      case FlatMap(y, g) => ???
+      case FlatMap(y, g) => run(y.flatMap(y => g(y).flatMap(f)))
     }
   }
 }
