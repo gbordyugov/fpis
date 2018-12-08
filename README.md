@@ -15,7 +15,7 @@ Open/skipped exercises:
     companion booklet, but afterwards I implemented the first part of
     the Exercise from scratch myself. As a repentance, I've
     implemented the whole Free from scratch, see
-    fpis.chapter13.MyImplementation.
+    `fpis.chapter13.MyImplementation`.
 
 For Chapter 7, I implemented an additional tracing of the fork depth,
 which is passed along with the result of Par
