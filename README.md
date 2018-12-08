@@ -12,8 +12,10 @@ Open/skipped exercises:
   - Exercise 12.7
   - Exercise 12.9
   - I cheated on the first part of Exercise 13.4 by looking into the
-    companion booklet, but afterwards I implemented the first part from
-    scratch myself
+    companion booklet, but afterwards I implemented the first part of
+    the Exercise from scratch myself. As a repentance, I've
+    implemented Free from scratch, see
+    fpis.chapter13.MyImplementation.
 
 For Chapter 7, I implemented an additional tracing of the fork depth,
 which is passed along with the result of Par
