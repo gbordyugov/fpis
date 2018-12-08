@@ -9,9 +9,10 @@ trait Functor[F[_]] {
 }
 
 sealed trait Free[F[_],A] {
-  def flatMap[B](f: A => Free[F,B])(implicit F: Functor[F]): Free[F,B] = this match {
+  def flatMap[B](f: A => Free[F,B])
+    (implicit F: Functor[F]): Free[F,B] = this match {
     case Return(a)  => f(a)
-    case Suspend(f) => ???
+    case Suspend(fa) => Suspend(F.map(fa)(ffa => ffa.flatMap(f)))
   }
 
   def map[B](f: A => B)(implicit F: Functor[F]): Free[F,B] =
