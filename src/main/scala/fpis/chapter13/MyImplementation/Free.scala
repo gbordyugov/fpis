@@ -39,6 +39,10 @@ object Free {
     (implicit G: Monad[G]): G[A] = f match {
     case Return(a)     => G.unit(a)
     case Suspend(fa)   => t(fa)
-    case FlatMap(x, f) => ???
+    case FlatMap(x, f) => x match {
+      case Return(a)     => runFree(f(a))(t)
+      case Suspend(fa)   => G.flatMap(t(fa))(x => runFree(f(x))(t))
+      case FlatMap(y, g) => runFree(y.flatMap(y => g(y).flatMap(f)))(t)
+    }
   }
 }
