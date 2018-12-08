@@ -22,8 +22,8 @@ object Free {
   type ~>[F[_],G[_]] = Translate[F,G]
 
   def run[F[_],A](f: Free[F,A])(implicit M: Monad[F]): F[A] = f match {
-    case Return(a)   => M.unit(a)
-    case Suspend(fa) => fa
+    case Return(a)     => M.unit(a)
+    case Suspend(fa)   => fa
     case FlatMap(x, f) => x match {
       case Return(a)     => run(f(a))
       case Suspend(fa)   => M.flatMap(fa)(x => run(f(x)))
