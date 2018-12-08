@@ -30,4 +30,7 @@ object Free {
       case FlatMap(y, g) => run(y.flatMap(y => g(y).flatMap(f)))
     }
   }
+
+  def runFree[F[_],G[_],A](f: Free[F,A])(t: F~>G)
+    (implicit M: Monad[G]): G[A] = ???
 }
