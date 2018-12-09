@@ -21,6 +21,12 @@ trait Translate[F[_],G[_]] {
 object Free {
   type ~>[F[_],G[_]] = Translate[F,G]
 
+  def freeMonad[F[_]] = new Monad[({type t[x] = Free[F,x]})#t] {
+    def unit[A](a: => A): Free[F,A] = Return(a)
+    def flatMap[A,B](a: Free[F,A])(f: A => Free[F,B]): Free[F,B] =
+      a.flatMap(f)
+  }
+
   def run[F[_],A](f: Free[F,A])(implicit F: Monad[F]): F[A] = f match {
     case Return(a)     => F.unit(a)
     case Suspend(fa)   => fa
@@ -44,5 +50,13 @@ object Free {
       case Suspend(fa)   => G.flatMap(t(fa))(x => runFree(f(x))(t))
       case FlatMap(y, g) => runFree(y.flatMap(y => g(y).flatMap(f)))(t)
     }
+  }
+
+  def translate[F[_],G[_],A](f: Free[F,A])(t: F~>G): Free[G,A] = {
+    type FreeG[A] = Free[G,A]
+    val int = new (F~>FreeG) {
+      def apply[A](fa: F[A]): FreeG[A] = Suspend(t(fa))
+    }
+    runFree[F,FreeG,A](f)(int)(freeMonad[G])
   }
 }
