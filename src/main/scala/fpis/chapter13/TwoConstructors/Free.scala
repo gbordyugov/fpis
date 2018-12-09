@@ -41,6 +41,6 @@ object Free {
   def runFree[F[_],G[_],A](f: Free[F,A])(t: F~>G)
     (implicit F: Functor[F], G: Monad[G]): G[A] = f match {
     case Return(a)   => G.unit(a)
-    case Suspend(fa) => ??? // G.join(G.map(fa)(a => run(a)))
+    case Suspend(fa) => G.join(t(F.map(fa)(a => runFree(a)(t))))
   }
 }
