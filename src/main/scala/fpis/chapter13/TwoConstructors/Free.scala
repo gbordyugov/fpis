@@ -26,4 +26,9 @@ object Free {
       def flatMap[A,B](a: Free[F,A])(f: A => Free[F,B]): Free[F,B] =
         a.flatMap(f)
     }
+
+  def run[F[_],A](f: Free[F,A])(implicit F: Monad[F]): F[A] = f match {
+    case Return(a)   => F.unit(a)
+    case Suspend(fa) => F.join(F.map(fa)(a => run(a)))
+  }
 }
