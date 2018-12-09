@@ -1,7 +1,16 @@
 package fpis.chapter13.MyImplementation
-import fpis.chapter13.Monad
 
 import scala.language.higherKinds
+
+trait Monad[F[_]] {
+  def unit[A](a: => A): F[A]
+  def flatMap[A,B](fa: F[A])(f: A => F[B]): F[B]
+
+  def join[A](ffa: F[F[A]]): F[A] =
+    flatMap(ffa)(a => a)
+  def map[A,B](fa: F[A])(f: A => B): F[B] =
+    flatMap(fa)(a => unit(f(a)))
+}
 
 sealed trait Free[F[_],A] {
   def flatMap[B](f: A => Free[F,B]): Free[F,B] =
