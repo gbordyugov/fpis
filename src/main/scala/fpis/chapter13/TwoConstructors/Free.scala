@@ -43,4 +43,14 @@ object Free {
     case Return(a)   => G.unit(a)
     case Suspend(fa) => G.join(t(F.map(fa)(a => runFree(a)(t))))
   }
+
+  def translate[F[_],G[_],A](f: Free[F,A])(t: F~>G)
+      (implicit F: Functor[F], G: Functor[G]): Free[G,A] = {
+    type FreeG[A] = Free[G,A]
+    val int = new (F~>FreeG) {
+      def apply[A](fa: F[A]): FreeG[A] =
+        Suspend(G.map(t(fa))(Return(_)))
+    }
+    runFree[F,FreeG,A](f)(int)(F, freeMonad[G])
+  }
 }
