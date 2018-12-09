@@ -14,13 +14,7 @@ case class Suspend[F[_],A](fa: F[A]) extends Free[F,A]
 case class FlatMap[F[_],A,B](fa: Free[F,A], f: A => Free[F,B])
     extends Free[F,B]
 
-trait Translate[F[_],G[_]] {
-  def apply[A](a: F[A]): G[A]
-}
-
 object Free {
-  type ~>[F[_],G[_]] = Translate[F,G]
-
   def freeMonad[F[_]] = new Monad[({type t[x] = Free[F,x]})#t] {
     def unit[A](a: => A): Free[F,A] = Return(a)
     def flatMap[A,B](a: Free[F,A])(f: A => Free[F,B]): Free[F,B] =
@@ -35,6 +29,12 @@ object Free {
       case Suspend(fa)   => F.flatMap(fa)(x => run(f(x)))
       case FlatMap(y, g) => run(y.flatMap(y => g(y).flatMap(f)))
     }
+  }
+
+  type ~>[F[_],G[_]] = Translate[F,G]
+
+  trait Translate[F[_],G[_]] {
+    def apply[A](a: F[A]): G[A]
   }
 
   /*
