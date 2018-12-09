@@ -26,6 +26,9 @@ trait Monad[F[_]] extends Functor[F] {
   def map[A,B](a: F[A])(f: A => B): F[B] =
     flatMap(a)(a => unit(f(a)))
 
+  def join[A](ffa: F[F[A]]): F[A] =
+    flatMap(ffa)(fa => fa)
+
   def map2[A,B,C](a: F[A], b: F[B])(f: (A,B) => C): F[C] =
     flatMap(a)(a => map(b)(b => f(a,b)))
 
