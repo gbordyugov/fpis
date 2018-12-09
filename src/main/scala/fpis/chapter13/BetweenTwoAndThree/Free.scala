@@ -22,10 +22,12 @@ object Free2 {
 sealed trait Free3[F[_],A]
 case class Return3[F[_],A](a: A) extends Free3[F,A]
 case class Suspend3[F[_],A](fa: F[A]) extends Free3[F,A]
-case class FlatMap3[F[_],A,B](a: Free3[F,A], f: A => Free3[F,B]) extends Free3[F,B]
+case class FlatMap3[F[_],A,B](a: Free3[F,A], f: A => Free3[F,B])
+    extends Free3[F,B]
 
 object Free3 {
-  def from2[F[_],A](a: Free2[F,A]): Free3[F,A] = a match {
+  def from2[F[_],A](a: Free2[F,A])
+    (implicit F: Functor[F]): Free3[F,A] = a match {
     case Return2(a)  => Return3(a)
     case Suspend2(a) => ???
   }
