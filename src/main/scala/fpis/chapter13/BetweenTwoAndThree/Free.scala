@@ -28,7 +28,10 @@ case class FlatMap3[F[_],A,B](a: Free3[F,A], f: A => Free3[F,B])
 object Free3 {
   def from2[F[_],A](a: Free2[F,A])
     (implicit F: Functor[F]): Free3[F,A] = a match {
-    case Return2(a)  => Return3(a)
-    case Suspend2(a) => ???
+    case Return2(a)                  => Return3(a)
+    case Suspend2(fa: F[Free2[F,A]]) => {
+      val tmp: F[Free3[F,A]] = F.map(fa)(from2(_))
+      ???
+    }
   }
 }
