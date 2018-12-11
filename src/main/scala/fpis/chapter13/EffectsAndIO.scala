@@ -384,6 +384,10 @@ object Exercise1305 {
 
   type Par[+A] = ExecutorService => Future[A]
 
+  /*
+   * this one expects a map for a callback (A => Unit) to Unit
+   * why?
+   */
   def async[A](run: (A => Unit) => Unit): Par[A] = es => new Future[A] {
     def apply(k: A => Unit) = run(k)
   }
