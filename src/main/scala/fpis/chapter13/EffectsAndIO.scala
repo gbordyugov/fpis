@@ -372,6 +372,8 @@ object Exercise1305 {
 
   import java.util.concurrent.ExecutorService
 
+  import Free._
+
   trait Source {
     def readBytes(numBytes: Int,
       callback: Either[Throwable,Array[Byte]] => Unit): Unit
@@ -385,6 +387,16 @@ object Exercise1305 {
   def async[A](run: (A => Unit) => Unit): Par[A] = es => new Future[A] {
     def apply(k: A => Unit) = run(k)
   }
+
+  def nonblockingRead(source: Source,
+    numBytes: Int): Par[Either[Throwable,Array[Byte]]] =
+    async { (cb: Either[Throwable, Array[Byte]] => Unit) =>
+      source.readBytes(numBytes, cb)
+    }
+
+  def readPar(source: Source,
+    numBytes: Int): Free[Par,Either[Throwable,Array[Byte]]] =
+    Suspend(nonblockingRead(source, numBytes))
 
   def read(file: AsynchronousFileChannel,
     fromPosition: Long,
