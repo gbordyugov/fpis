@@ -362,3 +362,14 @@ object Free {
     runTrampoline(translate(a)(translator))
   }
 }
+
+/*
+ * Exercise 13.5
+ */
+object Exercise1305 {
+  import java.nio._
+  import java.nio.channels.AsynchronousFileChannel
+  def read(file: AsynchronousFileChannel,
+    fromPosition: Long,
+    numBytes: Int): Par[Either[Throwable, Array[Byte]]] = ???
+}
