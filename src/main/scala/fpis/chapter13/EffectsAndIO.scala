@@ -372,6 +372,10 @@ object Exercise1305 {
 
   import java.util.concurrent.ExecutorService
 
+  trait Source {
+    def readBytes(numBytes: Int,
+      callback: Either[Throwable,Array[Byte]] => Unit): Unit
+  }
   trait Future[+A] {
     def apply(k: A => Unit): Unit
   }
