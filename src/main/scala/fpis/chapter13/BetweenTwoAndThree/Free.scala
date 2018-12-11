@@ -47,7 +47,10 @@ object Free2 {
 sealed trait Free3[F[_],A] {
   def flatMap[B](f: A => Free3[F,B]) =
     FlatMap3(this, f)
+  def map[B](f: A => B): Free3[F,B] =
+    flatMap(a => Return3(f(a)))
 }
+
 case class Return3[F[_],A](a: A) extends Free3[F,A]
 case class Suspend3[F[_],A](fa: F[A]) extends Free3[F,A]
 case class FlatMap3[F[_],A,B](a: Free3[F,A], f: A => Free3[F,B])
