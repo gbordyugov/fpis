@@ -369,6 +369,15 @@ object Free {
 object Exercise1305 {
   import java.nio._
   import java.nio.channels.AsynchronousFileChannel
+
+  import java.util.concurrent.ExecutorService
+
+  trait Future[+A] {
+    def apply(k: A => Unit): Unit
+  }
+
+  type Par[+A] = ExecutorService => Future[A]
+
   def read(file: AsynchronousFileChannel,
     fromPosition: Long,
     numBytes: Int): Par[Either[Throwable, Array[Byte]]] = ???
