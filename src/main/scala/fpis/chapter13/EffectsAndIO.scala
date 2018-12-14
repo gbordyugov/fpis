@@ -39,7 +39,7 @@ object IO0 {
      * some primitives
      */
     def ReadLine: IO[String] = IO {
-      readLine
+      scala.io.StdIn.readLine
     }
 
     def PrintLine(msg: String): IO[Unit] = IO {
@@ -290,7 +290,7 @@ object Free {
   val consoleToFunction0 = new (Console ~> Function0) {
     def apply[A](a: Console[A]) = a match {
       case ReadLine => { () =>
-        val x: Option[String] = try Some(readLine())
+        val x: Option[String] = try Some(scala.io.StdIn.readLine())
           catch { case e: Exception => Option.empty[String] }
         x
       }
@@ -302,7 +302,7 @@ object Free {
     def apply[A](a: Console[A]) = a match {
       case ReadLine => {
         val x: Option[String] =
-          try Some(readLine())
+          try Some(scala.io.StdIn.readLine())
           catch { case e: Exception => Option.empty[String] }
         Par.lazyUnit(x)
       }
@@ -352,7 +352,7 @@ object Free {
     val translator = new (Console ~> Function0) {
       def apply[A](a: Console[A]) = a match {
         case ReadLine => { () =>
-          val x: Option[String] = try Some(readLine())
+          val x: Option[String] = try Some(scala.io.StdIn.readLine())
           catch { case e: Exception => Option.empty[String] }
           x
         }
