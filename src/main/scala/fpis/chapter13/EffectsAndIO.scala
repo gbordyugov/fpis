@@ -378,6 +378,7 @@ object Exercise1305 {
     def readBytes(numBytes: Int,
       callback: Either[Throwable,Array[Byte]] => Unit): Unit
   }
+
   trait Future[+A] {
     def apply(k: A => Unit): Unit
   }
