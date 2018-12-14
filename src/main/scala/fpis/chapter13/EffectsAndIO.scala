@@ -394,6 +394,14 @@ object Exercise1305 {
       def apply(k: A => Unit) = run(k)
     }
 
+  /*
+   * why not like this?
+   */
+  def asyncPrime[A](run: A => Unit): Par[A] =
+    es => new Future[A] {
+      def apply(k: A => Unit) = a => run(a)
+    }
+
   def nonblockingRead(source: Source,
     numBytes: Int): Par[Either[Throwable,Array[Byte]]] =
     async { (cb: Either[Throwable, Array[Byte]] => Unit) =>
