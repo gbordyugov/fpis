@@ -67,7 +67,7 @@ object Free3 {
   def from2[F[_],A](a: Free2[F,A])
     (implicit F: Functor[F]): Free3[F,A] = a match {
     case Return2(a)                  => Return3(a)
-    case Suspend2(fa: F[Free2[F,A]]) => {
+    case Suspend2(fa) => {
       val tmp: F[Free3[F,A]] = F.map(fa)(from2(_))
       ???
     }
