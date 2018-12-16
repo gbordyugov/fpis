@@ -402,6 +402,9 @@ object Exercise1305 {
       def apply(k: A => Unit) = a => run(a)
     }
 
+  /*
+   * using async()
+   */
   def nonblockingRead(source: Source,
     numBytes: Int): Par[Either[Throwable,Array[Byte]]] =
     async { (cb: Either[Throwable, Array[Byte]] => Unit) =>
