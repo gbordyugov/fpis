@@ -363,9 +363,6 @@ object Free {
   }
 }
 
-/*
- * Exercise 13.5
- */
 object Exercise1305 {
   import java.nio._
   import java.nio.channels.{AsynchronousFileChannel, CompletionHandler}
@@ -423,11 +420,12 @@ object Exercise1305 {
     async { (cb: Either[Throwable, Array[Byte]] => Unit) =>
       val buffer = ByteBuffer.allocate(numBytes)
       val handler = new CompletionHandler[Integer,Unit] {
-        def completed(i: Integer, attachment: Unit): Unit = {
-          ???
+        def completed(bytesRead: Integer, attachment: Unit): Unit = {
+          val array = new Array[Byte](bytesRead)
+          cb(Right(array))
         }
         def failed(t: Throwable, attachment: Unit): Unit = {
-          ???
+          cb(Left(t))
         }
       }
       file.read(buffer, fromPosition, (), handler)
