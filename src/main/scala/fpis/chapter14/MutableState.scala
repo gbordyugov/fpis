@@ -26,3 +26,25 @@ object ST {
     }
   }
 }
+
+sealed trait STRef[S,A] {
+  protected var cell: A
+
+  def read: ST[S,A] = ST(cell)
+
+  def write(a: A): ST[S,Unit] = new ST[S,Unit] {
+    def run(s: S) = {
+      cell = a
+      ((), s)
+    }
+  }
+}
+
+object STRef {
+  def apply[S,A](a: A): ST[S, STRef[S,A]] = {
+    val ref: STRef[S,A] = new STRef[S,A] {
+      var cell = a
+    }
+    ST(ref)
+  }
+}
