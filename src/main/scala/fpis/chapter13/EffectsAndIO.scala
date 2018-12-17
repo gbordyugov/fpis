@@ -422,7 +422,14 @@ object Exercise1305 {
     numBytes: Int): Par[Either[Throwable, Array[Byte]]] =
     async { (cb: Either[Throwable, Array[Byte]] => Unit) =>
       val buffer = ByteBuffer.allocate(numBytes)
-      val handler: CompletionHandler[Integer,Unit] = ???
+      val handler = new CompletionHandler[Integer,Unit] {
+        def completed(i: Integer, attachment: Unit): Unit = {
+          ???
+        }
+        def failed(t: Throwable, attachment: Unit): Unit = {
+          ???
+        }
+      }
       file.read(buffer, fromPosition, (), handler)
     }
 }
