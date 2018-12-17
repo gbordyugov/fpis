@@ -17,3 +17,12 @@ sealed trait ST[S,A] { self =>
     }
   }
 }
+
+object ST {
+  def apply[S,A](a: => A) = {
+    lazy val memo: A = a
+    new ST[S,A] {
+      def run(s: S) = (memo, s)
+    }
+  }
+}
