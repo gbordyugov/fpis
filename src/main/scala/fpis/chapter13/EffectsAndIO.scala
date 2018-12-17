@@ -415,7 +415,13 @@ object Exercise1305 {
       Free[Par,Either[Throwable,Array[Byte]]] =
     Suspend(nonblockingRead(source, numBytes))
 
-  def read(file: AsynchronousFileChannel,
-    fromPosition: Long,
-    numBytes: Int): Par[Either[Throwable, Array[Byte]]] = ???
+  /*
+   * Exercise 13.5
+   */
+  def read(file: AsynchronousFileChannel, fromPosition: Long,
+    numBytes: Int): Par[Either[Throwable, Array[Byte]]] =
+    async { (cb: Either[Throwable, Array[Byte]] => Unit) =>
+      val buffer = ByteBuffer.allocate(numBytes)
+      file.read(buffer, fromPosition, null, ???)
+    }
 }
