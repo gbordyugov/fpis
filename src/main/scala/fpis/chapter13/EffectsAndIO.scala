@@ -368,7 +368,7 @@ object Free {
  */
 object Exercise1305 {
   import java.nio._
-  import java.nio.channels.AsynchronousFileChannel
+  import java.nio.channels.{AsynchronousFileChannel, CompletionHandler}
 
   import java.util.concurrent.ExecutorService
 
@@ -422,6 +422,7 @@ object Exercise1305 {
     numBytes: Int): Par[Either[Throwable, Array[Byte]]] =
     async { (cb: Either[Throwable, Array[Byte]] => Unit) =>
       val buffer = ByteBuffer.allocate(numBytes)
-      file.read(buffer, fromPosition, null, ???)
+      val handler: CompletionHandler[Integer,Unit] = ???
+      file.read(buffer, fromPosition, (), handler)
     }
 }
