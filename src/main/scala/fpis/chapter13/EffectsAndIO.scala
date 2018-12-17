@@ -422,6 +422,9 @@ object Exercise1305 {
       val handler = new CompletionHandler[Integer,Unit] {
         def completed(bytesRead: Integer, attachment: Unit): Unit = {
           val array = new Array[Byte](bytesRead)
+          /*
+           * copy from buffer into array
+           */
           buffer.get(array)
           cb(Right(array))
         }
