@@ -405,14 +405,14 @@ object Exercise1305 {
   /*
    * using async()
    */
-  def nonblockingRead(source: Source,
-    numBytes: Int): Par[Either[Throwable,Array[Byte]]] =
+  def nonblockingRead(source: Source, numBytes: Int):
+      Par[Either[Throwable,Array[Byte]]] =
     async { (cb: Either[Throwable, Array[Byte]] => Unit) =>
       source.readBytes(numBytes, cb)
     }
 
-  def readPar(source: Source,
-    numBytes: Int): Free[Par,Either[Throwable,Array[Byte]]] =
+  def readPar(source: Source, numBytes: Int):
+      Free[Par,Either[Throwable,Array[Byte]]] =
     Suspend(nonblockingRead(source, numBytes))
 
   def read(file: AsynchronousFileChannel,
