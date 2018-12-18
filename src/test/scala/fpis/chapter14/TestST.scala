@@ -4,7 +4,7 @@ import org.scalatest._
 
 class TestST extends FlatSpec with Matchers {
   "bla" should "blo" in {
-    val test = for {
+    val test: ST[Nothing,(Int, Int)] = for {
       r1 <- STRef[Nothing,Int](1)
       r2 <- STRef[Nothing,Int](1)
       a  <- r1.read
