@@ -49,6 +49,11 @@ sealed trait STRef[S,A] {
 }
 
 object STRef {
+  /*
+   * what we create here is a ST[S,_] - it has the same type S as
+   * the corresponding STRef[S,_] type. So this S type is a kind of
+   * token or a pass to control who can access the state.
+   */
   def apply[S,A](a: A): ST[S, STRef[S,A]] = {
     val ref: STRef[S,A] = new STRef[S,A] {
       var cell = a
