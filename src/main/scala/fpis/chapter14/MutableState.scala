@@ -31,6 +31,11 @@ object ST {
   }
 }
 
+/*
+ * observe that this trait is sealed and has no subclasses
+ * it means that constructing instances of it is only possible by
+ * calling the apply() method of the companion object
+ */
 sealed trait STRef[S,A] {
   protected var cell: A
 
