@@ -34,6 +34,10 @@ object ST {
 sealed trait STRef[S,A] {
   protected var cell: A
 
+  /*
+   * methods read() and write() are pure: they don't do anything
+   * themselves but rather return ST actions
+   */
   def read: ST[S,A] = ST(cell)
 
   def write(a: A): ST[S,Unit] = new ST[S,Unit] {
