@@ -1,6 +1,10 @@
 package fpis.chapter14
 
 sealed trait ST[S,A] { self =>
+  /*
+   * note that the run() method is protected, contrarily to the normal
+   * state monad
+   */
   protected def run(s: S): (A, S)
 
   def map[B](f: A => B): ST[S,B] = new ST[S,B] {
