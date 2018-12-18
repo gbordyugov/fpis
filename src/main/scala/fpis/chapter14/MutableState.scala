@@ -55,6 +55,9 @@ sealed trait STRef[S,A] {
 
 object STRef {
   /*
+   * we don't actually create any instances of STRef in apply() here
+   * looks a bit counterintuitive, nicht wahr?
+   *
    * what we create here is a ST[S,_] - it has the same type S as
    * the corresponding STRef[S,_] type. So this S type is a kind of
    * token or a pass to control who can access the state.
