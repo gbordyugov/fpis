@@ -35,4 +35,10 @@ class TestST extends FlatSpec with Matchers {
     }
     assert (ST.runST(p) == (3, 2))
   }
+
+  "RunnableST" should "not be initialisible with STRef[_,_]" in {
+    val p = new RunnableST[STRef[Nothing,Int]] {
+      def apply[S]: ST[S,STRef[Nothing,Int]] = ??? // STRef[S,Int](1)
+    }
+  }
 }

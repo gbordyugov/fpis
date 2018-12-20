@@ -77,5 +77,9 @@ object STRef {
 }
 
 trait RunnableST[A] {
+  /*
+   * here is the trick: we cannot choose A = STRef[X,Int] for any X,
+   * since it is the caller of apply[S] that chooses a concrete S
+   */
   def apply[S]: ST[S,A]
 }
