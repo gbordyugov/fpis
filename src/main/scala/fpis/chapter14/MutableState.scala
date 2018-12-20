@@ -29,6 +29,12 @@ object ST {
       def run(s: S) = (memo, s)
     }
   }
+
+  /*
+   * for RunnableST[S,A] see below
+   */
+  def runST[A](st: RunnableST[A]): A =
+    st.apply[Unit].run(())._1
 }
 
 /*
