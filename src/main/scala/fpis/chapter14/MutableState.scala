@@ -119,6 +119,13 @@ sealed abstract class STArray[S,A](implicit m: Manifest[A]) {
     _ <- write(i, y)
     _ <- write(j, x)
   } yield ()
+
+
+  /*
+   * Exercise 14.2
+   */
+  def partition(n: Int, r: Int, pivot: Int): ST[S,Int] = ???
+  def qs(n: Int, r: Int): ST[S,Unit] = ???
 }
 
 object STArray {
