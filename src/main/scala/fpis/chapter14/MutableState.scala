@@ -69,3 +69,7 @@ object STRef {
     ST(ref)
   }
 }
+
+trait RunnableST[A] {
+  def apply[S]: ST[S,A]
+}
