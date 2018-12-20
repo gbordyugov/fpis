@@ -113,6 +113,12 @@ sealed abstract class STArray[S,A](implicit m: Manifest[A]) {
       case (st, (ix, value)) => st.flatMap(_ => write(ix, value))
     }
 
+  def swap(i: Int, j: Int): ST[S,Unit] = for {
+    x <- read(i)
+    y <- read(j)
+    _ <- write(i, y)
+    _ <- write(j, x)
+  } yield ()
 }
 
 object STArray {
