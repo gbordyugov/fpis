@@ -112,6 +112,7 @@ sealed abstract class STArray[S,A](implicit m: Manifest[A]) {
     xs.toList.foldLeft(ST[S,Unit](())) {
       case (st, (ix, value)) => st.flatMap(_ => write(ix, value))
     }
+
 }
 
 object STArray {
