@@ -105,7 +105,7 @@ sealed abstract class STArray[S,A](implicit m: Manifest[A]) {
   def freeze: ST[S,List[A]] = ST(value.toList)
 }
 
-object STArra {
+object STArray {
   def apply[S,A:Manifest](sz: Int, v: A): ST[S,STArray[S,A]] =
     ST(new STArray[S,A] {
       lazy val value = Array.fill(sz)(v)
