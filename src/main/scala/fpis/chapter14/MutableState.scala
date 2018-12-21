@@ -1,6 +1,6 @@
 package fpis.chapter14
 
-object QuickSort {
+object Quicksort {
   def quicksort(xs: List[Int]): List[Int] = if (xs.isEmpty) xs else {
     val arr = xs.toArray
 
@@ -25,7 +25,7 @@ object QuickSort {
 
     def qs(n: Int, r: Int): Unit =
       if (n < r) {
-        val pi = partition(n, r, n + (n - r)/2)
+        val pi = partition(n, r, (n + r)/2)
         qs(n, pi - 1)
         qs(pi + 1, r)
       }

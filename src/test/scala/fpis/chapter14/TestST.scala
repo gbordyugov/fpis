@@ -2,6 +2,12 @@ package fpis.chapter14
 
 import org.scalatest._
 
+class TestQuicksort extends FlatSpec with Matchers {
+  import Quicksort.quicksort
+
+  assert (quicksort(List(5, 4, 3, 2, 1)) === List(1, 2, 3, 4, 5))
+}
+
 class TestST extends FlatSpec with Matchers {
   "ST" should "should be a monad" in {
     /*
