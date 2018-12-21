@@ -10,7 +10,7 @@ object QuickSort {
       arr(j) = tmp
     }
 
-    def partition(n: Int, r: Int, pivot: Int) = {
+    def partition(n: Int, r: Int, pivot: Int): Int = {
       val pivotVal = arr(pivot)
       swap(pivot, r)
       var j = n
