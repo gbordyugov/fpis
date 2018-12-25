@@ -23,9 +23,13 @@ object Quicksort {
       j
     }
 
+    def choosePivot(n: Int, r: Int): Int =
+      (n + r) / 2
+
     def qs(n: Int, r: Int): Unit =
       if (n < r) {
-        val pi = partition(n, r, (n + r)/2)
+        val pivot = choosePivot(n, r)
+        val pi = partition(n, r, pivot)
         qs(n, pi - 1)
         qs(pi + 1, r)
       }
