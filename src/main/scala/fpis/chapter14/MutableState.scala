@@ -185,7 +185,10 @@ object STArray {
       lazy val value = Array.fill(sz)(v)
     })
 
-  def fromList[S,A:Manifest](xs: Seq[A]): ST[S,STArray[S,A]] = ???
+  def fromList[S,A:Manifest](xs: Seq[A]): ST[S,STArray[S,A]] =
+    ST(new STArray[S,A] {
+      lazy val value = xs.toArray
+    })
 }
 
 /*
