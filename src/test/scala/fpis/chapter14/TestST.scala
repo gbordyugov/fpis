@@ -5,7 +5,9 @@ import org.scalatest._
 class TestQuicksort extends FlatSpec with Matchers {
   import Quicksort.quicksort
 
-  assert (quicksort(List(5, 4, 3, 2, 1)) === List(1, 2, 3, 4, 5))
+  val lst = (1 to 100).toList
+
+  assert (quicksort(lst.reverse) === lst)
 }
 
 class TestST extends FlatSpec with Matchers {
