@@ -177,13 +177,6 @@ sealed abstract class STArray[S,A](implicit m: Manifest[A]) {
     _ <- write(i, y)
     _ <- write(j, x)
   } yield ()
-
-
-  /*
-   * Exercise 14.2
-   */
-  def partition(n: Int, r: Int, pivot: Int): ST[S,Int] = ???
-  def qs(n: Int, r: Int): ST[S,Unit] = ???
 }
 
 object STArray {
@@ -191,4 +184,13 @@ object STArray {
     ST(new STArray[S,A] {
       lazy val value = Array.fill(sz)(v)
     })
+}
+
+/*
+ * Exercise 14.2
+ */
+object Exercise1402 {
+  def partition[S](arr: STArray[S,Int], n: Int, r: Int, pivot: Int)
+      : ST[S,Int] = ???
+  def qs[S](arr: STArray[S,Int], n: Int, r: Int): ST[S,Unit] = ???
 }
