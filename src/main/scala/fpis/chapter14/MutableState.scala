@@ -10,6 +10,9 @@ object Quicksort {
       arr(j) = tmp
     }
 
+    /*
+     * (n, r) are the inclusive index boundaries
+     */
     def partition(n: Int, r: Int, pivot: Int): Int = {
       val pivotVal = arr(pivot)
       swap(pivot, r)
