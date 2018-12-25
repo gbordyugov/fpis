@@ -205,6 +205,19 @@ object Exercise1402 {
       ???
     }
     else {
-      ???
+      ST(())
     }
+
+  def quicksort(xs: List[Int]): List[Int] =
+    if (xs.isEmpty)
+      xs
+    else
+      ST.runST(new RunnableST[List[Int]] {
+        def apply[S] = for {
+          arr    <- STArray.fromList(xs)
+          size   <- arr.size
+          _      <- qs(arr, 0, size-1)
+          sorted <- arr.freeze
+        } yield sorted
+      })
 }
