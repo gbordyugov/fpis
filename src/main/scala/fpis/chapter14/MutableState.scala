@@ -33,7 +33,12 @@ object Quicksort {
           swap(i, j)
           j += 1
         }
+
+      /*
+       * put pivot back in place
+       */
       swap(j, r)
+
       j
     }
 
