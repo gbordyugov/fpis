@@ -192,5 +192,17 @@ object STArray {
 object Exercise1402 {
   def partition[S](arr: STArray[S,Int], n: Int, r: Int, pivot: Int)
       : ST[S,Int] = ???
-  def qs[S](arr: STArray[S,Int], n: Int, r: Int): ST[S,Unit] = ???
+
+  def choosePivot(n: Int, r: Int): Int =
+    (n + r) / 2
+
+  def qs[S](arr: STArray[S,Int], n: Int, r: Int): ST[S,Unit] =
+    if (n < r) {
+      val pivot = choosePivot(n, r)
+
+      ???
+    }
+    else {
+      ???
+    }
 }
