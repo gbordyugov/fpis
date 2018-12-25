@@ -204,8 +204,11 @@ object Exercise1402 {
   def qs[S](arr: STArray[S,Int], n: Int, r: Int): ST[S,Unit] =
     if (n < r) {
       val pivot = choosePivot(n, r)
-
-      ???
+      for {
+        p <- partition(arr, n, r, pivot)
+        _ <- qs(arr, n, p - 1)
+        _ <- qs(arr, p + 1, r)
+      } yield ()
     }
     else {
       ST(())
