@@ -14,9 +14,20 @@ object Quicksort {
      * (n, r) are the inclusive index boundaries
      */
     def partition(n: Int, r: Int, pivot: Int): Int = {
+      /*
+       * put pivot to the right
+       */
       val pivotVal = arr(pivot)
       swap(pivot, r)
+
+      /*
+       * index of the first array element which is >= pivot
+       */
       var j = n
+
+      /*
+       * up to, but not including, r
+       */
       for (i <- n until r)
         if (arr(i) < pivotVal) {
           swap(i, j)
