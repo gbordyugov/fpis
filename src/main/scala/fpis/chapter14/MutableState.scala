@@ -198,6 +198,9 @@ object Exercise1402 {
   def partition[S](arr: STArray[S,Int], n: Int, r: Int, pivot: Int)
       : ST[S,Int] = {
     val pivotVal = arr.read(pivot)
+    for {
+      _ <- arr.swap(pivot, r)
+    } yield()
     ???
   }
 
