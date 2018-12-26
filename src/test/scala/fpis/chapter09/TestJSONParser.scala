@@ -18,27 +18,27 @@ class JSONParserTest extends FlatSpec {
    val parser = jsonParser(SimpleParsers)
    import parser._
 
-  "JSONParser" should "be able parse true" in {
+  "JSONParser" should "be able to parse true" in {
     val result = runParser(parser)("true")
     assert(result === Right(JBool(true)))
   }
 
-  it should "be able parse false" in {
+  it should "be able to parse false" in {
     val result = runParser(parser)("false")
     assert(result === Right(JBool(false)))
   }
 
-  it should "be able parse an int" in {
+  it should "be able to parse an int" in {
     val result = runParser(parser)("5")
     assert(result === Right(JNumber(5)))
   }
 
-  it should "be able parse a double" in {
+  it should "be able to parse a double" in {
     val result = runParser(parser)("5.9")
     assert(result === Right(JNumber(5.9)))
   }
 
-  it should "be able parse a double with a leading dot" in {
+  it should "be able to parse a double with a leading dot" in {
     val result = runParser(parser)(".9")
     assert(result === Right(JNumber(0.9)))
   }
