@@ -196,9 +196,9 @@ object STArray {
  */
 object Exercise1402 {
   def partition[S](arr: STArray[S,Int], n: Int, r: Int,
-    pivot: Int) : ST[S,Int] = {
-    val pivotVal = arr.read(pivot)
-    val tmp: ST[S, Unit] = for {
+    pivot: Int): ST[S,Int] =
+    for {
+      pivotVal <- arr.read(pivot)
       j <- STRef[S,Int](n)
       k <- j.read
       _ <- arr.swap(pivot, r)
@@ -210,9 +210,8 @@ object Exercise1402 {
       }
       l <- j.read
       _ <- arr.swap(l, r)
-    } yield ()
-    ???
-  }
+    } yield l
+
 
   def choosePivot(n: Int, r: Int): Int =
     (n + r) / 2
