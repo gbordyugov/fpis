@@ -201,11 +201,9 @@ object Exercise1402 {
     for {
       j <- STRef[S,Int](n)
       _ <- arr.swap(pivot, r)
-      /*
-      _ <- for (i <- n until r) {
-        arr.swap(i, i)
+      _ <- (n until r).foldLeft(STRef[S,Unit](())) { (acc, i) =>
+        ???
       }
-       */
     } yield()
     ???
   }
