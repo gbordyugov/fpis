@@ -199,7 +199,7 @@ object Exercise1402 {
     pivot: Int): ST[S,Int] =
     for {
       pivotVal <- arr.read(pivot)
-      j <- STRef[S,Int](n)
+      j <- STRef(n)
       k <- j.read
       _ <- arr.swap(pivot, r)
       _ <- (n until r).foldLeft(ST[S,Unit](())) { (acc, i) =>
