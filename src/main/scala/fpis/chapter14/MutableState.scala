@@ -203,15 +203,13 @@ object Exercise1402 {
       k <- j.read
       _ <- arr.swap(pivot, r)
       _ <- (n until r).foldLeft(ST[S,Unit](())) { (acc, i) =>
-        for (a <- arr.read(i))
-          if (a < pivotVal)
-            for {
-              _ <- arr.swap(i, k)
-              _ <- j.write(k + 1)
-            }
+        for {
+          a <- arr.read(i)
+          _ <- if (a < pivotVal) arr.swap(i, k) else ST[S,Unit](())
+        } yield ()
       }
       l <- j.read
-      _ <- swap(l, r)
+      _ <- arr.swap(l, r)
     } yield ()
     ???
   }
