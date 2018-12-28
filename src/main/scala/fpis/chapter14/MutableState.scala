@@ -196,21 +196,25 @@ object STArray {
  */
 object Exercise1402 {
   def partition[S](arr: STArray[S,Int], n: Int, r: Int,
-    pivotPos: Int): ST[S,Int] =
+    pivotPos: Int): ST[S,Int] = {
+
+    var noop = ST[S,Unit](())
+
     for {
       p <- arr.read(pivotPos)
       _ <- arr.swap(pivotPos, r)
       j <- STRef(n)
       k <- j.read
-      _ <- (n until r).foldLeft(ST[S,Unit](())) { (acc, i) =>
+      _ <- (n until r).foldLeft(noop) { (acc, i) =>
         for {
           a <- arr.read(i)
-          _ <- if (a < p) arr.swap(i, k) else ST[S,Unit](())
+          _ <- if (a < p) arr.swap(i, k) else noop
         } yield ()
       }
       l <- j.read
       _ <- arr.swap(l, r)
     } yield l
+  }
 
 
   def choosePivot(n: Int, r: Int): Int =
