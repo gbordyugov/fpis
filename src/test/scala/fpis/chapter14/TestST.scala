@@ -3,11 +3,21 @@ package fpis.chapter14
 import org.scalatest._
 
 class TestQuicksort extends FlatSpec with Matchers {
-  import Quicksort.quicksort
+  "simple quicksort" should "work corretly" in {
+    import Quicksort.quicksort
 
-  val lst = (1 to 100).toList
+    val lst = (1 to 100).toList
 
-  assert (quicksort(lst.reverse) === lst)
+    assert (quicksort(lst.reverse) === lst)
+  }
+
+  "STRef quicksort" should "work corretly" in {
+    import Exercise1402.quicksort
+
+    val lst = (1 to 4).toList
+
+    assert (quicksort(lst.reverse) === lst)
+  }
 }
 
 class TestST extends FlatSpec with Matchers {
