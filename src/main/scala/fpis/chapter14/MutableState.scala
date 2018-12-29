@@ -204,15 +204,20 @@ object Exercise1402 {
       p <- arr.read(pivotPos)
       _ <- arr.swap(pivotPos, r)
       j <- STRef(n)
-      k <- j.read
       _ <- (n until r).foldLeft(noop) { (acc, i) =>
         for {
           a <- arr.read(i)
-          _ <- if (a < p) arr.swap(i, k) else noop
+          k <- j.read
+          _ <- if (a < p) for {
+            _ <- arr.swap(i, k)
+            _ <- j.write(k + 1)
+          } yield ()
+          else noop
         } yield ()
       }
       l <- j.read
       _ <- arr.swap(l, r)
+      l <- j.read
     } yield l
   }
 
