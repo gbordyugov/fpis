@@ -266,3 +266,15 @@ sealed abstract class STMap[S,K,V] {
   def put[S](key: K, value: V): ST[S,Unit] =
     ST(hmap.put(key, value)).flatMap(_ => ST(()))
 }
+
+object STMap {
+  import scala.collection.mutable.HashMap
+  def apply[S,K,V](items: (K, V)*) = {
+    val hm = new HashMap[K,V]
+    items.foreach(x => hm.put(x._1, x._2))
+
+    new STMap[S,K,V] {
+      val hmap = hm
+      }
+    }
+}
