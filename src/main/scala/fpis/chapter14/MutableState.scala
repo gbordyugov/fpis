@@ -251,3 +251,15 @@ object Exercise1402 {
         } yield sorted
       })
 }
+
+/*
+ * Exercise 14.3
+ */
+sealed abstract class STMap[S,K,V] {
+  import scala.collection.mutable.HashMap
+  protected def hmap: HashMap[K,V]
+
+  def contains[S](key: K): ST[S,Boolean] = ???
+  def get[S](key: K): ST[S,Option[V]] = ???
+  def put[S](key: K, value: V): ST[S,Unit] = ???
+}
