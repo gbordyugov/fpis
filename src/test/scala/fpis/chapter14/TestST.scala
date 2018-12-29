@@ -14,7 +14,7 @@ class TestQuicksort extends FlatSpec with Matchers {
   "STRef quicksort" should "work corretly" in {
     import Exercise1402.quicksort
 
-    val lst = (1 to 4).toList
+    val lst = (1 to 100).toList
 
     assert (quicksort(lst.reverse) === lst)
   }

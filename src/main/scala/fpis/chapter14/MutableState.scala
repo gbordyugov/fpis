@@ -196,19 +196,20 @@ object STArray {
  */
 object Exercise1402 {
   def partition[S](arr: STArray[S,Int], n: Int, r: Int,
-    pivotPos: Int): ST[S,Int] = {
+    pivot: Int): ST[S,Int] = {
 
     var noop = ST[S,Unit](())
 
     for {
-      p <- arr.read(pivotPos)
-      _ <- arr.swap(pivotPos, r)
+      p <- arr.read(pivot)
+      _ <- arr.swap(pivot, r)
       j <- STRef(n)
       _ <- (n until r).foldLeft(noop) { (acc, i) =>
         for {
+          _ <- acc // this bloody line seems bogus, but IS important
           a <- arr.read(i)
-          k <- j.read
           _ <- if (a < p) for {
+            k <- j.read
             _ <- arr.swap(i, k)
             _ <- j.write(k + 1)
           } yield ()
@@ -217,7 +218,6 @@ object Exercise1402 {
       }
       l <- j.read
       _ <- arr.swap(l, r)
-      l <- j.read
     } yield l
   }
 
