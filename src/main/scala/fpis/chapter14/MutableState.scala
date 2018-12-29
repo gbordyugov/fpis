@@ -259,7 +259,10 @@ sealed abstract class STMap[S,K,V] {
   import scala.collection.mutable.HashMap
   protected def hmap: HashMap[K,V]
 
-  def contains[S](key: K): ST[S,Boolean] = ???
-  def get[S](key: K): ST[S,Option[V]] = ???
-  def put[S](key: K, value: V): ST[S,Unit] = ???
+  def contains[S](key: K): ST[S,Boolean] = ST(hmap.contains(key))
+
+  def get[S](key: K): ST[S,Option[V]] = ST(hmap.get(key))
+
+  def put[S](key: K, value: V): ST[S,Unit] =
+    ST(hmap.put(key, value)).flatMap(_ => ST(()))
 }
