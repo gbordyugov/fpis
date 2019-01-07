@@ -26,6 +26,14 @@ sealed trait Process[I,O] {
   }
 }
 
+object Process {
+  def liftOne[I,O](f: I => O): Process[I,O] =
+    Await {
+      case Some(i) => Emit(f(i))
+      case None    => Halt()
+    }
+}
+
 /*
  * Emit(head, tail) indicates to the driver that the `head` value
  * should be emitted to the output stream, and the machine should then
