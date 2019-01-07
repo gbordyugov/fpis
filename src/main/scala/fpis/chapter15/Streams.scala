@@ -44,6 +44,8 @@ object Process {
       case Some(i) => Emit(f(i))
       case None    => Halt()
     }
+
+  def lift[I,O](f: I=>O): Process[I,O] = liftOne(f).repeat
 }
 
 /*
