@@ -19,4 +19,8 @@ class StreamTest extends FlatSpec with Matchers {
     val evens = even(Stream(1, 2, 3, 4)).toList
     assert(evens === List(2, 4))
   }
+
+  "sum" should "work as expected" in {
+    assert(sum(Stream(1, 2, 3, 4)).head === 10)
+  }
 }
