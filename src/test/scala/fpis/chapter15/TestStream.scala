@@ -13,4 +13,10 @@ class StreamTest extends FlatSpec with Matchers {
 
     assert(ones.head === 1)
   }
+
+  "filter" should "work as expected" in {
+    val even = filter((x: Int) => x % 2 == 0)
+    val evens = even(Stream(1, 2, 3, 4)).toList
+    assert(evens === List(2, 4))
+  }
 }

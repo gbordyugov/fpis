@@ -46,6 +46,12 @@ object Process {
     }
 
   def lift[I,O](f: I=>O): Process[I,O] = liftOne(f).repeat
+
+  def filter[I](p: I=>Boolean): Process[I,I] =
+    Await[I,I] {
+      case Some(i) if p(i) => Emit(i)
+      case _               => Halt()
+    }.repeat
 }
 
 /*
