@@ -12,6 +12,10 @@ import scala.collection.immutable.Stream
  * of values I (and probably generates an output stream of O).
  */
 sealed trait Process[I,O] {
+  /*
+   * So, given p: Process[I,O] and in: Stream[I], the expression p(in)
+   * *produces a Stream[O]
+   */
   def apply(s: Stream[I]): Stream[O] = this match {
     case Halt() => Stream()
     case Await(recv) => s match {
