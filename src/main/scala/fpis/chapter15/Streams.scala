@@ -8,13 +8,14 @@ import scala.collection.immutable.Stream
  * This is a state machine that tells a further component (the driver) what
  * to do next.
  *
- * So the driver consumes an instance of Process[I,O] *and* the input stream
- * of values I (and probably generates an output stream of O).
+ * So the driver (the apply() method below) consumes an instance of
+ * Process[I,O] *and* the input stream of values I (and probably
+ * generates an output stream of O).
  */
 sealed trait Process[I,O] {
   /*
    * Given p: Process[I,O] and in: Stream[I], the expression p(in)
-   * produces a Stream[O]
+   * produces a Stream[O]. This is the driver mentioned above.
    */
   def apply(s: Stream[I]): Stream[O] = this match {
     case Halt()      => Stream()
