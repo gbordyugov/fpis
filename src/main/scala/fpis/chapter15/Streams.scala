@@ -109,7 +109,7 @@ object Process {
   /*
    * Exercise 15.0
    */
-  def echo[I]: Process[I,I] = ???
+  def echo[I]: Process[I,I] = lift[I,I](a => a)
 
   /*
    * Exercise 15.1
