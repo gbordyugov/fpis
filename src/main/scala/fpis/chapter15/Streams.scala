@@ -17,12 +17,12 @@ sealed trait Process[I,O] {
    * *produces a Stream[O]
    */
   def apply(s: Stream[I]): Stream[O] = this match {
-    case Halt() => Stream()
+    case Halt()      => Stream()
     case Await(recv) => s match {
       case h #:: t => recv(Some(h))(t)
       case xs      => recv(None)(xs)
     }
-    case Emit(h, t) => h #:: t(s)
+    case Emit(h, t)  => h #:: t(s)
   }
 
   def repeat: Process[I,O] = {
@@ -32,7 +32,7 @@ sealed trait Process[I,O] {
         case None => recv(None)
         case i    => go(recv(i))
       }
-      case Emit(h, t) => Emit(h, go(t))
+      case Emit(h, t)  => Emit(h, go(t))
     }
     go(this)
   }
