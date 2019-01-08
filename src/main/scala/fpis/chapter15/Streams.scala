@@ -32,6 +32,12 @@ sealed trait Process[I,O] {
        */
       case xs      => recv(None)(xs)
     }
+    /*
+     * Emit doesn't consume elements of the stream s, it just emitcs
+     * a new value.
+     *
+     * Looks like a return/unit to me!
+     */
     case Emit(h, t)  => h #:: t(s)
   }
 
