@@ -19,7 +19,17 @@ sealed trait Process[I,O] {
   def apply(s: Stream[I]): Stream[O] = this match {
     case Halt()      => Stream()
     case Await(recv) => s match {
+      /*
+       * If there is at least one element in the stream, consume it by
+       * calling recv() on it. The result of this consumption will be
+       * a new Process, which is then applied to the tail of the
+       * stream.
+       */
       case h #:: t => recv(Some(h))(t)
+      /*
+       * if the stream is empty, call recv() with None, it will
+       * return a Process, apply it to the (empty) xs again
+       */
       case xs      => recv(None)(xs)
     }
     case Emit(h, t)  => h #:: t(s)
