@@ -105,4 +105,13 @@ object Process {
       }
     go(0.0)
   }
+
+  /*
+   * Exercise 15.1
+   */
+  def take[I](n: Int): Process[I,I] = ???
+  def drop[I](n: Int): Process[I,I] = ???
+
+  def takeWhile[I](f: I=>Boolean): Process[I,I] = ???
+  def dropWhile[I](f: I=>Boolean): Process[I,I] = ???
 }
