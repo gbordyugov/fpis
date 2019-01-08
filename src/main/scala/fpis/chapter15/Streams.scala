@@ -60,6 +60,11 @@ case class Await[I,O](recv: Option[I] => Process[I,O])
  */
 case class Halt[I,O]() extends Process[I,O]
 
+/*
+ * Companion object to Process trait
+ *
+ * contains useful utilities: smart constructors and combinators
+ */
 object Process {
   def liftOne[I,O](f: I => O): Process[I,O] =
     Await {
