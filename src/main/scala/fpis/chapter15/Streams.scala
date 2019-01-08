@@ -107,6 +107,11 @@ object Process {
   }
 
   /*
+   * Exercise 15.0
+   */
+  def echo[I]: Process[I,I] = ???
+
+  /*
    * Exercise 15.1
    */
   def take[I](n: Int): Process[I,I] = ???
