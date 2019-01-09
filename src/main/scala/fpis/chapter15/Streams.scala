@@ -78,6 +78,12 @@ sealed trait Process[I,O] {
 }
 
 /*
+ * Halt indicates to the driver that no more elements should be read
+ * from the input or emitted to the output.
+ */
+case class Halt[I,O]() extends Process[I,O]
+
+/*
  * Emit(head, tail) indicates to the driver that the `head` value
  * should be emitted to the output stream, and the machine should then
  * be transitioned to the `tail` state.
@@ -92,12 +98,6 @@ case class Emit[I,O](head: O, tail: Process[I,O] = Halt[I,O])
  */
 case class Await[I,O](recv: Option[I] => Process[I,O])
     extends Process[I,O]
-
-/*
- * Halt indicates to the driver that no more elements should be read
- * from the input or emitted to the output.
- */
-case class Halt[I,O]() extends Process[I,O]
 
 /*
  * Companion object to Process trait
