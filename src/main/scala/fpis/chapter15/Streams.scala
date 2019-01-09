@@ -43,6 +43,15 @@ sealed trait Process[I,O] {
   }
 
   def repeat: Process[I,O] = {
+    /*
+     * I don't quite understand what this function does exactly, but
+     * here are some observations:
+     *  - it replaces every appearance of p: Process[I,O] by go(p)
+     *  - except if the source stream has been exhausted (the Await
+     * case)
+     *  - when process comes to a Halt, it restarts it by calling
+     * go(this)
+     */
     def go(p: Process[I,O]): Process[I,O] = p match {
       /*
        * if we wound up in a Halt() state, restart from `this`
@@ -60,7 +69,7 @@ sealed trait Process[I,O] {
         case i    => go(recv(i))
       }
       /*
-       * keep head, but recurse on tail?
+       * keep head, but recurse on tail thus making tail restartable
        */
       case Emit(h, t)  => Emit(h, go(t))
     }
