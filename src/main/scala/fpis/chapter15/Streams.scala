@@ -44,11 +44,24 @@ sealed trait Process[I,O] {
 
   def repeat: Process[I,O] = {
     def go(p: Process[I,O]): Process[I,O] = p match {
+      /*
+       * if we wound up in a Halt() state, restart from `this`
+       */
       case Halt()      => go(this)
       case Await(recv) => Await {
+        /*
+         * pass None to the old handler `recv`, do not restart if the
+         * source stream is exhausted
+         */
         case None => recv(None)
+        /*
+         * I don't understand this recursion, why not simply recv(i)?
+         */
         case i    => go(recv(i))
       }
+      /*
+       * keep head, but recurse on tail?
+       */
       case Emit(h, t)  => Emit(h, go(t))
     }
     go(this)
