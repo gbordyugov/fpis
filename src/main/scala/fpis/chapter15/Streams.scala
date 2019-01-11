@@ -137,8 +137,23 @@ object Process {
    * Exercise 15.1
    */
   def take[I](n: Int): Process[I,I] = ???
-  def drop[I](n: Int): Process[I,I] = ???
+
+  def drop[I](n: Int): Process[I,I] = {
+    ???
+  }
 
   def takeWhile[I](f: I=>Boolean): Process[I,I] = ???
   def dropWhile[I](f: I=>Boolean): Process[I,I] = ???
+
+  /*
+   * Exercise 15.2
+   */
+  def count: Process[Double,Int] = {
+    def go(n: Int): Process[Double, Int] =
+      Await {
+        case Some(d) => Emit(n+1, go(n+1))
+        case None    => Halt()
+      }
+    go(0)
+  }
 }

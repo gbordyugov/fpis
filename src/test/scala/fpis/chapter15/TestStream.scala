@@ -23,4 +23,8 @@ class StreamTest extends FlatSpec with Matchers {
   "sum" should "work as expected" in {
     assert(sum(Stream(1, 2, 3, 4)).toList === List(1, 3, 6, 10))
   }
+
+  "count" should "work as expected" in {
+    assert(count(Stream(4, 3, 2, 1)).toList === List(1, 2, 3, 4))
+  }
 }
