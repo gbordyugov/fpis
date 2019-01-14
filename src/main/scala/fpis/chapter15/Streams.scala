@@ -156,7 +156,14 @@ object Process {
     go(n)
   }
 
-  def takeWhile[I](f: I=>Boolean): Process[I,I] = ???
+  def takeWhile[I](f: I=>Boolean): Process[I,I] = {
+    def go: Process[I,I] = Await {
+      case Some(i) if (f(i)) => Emit(i, go)
+      case _                 => Halt()
+    }
+    go
+  }
+
   def dropWhile[I](f: I=>Boolean): Process[I,I] = ???
 
   /*
