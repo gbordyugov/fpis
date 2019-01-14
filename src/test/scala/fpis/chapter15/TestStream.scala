@@ -31,6 +31,10 @@ class StreamTest extends FlatSpec with Matchers {
     assert(drop(2)(Stream(1, 2, 3, 4)) === Stream(3, 4))
   }
 
+  "take" should "take stuff" in {
+    assert(take(2)(Stream(1, 2, 3, 4)) === Stream(1, 2))
+  }
+
   /*
    * Exercise 15.2
    */
