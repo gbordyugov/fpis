@@ -164,7 +164,16 @@ object Process {
     go
   }
 
-  def dropWhile[I](f: I=>Boolean): Process[I,I] = ???
+  def dropWhile[I](f: I=>Boolean): Process[I,I] = {
+    def go: Process[I,I] = {
+      def p: Process[I,I] = Await {
+        case Some(i) if (!f(i)) => Emit(i, go)
+        case _                  => Halt()
+      }
+      p.repeat
+    }
+    go
+  }
 
   /*
    * Exercise 15.2

@@ -39,6 +39,10 @@ class StreamTest extends FlatSpec with Matchers {
     assert(takeWhile((_: Int) <= 3)(Stream(1, 2, 3, 4)) === Stream(1, 2, 3))
   }
 
+  "dropWhile" should "take while" in {
+    assert(dropWhile((_: Int) <= 3)(Stream(1, 2, 3, 4, 5)) === Stream(4, 5))
+  }
+
   /*
    * Exercise 15.2
    */
