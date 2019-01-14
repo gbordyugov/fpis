@@ -25,6 +25,13 @@ class StreamTest extends FlatSpec with Matchers {
   }
 
   /*
+   * Exercise 15.1
+   */
+  "drop" should "drop stuff" in {
+    assert(drop(2)(Stream(1, 2, 3, 4)) === Stream(3, 4))
+  }
+
+  /*
    * Exercise 15.2
    */
   "count" should "work as expected" in {

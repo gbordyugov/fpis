@@ -139,10 +139,13 @@ object Process {
   def take[I](n: Int): Process[I,I] = ???
 
   def drop[I](n: Int): Process[I,I] = {
-    def go(k: Int): Process[I,I] = Await {
-      case Some(i) if (k == 0) => Emit(i)
-      case Some(i)             => ???
-      case None                => ???
+    def go(k: Int): Process[I,I] = {
+      def p: Process[I,I] = Await {
+        case Some(i) if (k == 0) => Emit(i)
+        case Some(i)             => go(k-1)
+        case None                => Halt()
+      }
+      p.repeat
     }
     go(n)
   }
