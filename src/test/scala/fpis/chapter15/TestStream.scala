@@ -49,4 +49,12 @@ class StreamTest extends FlatSpec with Matchers {
   "count" should "work as expected" in {
     assert(count(Stream(4, 3, 2, 1)) === Stream(1, 2, 3, 4))
   }
+
+
+  /*
+   * Exercise 15.3
+   */
+  "mean" should "calculate the mean correctly" in {
+    assert(mean(Stream(1, 2, 3, 4)) === Stream(1, 1.5, 2, 2.5))
+  }
 }

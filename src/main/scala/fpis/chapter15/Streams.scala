@@ -186,4 +186,16 @@ object Process {
       }
     go(0)
   }
+
+  /*
+   * Exercise 15.3
+   */
+  def mean: Process[Double,Double] = {
+    def go(n: Int, sum: Double): Process[Double, Double] =
+      Await {
+        case Some(d) => Emit((d+sum)/(n+1), go(n+1, sum+d))
+        case None    => Halt()
+      }
+    go(0, 0.0)
+  }
 }
