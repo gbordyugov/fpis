@@ -237,4 +237,9 @@ object Process {
    */
   def sumViaLoop: Process[Double,Double] =
     loop[Double,Double,Double](0.0)((i, s) => (i+s, i+s))
+
+  def meanViaLoop: Process[Double,Double] =
+    loop[(Int,Double),Double,Double]((0, 0.0)) {
+      case (i, (n, s)) => ((i+s)/(n+1), (n+1, s+i))
+    }
 }
