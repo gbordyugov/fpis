@@ -128,6 +128,9 @@ object Process {
     go(0.0)
   }
 
+  def emit[I,O](head: O, tail: Process[I,O] = Halt[I,O]()) =
+    Emit(head, tail)
+
   /*
    * Exercise 15.0
    */
@@ -136,7 +139,13 @@ object Process {
   /*
    * Exercise 15.1
    */
-  def take[I](n: Int): Process[I,I] = {
+  def take[I](n: Int): Process[I,I] =
+    if (n == 0)
+      Halt()
+    else
+      await(i => emit(i, take(n-1)))
+
+  def takeOld[I](n: Int): Process[I,I] = {
     def go(k: Int): Process[I,I] = Await {
       case Some(i) if (k > 0) => Emit(i, go(k-1))
       case _                  => Halt()
@@ -144,7 +153,13 @@ object Process {
     go(n)
   }
 
-  def drop[I](n: Int): Process[I,I] = {
+  def drop[I](n: Int): Process[I,I] =
+    if (n > 0)
+      await(i => drop(n-1))
+    else
+      echo[I]
+
+  def dropOld[I](n: Int): Process[I,I] = {
     def go(k: Int): Process[I,I] = {
       def p: Process[I,I] = Await {
         case Some(i) if (k == 0) => Emit(i)
