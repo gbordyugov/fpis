@@ -171,7 +171,10 @@ object Process {
     go(n)
   }
 
-  def takeWhile[I](f: I=>Boolean): Process[I,I] = {
+  def takeWhile[I](f: I=>Boolean): Process[I,I] =
+    await(i => if (f(i)) emit(i, takeWhile(f)) else Halt())
+
+  def takeWhileOld[I](f: I=>Boolean): Process[I,I] = {
     def go: Process[I,I] = Await {
       case Some(i) if (f(i)) => Emit(i, go)
       case _                 => Halt()
@@ -179,7 +182,10 @@ object Process {
     go
   }
 
-  def dropWhile[I](f: I=>Boolean): Process[I,I] = {
+  def dropWhile[I](f: I=>Boolean): Process[I,I] =
+    await(i => if (f(i)) dropWhile(f) else emit(i, echo))
+
+  def dropWhileOld[I](f: I=>Boolean): Process[I,I] = {
     def go: Process[I,I] = {
       def p: Process[I,I] = Await {
         case Some(i) if (!f(i)) => Emit(i, go)
