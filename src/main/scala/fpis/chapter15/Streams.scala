@@ -231,4 +231,10 @@ object Process {
     await((i: I) => f(i,z) match {
       case (o, s2) => Emit(o, loop(s2)(f))
     })
+
+  /*
+   * Exerise 15.4
+   */
+  def sumViaLoop: Process[Double,Double] =
+    loop[Double,Double,Double](0.0)((i, s) => (i+s, i+s))
 }

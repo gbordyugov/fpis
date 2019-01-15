@@ -57,4 +57,11 @@ class StreamTest extends FlatSpec with Matchers {
   "mean" should "calculate the mean correctly" in {
     assert(mean(Stream(1, 2, 3, 4)) === Stream(1, 1.5, 2, 2.5))
   }
+
+  /*
+   * Exercise 15.4
+   */
+  "sumViaLoop" should "work as expected" in {
+    assert(sumViaLoop(Stream(1, 2, 3, 4)).toList === List(1, 3, 6, 10))
+  }
 }
