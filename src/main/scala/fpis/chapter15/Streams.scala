@@ -198,4 +198,16 @@ object Process {
       }
     go(0, 0.0)
   }
+
+  def await[I,O](f: I => Process[I,O],
+    fallback: Process[I,O] = Halt[I,O]()): Process[I,O] =
+    Await[I,O] {
+      case Some(i) => f(i)
+      case None    => fallback
+    }
+
+  def loop[S,I,O](z: S)(f: (I,S) => (O,S)): Process[I,O] =
+    await((i: I) => f(i,z) match {
+      case (o, s2) => Emit(o, loop(s2)(f))
+    })
 }
