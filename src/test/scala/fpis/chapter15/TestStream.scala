@@ -68,4 +68,15 @@ class StreamTest extends FlatSpec with Matchers {
   "meanViaLoop" should "calculate the mean correctly" in {
     assert(meanViaLoop(Stream(1, 2, 3, 4)) === Stream(1, 1.5, 2, 2.5))
   }
+
+  /*
+   * Testing the pipe
+   */
+  "pipe" should "compose processes" in {
+    val p1: Process[Int,Int] = filter(_ % 2 == 0)
+    val p2: Process[Int,Int] = lift(_ + 1)
+    val p: Process[Int,Int] = p1 |> p2
+
+    assert(p(Stream(0, 1, 2, 3, 4)) === Stream(1, 3, 5))
+  }
 }
