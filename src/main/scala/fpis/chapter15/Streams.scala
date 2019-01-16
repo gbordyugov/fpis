@@ -83,12 +83,13 @@ sealed trait Process[I,O] {
     case Halt()      => Halt()
     case Emit(h1, t1)  => p2 match {
       case Halt()       => Halt()
-      case Await(recv)  => Emit(???, ???)
+      case Await(recv)  => Await {
+        case Some(x) => ???
+        case None    => ???
+      }
       case Emit(h2, t2) => Emit(h2, t1 |> t2)
     }
-    case Await(recv) => Await {
-      case i => recv(i) |> p2
-    }
+    case Await(recv) => Await { recv(_) |> p2 }
   }
 }
 
