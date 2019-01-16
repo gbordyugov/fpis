@@ -82,7 +82,9 @@ sealed trait Process[I,O] {
   def |>[O2](p2: Process[O,O2]): Process[I,O2] = this match {
     case Halt()      => Halt()
     case Emit(h,t)   => ???
-    case Await(recv) => ???
+    case Await(recv) => Await {
+      case i => recv(i) |> p2
+    }
   }
 }
 

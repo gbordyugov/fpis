@@ -70,7 +70,7 @@ class StreamTest extends FlatSpec with Matchers {
   }
 
   /*
-   * Testing the pipe
+   * Exercise 15.5
    */
   "pipe" should "compose processes" in {
     val p1: Process[Int,Int] = filter(_ % 2 == 0)
