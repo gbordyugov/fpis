@@ -77,6 +77,8 @@ class StreamTest extends FlatSpec with Matchers {
     val p2: Process[Int,Int] = lift(_ + 1)
     val p: Process[Int,Int] = p1 |> p2
 
+    assert(p2(Stream(0, 1, 2, 3)) === Stream(1, 2, 3, 4))
+
     assert(p(Stream(0, 1, 2, 3, 4)) === Stream(1, 3, 5))
   }
 }
