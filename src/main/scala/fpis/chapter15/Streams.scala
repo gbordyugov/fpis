@@ -83,10 +83,7 @@ sealed trait Process[I,O] {
     case Halt()      => Halt()
     case Emit(h1, t1)  => p2 match {
       case Halt()       => Halt()
-      case Await(recv)  => {
-        val tmp: Process[O,O2] = recv(Some(h1))
-        t1 |> tmp
-      }
+      case Await(recv)  => t1 |> recv(Some(h1))
       case Emit(h2, t2) => Emit(h2, t1 |> t2)
     }
     case Await(recv) => Await { recv(_) |> p2 }
