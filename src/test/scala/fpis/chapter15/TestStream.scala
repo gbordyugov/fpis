@@ -75,11 +75,13 @@ class StreamTest extends FlatSpec with Matchers {
   "pipe" should "compose processes" in {
     val p1: Process[Int,Int] = filter(_ % 2 == 0)
     val p2: Process[Int,Int] = lift(_ + 1)
+    val p3: Process[Int,Int] = filter(_ >= 5)
     val p: Process[Int,Int] = p1 |> p2
 
     assert(p1(Stream(0, 1, 2, 3)) === Stream(0, 2))
     assert(p2(Stream(0, 1, 2, 3)) === Stream(1, 2, 3, 4))
 
     assert(p(Stream(0, 1, 2, 3, 4, 5, 6)) === Stream(1, 3, 5, 7))
+    assert((p |> p3)(Stream(0, 1, 2, 3, 4, 5, 6)) === Stream(5, 7))
   }
 }
