@@ -80,6 +80,6 @@ class StreamTest extends FlatSpec with Matchers {
     assert(p1(Stream(0, 1, 2, 3)) === Stream(0, 2))
     assert(p2(Stream(0, 1, 2, 3)) === Stream(1, 2, 3, 4))
 
-    assert(p(Stream(0, 1, 2, 3, 4)) === Stream(1, 3, 5))
+    assert(p(Stream(0, 1, 2, 3, 4, 5, 6)) === Stream(1, 3, 5, 7))
   }
 }
