@@ -87,6 +87,8 @@ sealed trait Process[I,O] {
     case (Emit(h1, t1), Emit(h2, t2)) => Emit(h2, this |> t2)
     case (Emit(h1, t1), Await(recv))  => t1 |> recv(Some(h1))
   }
+
+  def map[O2](f: O=>O2): Process[I,O2] = this |> Process.lift(f)
 }
 
 /*
