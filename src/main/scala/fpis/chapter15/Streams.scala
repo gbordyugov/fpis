@@ -2,6 +2,8 @@ package fpis.chapter15
 
 import scala.collection.immutable.Stream
 
+import fpis.chapter13.Monad
+
 /*
  * Transforms a stream containing I values into a stream containing O values
  *
@@ -267,5 +269,13 @@ object Process {
   def meanViaLoop: Process[Double,Double] =
     loop[(Int,Double),Double,Double]((0, 0.0)) {
       case (i, (n, s)) => ((i+s)/(n+1), (n+1, s+i))
+    }
+
+  def monad[I]: Monad[({type f[x] = Process[I,x]})#f] =
+    new Monad[({type f[x] = Process[I,x]})#f] {
+      def unit[O](o: => O): Process[I,O] = Emit(o)
+
+      def flatMap[O,O2](p: Process[I,O])(f: O=>Process[I,O2]): Process[I,O2] =
+        p.flatMap(f)
     }
 }
