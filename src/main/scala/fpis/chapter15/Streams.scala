@@ -103,6 +103,11 @@ sealed trait Process[I,O] {
     case Emit(h, t)  => f(h) ++ t.flatMap(f)
     case Await(recv) => Await(recv andThen (_ flatMap f))
   }
+
+  /*
+   * Exercise 15.6
+   */
+  def zipWithIndex: Process[I,(O,Int)] = ???
 }
 
 /*
