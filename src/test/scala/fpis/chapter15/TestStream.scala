@@ -84,4 +84,18 @@ class StreamTest extends FlatSpec with Matchers {
     assert(p(Stream(0, 1, 2, 3, 4, 5, 6)) === Stream(1, 3, 5, 7))
     assert((p |> p3)(Stream(0, 1, 2, 3, 4, 5, 6)) === Stream(5, 7))
   }
+
+  "zip" should "do stuff" in {
+    val p: Process[Double,Double] = echo
+    val q: Process[Double,Double] = echo
+
+    assert(p.zip(q)(Stream(1, 2, 3)) === Stream((1, 1), (2, 2), (3, 3)))
+  }
+
+  /*
+   * Exercise 15.7
+   */
+  "mean157" should "calculate the mean correctly" in {
+    assert(mean157(Stream(1, 2, 3, 4)) === Stream(1, 1.5, 2, 2.5))
+  }
 }

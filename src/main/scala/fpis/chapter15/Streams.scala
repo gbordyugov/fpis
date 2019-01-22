@@ -297,4 +297,9 @@ object Process {
       def flatMap[O,O2](p: Process[I,O])(f: O=>Process[I,O2]): Process[I,O2] =
         p.flatMap(f)
     }
+
+  /*
+   * Exercise 15.7
+   */
+  def mean157: Process[Double,Double] = sum.zipWith(count)((_ / _))
 }
