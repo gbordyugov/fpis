@@ -107,7 +107,15 @@ sealed trait Process[I,O] {
   /*
    * Exercise 15.6
    */
-  def zip[O2](p: Process[I,O2]): Process[I,(O,O2)] = ???
+  def zip[O2](p: Process[I,O2]): Process[I,(O,O2)] = (this, p) match {
+    case (Halt(), _) => Halt()
+    case (_, Halt()) => Halt()
+    case (Await(recv), _) => Await(x => recv(x).zip(p))
+    case (_, Await(recv)) => Await(x => this.zip(recv(x)))
+    case (Emit(h, t), _)  => ???
+    case (_, Emit(h, t))  => ???
+    case _                => ???
+  }
 
   def zipWithIndex: Process[I,(O,Int)] = {
     val index: Process[I,Int] = ???
