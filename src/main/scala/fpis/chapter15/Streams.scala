@@ -112,9 +112,9 @@ sealed trait Process[I,O] {
     case (_, Halt()) => Halt()
     case (Await(recv), _) => Await(x => recv(x).zip(p))
     case (_, Await(recv)) => Await(x => this.zip(recv(x)))
+    case (Emit(h1, t1), Emit(h2, t2)) => Emit((h1, h2), t1.zip(t2))
     case (Emit(h, t), _)  => ???
     case (_, Emit(h, t))  => ???
-    case _                => ???
   }
 
   def zipWithIndex: Process[I,(O,Int)] = {
