@@ -107,12 +107,13 @@ sealed trait Process[I,O] {
   /*
    * Exercise 15.6
    */
-  def zip[O2](p: Process[I,O2]): Process[I,(O,O2)] = (this, p) match {
+  def zipWith[O2,P](p: Process[I,O2])
+    (f: (O,O2)=>P): Process[I,P] = (this, p) match {
     case (Halt(), _) => Halt()
     case (_, Halt()) => Halt()
-    case (Await(recv), _) => Await(x => recv(x).zip(p))
-    case (_, Await(recv)) => Await(x => this.zip(recv(x)))
-    case (Emit(h1, t1), Emit(h2, t2)) => Emit((h1, h2), t1.zip(t2))
+    case (Await(recv), _) => Await(x => recv(x).zipWith(p)(f))
+    case (_, Await(recv)) => Await(x => this.zipWith(recv(x))(f))
+    case (Emit(h1, t1), Emit(h2, t2)) => Emit(f(h1, h2), t1.zipWith(t2)(f))
     case (Emit(h, t), _)  => ???
     case (_, Emit(h, t))  => ???
   }
