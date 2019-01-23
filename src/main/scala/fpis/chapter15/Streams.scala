@@ -111,6 +111,7 @@ sealed trait Process[I,O] {
     (f: (O,O2)=>P): Process[I,P] = (this, p) match {
     case (Halt(), _) => Halt()
     case (_, Halt()) => Halt()
+    case (Await(r1), Await(r2)) => Await(x => r1(x).zipWith(r2(x))(f))
     case (Await(recv), _) => Await(x => recv(x).zipWith(p)(f))
     case (_, Await(recv)) => Await(x => this.zipWith(recv(x))(f))
     case (Emit(h1, t1), Emit(h2, t2)) => Emit(f(h1, h2), t1.zipWith(t2)(f))
