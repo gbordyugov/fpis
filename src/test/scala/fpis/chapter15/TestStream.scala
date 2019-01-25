@@ -93,6 +93,14 @@ class StreamTest extends FlatSpec with Matchers {
   }
 
   /*
+   * Exercise 15.6
+   */
+  "zipWithIndex" should "zip with index" in {
+    val p: Process[Double,Double] = echo
+    assert(p.zipWithIndex(Stream(3, 2, 1)) === Stream((3, 1), (2, 2), (1, 3)))
+  }
+
+  /*
    * Exercise 15.7
    */
   "mean157" should "calculate the mean correctly" in {

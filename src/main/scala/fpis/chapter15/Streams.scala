@@ -119,10 +119,7 @@ sealed trait Process[I,O] {
 
   def zip[O2](p: Process[I,O2]): Process[I,(O,O2)] = zipWith(p)((_, _))
 
-  def zipWithIndex: Process[I,(O,Int)] = {
-    val index: Process[I,Int] = ???
-    ???
-  }
+  def zipWithIndex: Process[I,(O,Int)] = this zip Process.count
 }
 
 /*
@@ -247,8 +244,8 @@ object Process {
   /*
    * Exercise 15.2
    */
-  def count: Process[Double,Int] = {
-    def go(n: Int): Process[Double, Int] =
+  def count[I]: Process[I,Int] = {
+    def go(n: Int): Process[I, Int] =
       Await {
         case Some(d) => Emit(n+1, go(n+1))
         case None    => Halt()
