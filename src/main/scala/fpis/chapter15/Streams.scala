@@ -306,4 +306,7 @@ object Process {
    */
   def exists[I](f: I=>Boolean): Process[I,Boolean] =
     Process.echo map f
+
+  def processFile[A,B](f: java.io.File, p: Process[String,A],
+    z: B): Unit = ???
 }
