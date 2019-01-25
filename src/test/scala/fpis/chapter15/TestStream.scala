@@ -106,4 +106,11 @@ class StreamTest extends FlatSpec with Matchers {
   "mean157" should "calculate the mean correctly" in {
     assert(mean157(Stream(1, 2, 3, 4)) === Stream(1, 1.5, 2, 2.5))
   }
+
+  /*
+   * Exercise 15.8
+   */
+  "exists" should "do stuff" in {
+    assert(exists[Int](_ > 2)(Stream(1, 2, 3, 4, 5)) === Stream(false, false, true, true, true))
+  }
 }

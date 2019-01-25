@@ -300,4 +300,10 @@ object Process {
    * Exercise 15.7
    */
   def mean157: Process[Double,Double] = sum.zipWith(count)((_ / _))
+
+  /*
+   * Exercise 15.8
+   */
+  def exists[I](f: I=>Boolean): Process[I,Boolean] =
+    Process.echo map f
 }
