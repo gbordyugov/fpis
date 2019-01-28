@@ -327,4 +327,26 @@ object Process {
 
   val fileProcessor =
     processFile(???, count |> exists(_ > 40000), false)(_ || _)
+
+  /*
+   * Exercise 15.9
+   */
+  def toCelsius(fahrenheit: Double): Double =
+    (5.0 / 9.0)*(fahrenheit - 32.0)
+
+  val f2c: Process[String,String] = {
+    val str2Double: Process[String,Double] = lift(_.toDouble)
+    val double2Str: Process[Double,String] = lift(_.toString)
+    val addLn: Process[String,String] = lift(_ + "\n")
+
+    val degreeConverter: Process[Double,Double] = lift(toCelsius)
+
+    def skipLine(l: String): Boolean = (l.length == 0) || (l(0) == '#')
+    val fltr: Process[String,String] = filter(skipLine)
+
+    val pipeline: Process[String,String] =
+      fltr |> str2Double |> degreeConverter |> double2Str |> addLn
+
+    pipeline
+  }
 }
