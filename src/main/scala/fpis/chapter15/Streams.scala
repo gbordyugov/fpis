@@ -3,6 +3,7 @@ package fpis.chapter15
 import scala.collection.immutable.Stream
 
 import fpis.chapter13.Monad
+import fpis.chapter13.IO
 
 /*
  * Transforms a stream containing I values into a stream containing O values
@@ -308,5 +309,5 @@ object Process {
     Process.echo map f
 
   def processFile[A,B](f: java.io.File, p: Process[String,A],
-    z: B): Unit = ???
+    z: B): IO[B] = ???
 }

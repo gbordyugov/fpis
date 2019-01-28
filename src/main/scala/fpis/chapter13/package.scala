@@ -1,4 +1,4 @@
-package fpis.chapter13
+package fpis
 
 import language.higherKinds
 
