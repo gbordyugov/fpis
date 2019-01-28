@@ -1,12 +1,15 @@
-package fpinscala
+package fpis.chapter13
 
 import language.higherKinds
 
-package object iomonad {
-  import fpis.chapter07.Nonblocking._
-  import fpis.chapter13.Free._
+/*
+ * I copied this code in order to be able to run Chapter 15
+ */
 
-  type IO[A] = Free.IO[A]
+package object chapter13 {
+  import fpis.chapter07.BookNonBlocking._
+
+  type IO[A] = IO3.IO[A]
 
   def IO[A](a: => A): IO[A] = IO3.IO[A](a)
 
