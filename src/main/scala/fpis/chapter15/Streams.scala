@@ -324,4 +324,7 @@ object Process {
     try go(s.getLines, p, z)
     finally s.close
   }
+
+  val fileProcessor =
+    processFile(???, count |> exists(_ > 40000), false)(_ || _)
 }
