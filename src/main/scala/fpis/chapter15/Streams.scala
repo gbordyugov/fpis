@@ -314,7 +314,8 @@ object Process {
    *  - f is just a file handler
    *  - p is a process that maps a stream of strings to a stream of A's
    *  - z is the ``zero'' value for a fold-like g: (B,A) => B
-   *  - b is the folding function
+   *  - g is the folding function that accumulate A's into a B
+   *  the signature of g suggests that it's like a left fold
    */
   def processFile[A,B](f: java.io.File, p: Process[String,A], z: B)
       (g: (B,A) => B): IO[B] = IO {
