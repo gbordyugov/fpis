@@ -308,6 +308,14 @@ object Process {
   def exists[I](f: I=>Boolean): Process[I,Boolean] =
     Process.echo map f
 
+  /*
+   * I don't really understand this function to the every detail, so
+   * here is the breakdown of what I understood so far:
+   *  - f is just a file handler
+   *  - p is a process that maps a stream of strings to a stream of A's
+   *  - z is the ``zero'' value for a fold-like g: (B,A) => B
+   *  - b is the folding function
+   */
   def processFile[A,B](f: java.io.File, p: Process[String,A], z: B)
       (g: (B,A) => B): IO[B] = IO {
 
