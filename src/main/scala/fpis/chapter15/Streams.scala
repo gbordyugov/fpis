@@ -318,15 +318,26 @@ object Process {
    *  the signature of g suggests that it's like a left fold
    */
   def processFile[A,B](f: java.io.File, p: Process[String,A], z: B)
-      (g: (B,A) => B): IO[B] = IO {
+      // (g: (B,A) => B): IO[B] = IO {
+      (g: (B,A) => B): B = {
 
     @annotation.tailrec
     def go(ss: Iterator[String], cur: Process[String,A], acc: B): B =
       cur match {
+        /*
+         * is the process done? if so, stop and return the accumulated values
+         */
         case Halt() => acc
+        /*
+         * is the process a receiver? If so, try to feed it the next value
+         * and continue with the resulting process
+         */
         case Await(recv) =>
           val next = if (ss.hasNext) recv(Some(ss.next)) else recv(None)
           go(ss, next, acc)
+        /*
+         * if we're required to emit h, append it to acc and continue
+         */
         case Emit(h, t) => go(ss, t, g(acc, h))
       }
     val s = io.Source.fromFile(f)
