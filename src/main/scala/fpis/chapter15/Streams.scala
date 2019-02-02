@@ -345,8 +345,10 @@ object Process {
     finally s.close
   }
 
-  val fileProcessor =
-    processFile(???, count |> exists(_ > 40000), false)(_ || _)
+  /*
+   val fileProcessor =
+   processFile(???, count |> exists(_ > 40000), false)(_ || _)
+   */
 
   /*
    * Exercise 15.9
