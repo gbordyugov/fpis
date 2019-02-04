@@ -2,6 +2,8 @@ package fpis.chapter15.ExtensibleProcess
 
 import scala.language.higherKinds
 
+import fpis.chapter13._
+
 trait Process[F[_],O] {
   import Process._
 
@@ -54,4 +56,23 @@ object Process {
   def await[F[_],A,O](req: F[A])
     (recv: Either[Throwable,A] => Process[F,O]): Process[F,O] =
     Await(req, recv)
+
+
+  def runLog[O](src: Process[IO,O]): IO[IndexedSeq[O]] = IO {
+    val E = java.util.concurrent.Executors.newFixedThreadPool(4)
+    @annotation.tailrec
+    def go(cur: Process[IO,O], acc: IndexedSeq[O]): IndexedSeq[O] =
+      cur match {
+        case Emit(h, t) => go(t, acc :+ h)
+        case Halt(End) => acc
+        case Halt(err) => throw err
+        case Await(req, recv) =>
+          val next =
+            try recv(Right(unsafePerformIO(req)(E)))
+            catch { case err: Throwable => recv(Left(err)) }
+          go(next, acc)
+      }
+    try go(src, IndexedSeq())
+    finally E.shutdown
+  }
 }
