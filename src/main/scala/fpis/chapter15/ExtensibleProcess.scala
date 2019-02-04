@@ -41,4 +41,11 @@ object Process {
     catch {
       case e: Throwable => Halt(e)
     }
+
+  /*
+   * just a shortcut with curried arguments to help type inference
+   */
+  def await[F[_],A,O](req: F[A])
+    (recv: Either[Throwable,A] => Process[F,O]): Process[F,O] =
+    Await(req, recv)
 }
