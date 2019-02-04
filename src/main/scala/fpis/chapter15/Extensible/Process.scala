@@ -35,31 +35,11 @@ trait Process[F[_],O] {
         case Halt(End) => acc
         case Halt(err) => F.fail(err)
         case Await(req, recv) =>
-          val next = recv(F.attempt(req))
-          go(next, acc)
+          val next = F.map(F.attempt(req))(recv)
+          F.flatMap(next){n => go(n, acc)}
       }
     go(this, F.unit(IndexedSeq()))
   }
-
-/*
-  IO {
-    val E = java.util.concurrent.Executors.newFixedThreadPool(4)
-    @annotation.tailrec
-    def go(cur: Process[IO,O], acc: IndexedSeq[O]): IndexedSeq[O] =
-      cur match {
-        case Emit(h, t) => go(t, acc :+ h)
-        case Halt(End) => acc
-        case Halt(err) => throw err
-        case Await(req, recv) =>
-          val next =
-            try recv(Right(unsafePerformIO(req)(E)))
-            catch { case err: Throwable => recv(Left(err)) }
-          go(next, acc)
-      }
-    try go(src, IndexedSeq())
-    finally E.shutdown
-  }
- */
 }
 
 object Process {
