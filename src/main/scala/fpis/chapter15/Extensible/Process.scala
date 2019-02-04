@@ -28,24 +28,19 @@ trait Process[F[_],O] {
   /*
    * Exercise 15.10
    */
-  def runLog(implicit F: MonadCatch[F]): F[IndexedSeq[O]] = F.unit {
+  def runLog(implicit F: MonadCatch[F]): F[IndexedSeq[O]] = {
     val E = java.util.concurrent.Executors.newFixedThreadPool(4)
-    @annotation.tailrec
-    def go(cur: Process[IO,O], acc: IndexedSeq[O]): IndexedSeq[O] =
+
+    def go(cur: Process[F,O], acc: F[IndexedSeq[O]]): F[IndexedSeq[O]] =
       cur match {
-        case Emit(h, t) => go(t, acc :+ h)
+        case Emit(h, t) => go(t, F.map(acc)(_ :+ h))
         case Halt(End) => acc
-        case Halt(err) => throw err
+        case Halt(err) => F.fail(err)
         case Await(req, recv) =>
           val next = recv(F.attempt(req))
-    /*
-            try recv(Right(unsafePerformIO(req)(E)))
-            catch { case err: Throwable => recv(Left(err)) }
-     */
           go(next, acc)
       }
-    try go(this, IndexedSeq())
-    finally E.shutdown
+    go(this, F.unit(IndexedSeq()))
   }
 
 /*
