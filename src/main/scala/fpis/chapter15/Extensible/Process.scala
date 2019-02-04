@@ -28,7 +28,45 @@ trait Process[F[_],O] {
   /*
    * Exercise 15.10
    */
-  def runLog[O](implicit F: MonadCatch[F]): F[IndexedSeq[O]] = ???
+  def runLog(implicit F: MonadCatch[F]): F[IndexedSeq[O]] = F.unit {
+    val E = java.util.concurrent.Executors.newFixedThreadPool(4)
+    @annotation.tailrec
+    def go(cur: Process[IO,O], acc: IndexedSeq[O]): IndexedSeq[O] =
+      cur match {
+        case Emit(h, t) => go(t, acc :+ h)
+        case Halt(End) => acc
+        case Halt(err) => throw err
+        case Await(req, recv) =>
+          val next = recv(F.attempt(req))
+    /*
+            try recv(Right(unsafePerformIO(req)(E)))
+            catch { case err: Throwable => recv(Left(err)) }
+     */
+          go(next, acc)
+      }
+    try go(this, IndexedSeq())
+    finally E.shutdown
+  }
+
+/*
+  IO {
+    val E = java.util.concurrent.Executors.newFixedThreadPool(4)
+    @annotation.tailrec
+    def go(cur: Process[IO,O], acc: IndexedSeq[O]): IndexedSeq[O] =
+      cur match {
+        case Emit(h, t) => go(t, acc :+ h)
+        case Halt(End) => acc
+        case Halt(err) => throw err
+        case Await(req, recv) =>
+          val next =
+            try recv(Right(unsafePerformIO(req)(E)))
+            catch { case err: Throwable => recv(Left(err)) }
+          go(next, acc)
+      }
+    try go(src, IndexedSeq())
+    finally E.shutdown
+  }
+ */
 }
 
 object Process {
