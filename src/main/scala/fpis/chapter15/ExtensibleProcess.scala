@@ -2,7 +2,9 @@ package fpis.chapter15.ExtensibleProcess
 
 import scala.language.higherKinds
 
-trait Process[F[_],O]
+trait Process[F[_],O] {
+  def onHalt(f: Throwable => Process[F,O]): Process[F,O] = ???
+}
 
 object Process {
   case class Await[F[_],A,O](req: F[A],
