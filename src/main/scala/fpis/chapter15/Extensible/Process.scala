@@ -24,6 +24,11 @@ trait Process[F[_],O] {
     case Emit(o, t) => Try(f(o)) ++ t.flatMap(f)
     case Await(req,recv) => Await(req, recv andThen (_ flatMap f))
   }
+
+  /*
+   * Exercise 15.10
+   */
+  def runLog[O](implicit F: MonadCatch[F]): F[IndexedSeq[O]] = ???
 }
 
 object Process {
