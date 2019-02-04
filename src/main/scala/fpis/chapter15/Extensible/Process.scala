@@ -29,8 +29,6 @@ trait Process[F[_],O] {
    * Exercise 15.10
    */
   def runLog(implicit F: MonadCatch[F]): F[IndexedSeq[O]] = {
-    val E = java.util.concurrent.Executors.newFixedThreadPool(4)
-
     def go(cur: Process[F,O], acc: F[IndexedSeq[O]]): F[IndexedSeq[O]] =
       cur match {
         case Emit(h, t) => go(t, F.map(acc)(_ :+ h))
