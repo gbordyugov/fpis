@@ -145,6 +145,10 @@ object Process {
     }
 }
 
+/*
+ * the inner trait f fixes X to be I
+ * Scala will complain on `is[I]#f[A]` unless A = I
+ */
 case class Is[I]() {
   sealed trait f[X]
   val Get = new f[I] {}
