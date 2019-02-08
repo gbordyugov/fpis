@@ -120,4 +120,10 @@ object Process {
       case Left(e) => Halt(e)
       case Right(a) => Emit(a, Halt(End))
     }
+
+  def eval_[F[_],A,B](a: F[A]): Process[F,B] =
+    await(a) {
+      case Left(e) => Halt(e)
+      case Right(a) => Halt(End)
+    }
 }
