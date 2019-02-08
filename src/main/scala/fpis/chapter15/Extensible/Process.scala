@@ -105,4 +105,8 @@ object Process {
     try go(src, IndexedSeq())
     finally E.shutdown
   }
+
+  def resource[R,O](acquire: IO[R])(use: R => Process[IO,O],
+    release: R => Process[IO,O]): Process[IO,O] =
+    await[IO,R,O](acquire)(r => use(r).onComplete(release(r)))
 }
