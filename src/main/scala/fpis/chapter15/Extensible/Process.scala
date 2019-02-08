@@ -106,7 +106,18 @@ object Process {
     finally E.shutdown
   }
 
+  /*
   def resource[R,O](acquire: IO[R])(use: R => Process[IO,O],
     release: R => Process[IO,O]): Process[IO,O] =
     await[IO,R,O](acquire)(r => use(r).onComplete(release(r)))
+   */
+
+  /*
+   * Exercise 15.11
+   */
+  def eval[F[_],A](a: F[A]): Process[F,A] =
+    await(a) {
+      case Left(e) => Halt(e)
+      case Right(a) => Emit(a, Halt(End))
+    }
 }
