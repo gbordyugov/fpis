@@ -144,3 +144,8 @@ object Process {
       eval_ { IO(src.close) }
     }
 }
+
+case class Is[I]() {
+  sealed trait f[X]
+  val Get = new f[I] {}
+}
