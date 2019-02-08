@@ -25,6 +25,20 @@ trait Process[F[_],O] {
     case Await(req,recv) => Await(req, recv andThen (_ flatMap f))
   }
 
+  def onComplete(p: => Process[F,O]): Process[F,O] = this.onHalt {
+    case End => p.asFinalizer
+    case err => p.asFinalizer ++ Halt(err)
+  }
+
+  def asFinalizer: Process[F,O] = this match {
+    case Emit(h, t)       => Emit(h, t.asFinalizer)
+    case Halt(e)          => Halt(e)
+    case Await(req, recv) => await(req) {
+      case Left(Kill) => this.asFinalizer
+      case x          => recv(x)
+    }
+  }
+
   /*
    * Exercise 15.10
    */
