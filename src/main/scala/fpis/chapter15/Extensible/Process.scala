@@ -153,3 +153,7 @@ case class Is[I]() {
   sealed trait f[X]
   val Get = new f[I] {}
 }
+
+object Process1 {
+  type Process1[I,O] = Process[Is[I]#f,O]
+}
