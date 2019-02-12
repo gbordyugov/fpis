@@ -56,6 +56,10 @@ trait Process[F[_],O] {
       }
     go(this, F.unit(IndexedSeq()))
   }
+
+  import Process1.Process1
+
+  def |>[O2](p2: Process1[O,O2]): Process[F,O2] = ???
 }
 
 object Process {
