@@ -19,6 +19,8 @@ trait Process[F[_],O] {
       case err => Halt(err)
     }
 
+  def repeat: Process[F,O] = this ++ this.repeat
+
   def flatMap[O2](f: O => Process[F,O2]): Process[F,O2] = this match {
     case Halt(err) => Halt(err)
     case Emit(o, t) => Try(f(o)) ++ t.flatMap(f)
@@ -87,7 +89,7 @@ object Process {
     (recv: Either[Throwable,A] => Process[F,O]): Process[F,O] =
     Await(req, recv)
 
-  def emit[F[_],O](h: O, t: Process[F,O]) = Emit(h, t)
+  def emit[F[_],O](h: O, t: Process[F,O] = Halt[F,O](End)) = Emit(h, t)
 
   def runLog[O](src: Process[IO,O]): IO[IndexedSeq[O]] = IO {
     val E = java.util.concurrent.Executors.newFixedThreadPool(4)
@@ -180,4 +182,10 @@ object Process1 {
     emit(h, t1)
 
   def halt1[I,O]: Process1[I,O] = Halt[Is[I]#f,O](End)
+
+  def lift[I,O](f: I=>O): Process1[I,O] =
+    await1[I,O](i => emit(f(i))).repeat
+
+  def filter[I](f: I=>Boolean): Process1[I,I] =
+    await1[I,I](i => if (f(i)) emit(i) else halt1).repeat
 }
