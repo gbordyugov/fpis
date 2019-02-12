@@ -156,4 +156,11 @@ case class Is[I]() {
 
 object Process1 {
   type Process1[I,O] = Process[Is[I]#f,O]
+
+  /*
+   * substitution in the definition of Await results in
+   * case class Await[A,O] (req: Is[I]#f[A],
+                            recv: Either[Throwable,A] => Process[Is[I]#f,O])
+       extends Process[Is[I]#f,O]
+   */
 }
