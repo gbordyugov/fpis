@@ -87,6 +87,7 @@ object Process {
     (recv: Either[Throwable,A] => Process[F,O]): Process[F,O] =
     Await(req, recv)
 
+  def emit[F[_],O](h: O, t: Process[F,O]) = Emit(h, t)
 
   def runLog[O](src: Process[IO,O]): IO[IndexedSeq[O]] = IO {
     val E = java.util.concurrent.Executors.newFixedThreadPool(4)
@@ -155,12 +156,28 @@ case class Is[I]() {
 }
 
 object Process1 {
+  import Process._
+
   type Process1[I,O] = Process[Is[I]#f,O]
 
+  def Get[I] = Is[I]().Get
   /*
    * substitution in the definition of Await results in
    * case class Await[A,O] (req: Is[I]#f[A],
                             recv: Either[Throwable,A] => Process[Is[I]#f,O])
        extends Process[Is[I]#f,O]
    */
+
+  def await1[I,O](recv: I => Process1[I,O],
+    fallback: Process1[I,O] = halt1[I,O]): Process1[I,O] =
+    Await(Get[I], (e: Either[Throwable,I]) => e match {
+      case Left(End) => fallback
+      case Left(err) => Halt(err)
+      case Right(i)  => Try(recv(i))
+    })
+
+  def emit1[I,O](h: O, t1: Process1[I,O] = halt1[I,O]): Process1[I,O] =
+    emit(h, t1)
+
+  def halt1[I,O]: Process1[I,O] = Halt[Is[I]#f,O](End)
 }
