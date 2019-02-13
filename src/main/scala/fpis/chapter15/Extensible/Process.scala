@@ -121,6 +121,16 @@ trait Process[F[_],O] {
 
   def to[O2](sink: Sink[F,O]): Process[F,Unit] =
     join { (this zipWith sink)((o, f) => f(o)) }
+
+  def through[O2](p2: Process[F, O=>Process[F,O2]]): Process[F,O2] =
+    join { (this zipWith p2) ((o, f) => f(o)) }
+
+  type Channel[F[_],I,O] = Process[F,I=>Process[F,O]]
+
+  import java.sql.{Connection, PreparedStatement, ResultSet}
+
+  def query(conn: IO[Connection]):
+      Channel[IO, Connection => PreparedStatement, Map[String,Any]] = ???
 }
 
 object Process {
