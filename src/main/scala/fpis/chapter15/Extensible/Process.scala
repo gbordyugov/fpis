@@ -59,7 +59,33 @@ trait Process[F[_],O] {
 
   import Process1.Process1
 
-  def |>[O2](p2: Process1[O,O2]): Process[F,O2] = ???
+  def |>[O2](p2: Process1[O,O2]): Process[F,O2] = p2 match {
+    case Halt(e) => this.kill onHalt { e2 => Halt(e) ++ Halt(e2) }
+    case Emit(h, t) => Emit(h, this |> t)
+    case Await(req, recv) => this match {
+      case Halt(err) => Halt(err) |> recv(Left(err))
+      case Emit(h, t) => t |> Try(recv(Right(h)))
+      case Await(req0, recv0) => await(req0)(recv0 andThen (_ |> p2))
+    }
+  }
+
+  //def pipe[O2](p2: Process[O,O2]): Process[F,O2] = this |> p2
+
+  final def drain[O2]: Process[F,O2] = this match {
+    case Halt(e) => Halt(e)
+    case Emit(h, t) => t.drain
+    case Await(req, recv) => Await(req, recv andThen(_.drain))
+  }
+
+  @annotation.tailrec
+  final def kill[O2]: Process[F,O2] = this match {
+    case Await(req, recv) => recv(Left(Kill)).drain.onHalt {
+      case Kill => Halt(End)
+      case e    => Halt(e)
+    }
+    case Halt(e) => Halt(e)
+    case Emit(h, t) => t.kill
+  }
 }
 
 object Process {
