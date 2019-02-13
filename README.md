@@ -22,3 +22,6 @@ which is passed along with the result of Par
 
 For Chapter 9, I implemented an S-Expression parser before my take on a JSON
 parser.
+
+## Happy end
+I finished solving the exercises (apart from the listed above) on Feb 13 2019.
