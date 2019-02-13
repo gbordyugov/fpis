@@ -1,4 +1,4 @@
-# My read through some of the chapters of [Functional Programming in Scala](https://www.manning.com/books/functional-programming-in-scala)
+# My read through [Functional Programming in Scala](https://www.manning.com/books/functional-programming-in-scala)
 
 Open/skipped exercises:
   - Exercise 7.2: I had no idea
@@ -24,4 +24,4 @@ For Chapter 9, I implemented an S-Expression parser before my take on a JSON
 parser.
 
 ## Happy end
-I finished solving the exercises (apart from the listed above) on Feb 13 2019.
+I finished solving exercises (apart from the listed above) on Feb 13 2019.
