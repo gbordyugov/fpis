@@ -115,6 +115,12 @@ trait Process[F[_],O] {
         }
       }
     }
+
+  import Process.join
+  import T.zipWith
+
+  def to[O2](sink: Sink[F,O]): Process[F,Unit] =
+    join { (this zipWith sink)((o, f) => f(o)) }
 }
 
 object Process {
@@ -217,6 +223,12 @@ object Process {
       { w => eval_(IO(w.close)) }
 
   def constant[A](a: A): Process[IO,A] = eval[IO,A](IO(a)).repeat
+
+  /*
+   * Exercise 15.12
+   */
+  def join[F[_],O](p: Process[F, Process[F,O]]): Process[F,O] =
+    p.flatMap(x => x)
 }
 
 /*
@@ -259,12 +271,6 @@ object Process1 {
 
   def filter[I](f: I=>Boolean): Process1[I,I] =
     await1[I,I](i => if (f(i)) emit(i) else halt1).repeat
-
-  /*
-   * Exercise 15.12
-   */
-  def join[F[_],O](p: Process[F, Process[F,O]]): Process[F,O] =
-    p.flatMap(x => x)
 }
 
 object T {
