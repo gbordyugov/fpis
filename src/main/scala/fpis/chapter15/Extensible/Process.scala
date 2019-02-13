@@ -205,6 +205,18 @@ object Process {
     } { src =>
       eval_ { IO(src.close) }
     }
+
+  import java.io.FileWriter
+
+  type Sink[F[_],O] = Process[F,O => Process[F,Unit]]
+
+  def fileW(file: String, append: Boolean = false): Sink[IO,String] =
+    resource[FileWriter, String => Process[IO,Unit]]
+      { IO { new FileWriter(file, append) }}
+      { w => constant { (s: String) => eval[IO,Unit](IO(w.write(s))) } }
+      { w => eval_(IO(w.close)) }
+
+  def constant[A](a: A): Process[IO,A] = eval[IO,A](IO(a)).repeat
 }
 
 /*
