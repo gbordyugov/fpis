@@ -265,4 +265,8 @@ object T {
 
   def emitT[I1,I2,O](h: O, t1: Tee[I1,I2,O]=haltT[I1,I2,O]): Tee[I1,I2,O] =
     emit(h, t1)
+
+  def zipWith[I1,I2,O](f: (I1,I2) => O): Tee[I1,I2,O] =
+    awaitL[I1,I2,O](i1 =>
+    awaitR[I1,I2,O](i2 => emitT(f(i1,i2)))).repeat
 }
