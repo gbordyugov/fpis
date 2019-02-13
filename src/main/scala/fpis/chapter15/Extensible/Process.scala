@@ -231,12 +231,15 @@ object Process1 {
 
 object T {
   def identity[A](a: A): A = a
-}
 
-case class T[I1,I2]() {
-  import T.identity
+  case class T[I1,I2]() {
+    sealed trait f[X] { def get: Either[I1=>X,I2=>X] }
+    val L = new f[I1] { def get =  Left(identity _) }
+    val R = new f[I2] { def get = Right(identity _) }
+  }
 
-  sealed trait f[X] { def get: Either[I1=>X,I2=>X] }
-  val L = new f[I1] { def get =  Left(identity _) }
-  val R = new f[I2] { def get = Right(identity _) }
+  def L[I1,I2] = T[I1,I2]().L
+  def R[I1,I2] = T[I1,I2]().R
+
+  type Tee[I1,I2,O] = Process[T[I1,I2]#f,O]
 }
