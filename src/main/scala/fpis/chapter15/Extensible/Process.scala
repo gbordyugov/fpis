@@ -262,4 +262,7 @@ object T {
       case Left(err) => Halt(err)
       case Right(a)  => Try(recv(a))
     }
+
+  def emitT[I1,I2,O](h: O, t1: Tee[I1,I2,O]=haltT[I1,I2,O]): Tee[I1,I2,O] =
+    emit(h, t1)
 }
