@@ -116,8 +116,8 @@ trait Process[F[_],O] {
       }
     }
 
-  import Process.join
-  import T.zipWith
+  def zipWith[O2,O3](p2: Process[F,O2])(f: (O, O2) => O3): Process[F,O3] =
+    (this tee p2)(T.zipWith(f))
 
   def to[O2](sink: Sink[F,O]): Process[F,Unit] =
     join { (this zipWith sink)((o, f) => f(o)) }
