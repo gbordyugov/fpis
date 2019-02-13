@@ -230,6 +230,8 @@ object Process1 {
 }
 
 object T {
+  import Process._
+
   def identity[A](a: A): A = a
 
   case class T[I1,I2]() {
@@ -242,4 +244,22 @@ object T {
   def R[I1,I2] = T[I1,I2]().R
 
   type Tee[I1,I2,O] = Process[T[I1,I2]#f,O]
+
+  def haltT[I1,I2,O]: Tee[I1,I2,O] = Halt[T[I1,I2]#f,O](End)
+
+  def awaitL[I1,I2,O](recv: I1 => Tee[I1,I2,O],
+    fallback: => Tee[I1,I2,O] = haltT[I1,I2,O]): Tee[I1,I2,O] =
+    await[T[I1,I2]#f,I1,O](L) {
+      case Left(End) => fallback
+      case Left(err) => Halt(err)
+      case Right(a)  => Try(recv(a))
+    }
+
+  def awaitR[I1,I2,O](recv: I2 => Tee[I1,I2,O],
+    fallback: => Tee[I1,I2,O] = haltT[I1,I2,O]): Tee[I1,I2,O] =
+    await[T[I1,I2]#f,I2,O](R) {
+      case Left(End) => fallback
+      case Left(err) => Halt(err)
+      case Right(a)  => Try(recv(a))
+    }
 }
