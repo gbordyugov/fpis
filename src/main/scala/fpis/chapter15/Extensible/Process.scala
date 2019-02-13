@@ -228,3 +228,15 @@ object Process1 {
   def join[F[_],O](p: Process[F, Process[F,O]]): Process[F,O] =
     p.flatMap(x => x)
 }
+
+object T {
+  def identity[A](a: A): A = a
+}
+
+case class T[I1,I2]() {
+  import T.identity
+
+  sealed trait f[X] { def get: Either[I1=>X,I2=>X] }
+  val L = new f[I1] { def get =  Left(identity _) }
+  val R = new f[I2] { def get = Right(identity _) }
+}
