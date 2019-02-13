@@ -218,4 +218,10 @@ object Process1 {
 
   def filter[I](f: I=>Boolean): Process1[I,I] =
     await1[I,I](i => if (f(i)) emit(i) else halt1).repeat
+
+  /*
+   * Exercise 15.12
+   */
+  def join[F[_],O](p: Process[F, Process[F,O]]): Process[F,O] =
+    p.flatMap(x => x)
 }
