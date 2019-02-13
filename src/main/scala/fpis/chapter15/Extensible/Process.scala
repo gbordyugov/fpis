@@ -269,4 +269,6 @@ object T {
   def zipWith[I1,I2,O](f: (I1,I2) => O): Tee[I1,I2,O] =
     awaitL[I1,I2,O](i1 =>
     awaitR[I1,I2,O](i2 => emitT(f(i1,i2)))).repeat
+
+  def zip[I1,I2]: Tee[I1,I2,(I1,I2)] = zipWith((_,_))
 }
