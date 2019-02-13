@@ -86,6 +86,9 @@ trait Process[F[_],O] {
     case Halt(e) => Halt(e)
     case Emit(h, t) => t.kill
   }
+
+  def filter(f: O=>Boolean): Process[F,O] =
+    this |> Process1.filter(f)
 }
 
 object Process {
