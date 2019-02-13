@@ -117,7 +117,7 @@ trait Process[F[_],O] {
     }
 
   def zipWith[O2,O3](p2: Process[F,O2])(f: (O, O2) => O3): Process[F,O3] =
-    (this tee p2)(T.zipWith(f))
+    (this tee p2)(Process.zipWith(f))
 
   def to[O2](sink: Sink[F,O]): Process[F,Unit] =
     join { (this zipWith sink)((o, f) => f(o)) }
@@ -229,6 +229,36 @@ object Process {
    */
   def join[F[_],O](p: Process[F, Process[F,O]]): Process[F,O] =
     p.flatMap(x => x)
+
+
+  import T._
+
+  def haltT[I1,I2,O]: Tee[I1,I2,O] = Halt[T[I1,I2]#f,O](End)
+
+  def awaitL[I1,I2,O](recv: I1 => Tee[I1,I2,O],
+    fallback: => Tee[I1,I2,O] = haltT[I1,I2,O]): Tee[I1,I2,O] =
+    await[T[I1,I2]#f,I1,O](L) {
+      case Left(End) => fallback
+      case Left(err) => Halt(err)
+      case Right(a)  => Try(recv(a))
+    }
+
+  def awaitR[I1,I2,O](recv: I2 => Tee[I1,I2,O],
+    fallback: => Tee[I1,I2,O] = haltT[I1,I2,O]): Tee[I1,I2,O] =
+    await[T[I1,I2]#f,I2,O](R) {
+      case Left(End) => fallback
+      case Left(err) => Halt(err)
+      case Right(a)  => Try(recv(a))
+    }
+
+  def emitT[I1,I2,O](h: O, t1: Tee[I1,I2,O]=haltT[I1,I2,O]): Tee[I1,I2,O] =
+    emit(h, t1)
+
+  def zipWith[I1,I2,O](f: (I1,I2) => O): Tee[I1,I2,O] =
+    awaitL[I1,I2,O](i1 =>
+    awaitR[I1,I2,O](i2 => emitT(f(i1,i2)))).repeat
+
+  def zip[I1,I2]: Tee[I1,I2,(I1,I2)] = zipWith((_,_))
 }
 
 /*
@@ -288,31 +318,4 @@ object T {
   def R[I1,I2] = T[I1,I2]().R
 
   type Tee[I1,I2,O] = Process[T[I1,I2]#f,O]
-
-  def haltT[I1,I2,O]: Tee[I1,I2,O] = Halt[T[I1,I2]#f,O](End)
-
-  def awaitL[I1,I2,O](recv: I1 => Tee[I1,I2,O],
-    fallback: => Tee[I1,I2,O] = haltT[I1,I2,O]): Tee[I1,I2,O] =
-    await[T[I1,I2]#f,I1,O](L) {
-      case Left(End) => fallback
-      case Left(err) => Halt(err)
-      case Right(a)  => Try(recv(a))
-    }
-
-  def awaitR[I1,I2,O](recv: I2 => Tee[I1,I2,O],
-    fallback: => Tee[I1,I2,O] = haltT[I1,I2,O]): Tee[I1,I2,O] =
-    await[T[I1,I2]#f,I2,O](R) {
-      case Left(End) => fallback
-      case Left(err) => Halt(err)
-      case Right(a)  => Try(recv(a))
-    }
-
-  def emitT[I1,I2,O](h: O, t1: Tee[I1,I2,O]=haltT[I1,I2,O]): Tee[I1,I2,O] =
-    emit(h, t1)
-
-  def zipWith[I1,I2,O](f: (I1,I2) => O): Tee[I1,I2,O] =
-    awaitL[I1,I2,O](i1 =>
-    awaitR[I1,I2,O](i2 => emitT(f(i1,i2)))).repeat
-
-  def zip[I1,I2]: Tee[I1,I2,(I1,I2)] = zipWith((_,_))
 }
