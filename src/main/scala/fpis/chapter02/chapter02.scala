@@ -1,7 +1,7 @@
 package fpis.chapter02
 
 object Chapter2 {
-  
+
   object MyModule {
     def abs(n: Int): Int =
       if (n < 0) -n
