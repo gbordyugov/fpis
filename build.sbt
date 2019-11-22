@@ -1,4 +1,4 @@
-//scalaVersion := "2.12.6"
+scalaVersion := "2.12.10"
 
 scalacOptions += "-feature"
 scalacOptions += "-deprecation"
