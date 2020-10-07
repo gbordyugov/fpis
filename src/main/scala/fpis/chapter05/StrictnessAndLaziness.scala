@@ -112,7 +112,7 @@ sealed trait Stream[+A] {
    */
 
   def forAll(p: A => Boolean): Boolean =
-    foldRight(false)((a, b) => p(a) && b)
+    foldRight(true)((a, b) => p(a) && b)
 
 
   /*
